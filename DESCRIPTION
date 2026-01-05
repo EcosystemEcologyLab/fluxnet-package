@@ -1,0 +1,15 @@
+Package: fluxnet
+Title: Download, read, and visualize FLUXNET data
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Eric R.", "Scott", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-7430-7879")),
+    person("David J.P.", "Moore", role = "aut",
+           comment = c(ORCID = "0000-0002-6462-3288"))
+  )
+Description: Utility functions to help download, read in, and work with
+    data from FLUXNET.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
