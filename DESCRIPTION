@@ -11,13 +11,18 @@ Description: Utility functions to help download, read in, and work with
     data from FLUXNET.
 License: MIT + file LICENSE
 Imports: 
+    curl,
     dplyr,
     fs,
+    lubridate,
+    processx,
     purrr,
-    rlang,
+    rappdirs,
+    readr,
+    stringr,
     utils
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Suggests: 
-    processx
+URL: https://github.com/EcosystemEcologyLab/fluxnet-package
+BugReports: https://github.com/EcosystemEcologyLab/fluxnet-package/issues
