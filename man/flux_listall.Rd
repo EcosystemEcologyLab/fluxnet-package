@@ -7,18 +7,27 @@
 flux_listall(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
   use_cache = TRUE,
-  cache_age = as.difftime(30, units = "days")
+  cache_age = as.difftime(30, units = "days"),
+  log_file = NULL,
+  echo_cmd = FALSE
 )
 }
 \arguments{
-\item{cache_dir}{The directory to store the FLUXNET snapshot CSV in.}
+\item{cache_dir}{The directory to store the list of available FLUXNET data
+in.}
 
-\item{use_cache}{Logical; use already downloaded CSV if available and
-not older than \code{cache_age}?}
+\item{use_cache}{Logical; use cached list of files available to download if
+it exists and is not older than \code{cache_age}?}
 
-\item{cache_age}{A \code{difftime} object of length 1.  If there are no cached
+\item{cache_age}{A \code{difftime} object of length 1. If there are no cached
 snapshots more recent than \code{cache_age}, a new one will be downloaded and
-stored.}
+stored. You can force the cache to be invalidated with \code{cache_age = -Inf}.}
+
+\item{log_file}{An optional file path (e.g. \code{"log.txt"}) to direct the
+\code{fluxnet-shuttle} log to. Useful for debugging.}
+
+\item{echo_cmd}{Set to \code{TRUE} to print the shell command in the console.
+Passed to \code{\link[processx:run]{processx::run()}}.}
 }
 \value{
 A data frame of stations with available data and their metadata.

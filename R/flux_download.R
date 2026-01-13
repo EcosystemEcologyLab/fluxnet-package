@@ -8,12 +8,17 @@
 #' shanpshot CSV file downloaded and it is more recent than `cache_age`, it will
 #' be read in instead of downloading a new snapshot (unless `cache = FALSE`).
 #'
-#' @param cache_dir The directory to store the FLUXNET snapshot CSV in.
-#' @param use_cache Logical; use already downloaded CSV if available and
-#'   not older than `cache_age`?
-#' @param cache_age A `difftime` object of length 1.  If there are no cached
+#' @param cache_dir The directory to store the list of available FLUXNET data
+#'   in.
+#' @param use_cache Logical; use cached list of files available to download if
+#'   it exists and is not older than `cache_age`?
+#' @param cache_age A `difftime` object of length 1. If there are no cached
 #'   snapshots more recent than `cache_age`, a new one will be downloaded and
-#'   stored.
+#'   stored. You can force the cache to be invalidated with `cache_age = -Inf`.
+#' @param log_file An optional file path (e.g. `"log.txt"`) to direct the
+#'   `fluxnet-shuttle` log to. Useful for debugging.
+#' @param echo_cmd Set to `TRUE` to print the shell command in the console.
+#'   Passed to [processx::run()].
 #' @returns A data frame of stations with available data and their metadata.
 #' @examples
 #' \dontrun{
@@ -23,7 +28,9 @@
 flux_listall <- function(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
   use_cache = TRUE,
-  cache_age = as.difftime(30, units = "days")
+  cache_age = as.difftime(30, units = "days"),
+  log_file = NULL,
+  echo_cmd = FALSE
 ) {
   # Check if there is already a recently downloaded list
   fs::dir_create(cache_dir)
@@ -57,12 +64,21 @@ flux_listall <- function(
     message("File list is expired, downloading the latest version")
     # Run from cache_dir instead of supplying cache_dir to -o flag because -l flag to set path
     # of logfile doesn't work (https://github.com/fluxnet/shuttle/issues/104)
-    listall <- processx::run("fluxnet-shuttle", "listall", wd = cache_dir)
+    if (is.null(log_file)) {
+      log_cmd <- "--no-logfile"
+    } else {
+      log_cmd <- c("-l", log_file)
+    }
+    listall <- processx::run(
+      "fluxnet-shuttle",
+      c(log_cmd, "listall", "-o", fs::path_expand(cache_dir)),
+      echo_cmd = echo_cmd
+    )
     csv_file <- listall$stdout |>
       stringr::str_extract("(?<=snapshot written to ).+")
 
     list <- readr::read_csv(
-      fs::path(cache_dir, csv_file),
+      fs::path(csv_file),
       show_col_types = FALSE
     )
     return(list)
@@ -89,20 +105,16 @@ flux_listall <- function(
 #'   `file_list_df` is not `NULL`, `cache_dir`, `cache`, and `cache_age` will be
 #'   ingored but `site_ids` other than `"all"` will still be used.
 #' @param site_ids Character; either `"all"` to download all sites available, or
-#'   a vector of site IDs, for example `c("UK-GaB", "CA-Ca2")`.
+#'   a vector of site IDs. For example, `c("UK-GaB", "CA-Ca2")`.
 #' @param download_dir The directory to download zip files to.
 #' @param overwrite Logical; overwrite already downloaded .zip files?
-#' @param use_cache Passed to [flux_listall()] when `file_list_df` is not
-#'   supplied.
-#' @param cache_dir Passed to [flux_listall()] when `file_list_df` is not
-#'   supplied.
-#' @param cache_age Passed to [flux_listall()] when `file_list_df` is not
-#'   supplied.
+#' @inheritParams flux_listall
+#'
 #' @returns Invisibly returns the output of [curl::multi_download()], which
 #'   contains information on download success, download time, HTTP errors, etc.
 #' @examples
 #' \dontrun{
-#' # Download data for all available sites using the latest list of sites
+#' # Download data for all available sites
 #' flux_download()
 #'
 #' # Download data for just select site IDs
@@ -126,7 +138,9 @@ flux_download <- function(
   overwrite = FALSE,
   use_cache = TRUE,
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
-  cache_age = as.difftime(30, units = "days")
+  cache_age = as.difftime(30, units = "days"),
+  log_file = NULL,
+  echo_cmd = FALSE
 ) {
   if (!is.null(file_list_df)) {
     if (!is.data.frame(file_list_df)) {
