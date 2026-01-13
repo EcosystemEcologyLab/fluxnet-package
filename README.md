@@ -15,6 +15,10 @@ You can install the development version of fluxnet from [GitHub](https://github.
 pak::pak("EcosystemEcologyLab/fluxnet-package")
 ```
 
+## Data Use Requirements
+
+The FLUXNET data are shared under a CC-BY-4.0 data use license which requires attribution for each data use. You can see the citations for each site in the result of `flux_listall()` and view the license document contained within each FLUXNET data product (downloaded zip files).
+
 To use the `fluxnet` R package to download data, you'll also need to install the `fluxnet-shuttle` command-line utility, found at https://github.com/fluxnet/shuttle. 
 
 ## Example
