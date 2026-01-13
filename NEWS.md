@@ -1,3 +1,3 @@
 # fluxnet (development version)
 
-* Package created
+* Added functions for downloading FLUXNET data
