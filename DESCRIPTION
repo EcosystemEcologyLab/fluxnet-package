@@ -16,6 +16,7 @@ Imports:
     fs,
     lubridate,
     processx,
+    purrr,
     rappdirs,
     readr,
     stringr
