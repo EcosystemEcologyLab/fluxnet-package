@@ -2,4 +2,3 @@
 
 export(flux_download)
 export(flux_listall)
-export(unzip_fluxnet_zips)
