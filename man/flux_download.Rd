@@ -27,7 +27,7 @@ specific sites. See the examples for a possible use case. If
 ingored but \code{site_ids} other than \code{"all"} will still be used.}
 
 \item{site_ids}{Character; either \code{"all"} to download all sites available, or
-a vector of site IDs, for example \code{c("UK-GaB", "CA-Ca2")}.}
+a vector of site IDs. For example, \code{c("UK-GaB", "CA-Ca2")}.}
 
 \item{download_dir}{The directory to download zip files to.}
 
