@@ -11,6 +11,7 @@ Description: Utility functions to help download, read in, and work with
     data from FLUXNET.
 License: MIT + file LICENSE
 Imports: 
+    cli,
     curl,
     dplyr,
     fs,

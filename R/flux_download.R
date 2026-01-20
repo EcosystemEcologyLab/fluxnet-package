@@ -58,11 +58,11 @@ flux_listall <- function(
       stdout = NULL
     )
     if (shuttle_installed$status > 0) {
-      stop( # TODO use cli and make this a clickable link
-        "Please install the fluxnet-shuttle utility (https://github.com/fluxnet/shuttle)!"
+      cli::cli_abort(
+        "To use {.fn flux_listall}, install the {.code fluxnet-shuttle} command-line utility at {.url https://github.com/fluxnet/shuttle}."
       )
     }
-    message("File list is expired, downloading the latest version")
+    cli::cli_inform("File list is expired, downloading the latest version")
     # Run from cache_dir instead of supplying cache_dir to -o flag because -l flag to set path
     # of logfile doesn't work (https://github.com/fluxnet/shuttle/issues/104)
     if (is.null(log_file)) {
@@ -145,7 +145,9 @@ flux_download <- function(
 ) {
   if (!is.null(file_list_df)) {
     if (!is.data.frame(file_list_df)) {
-      stop("`file_list_df` must be a `data.frame`!")
+      cli::cli_abort(
+        "{.var file_list_df} must be of class {.cls data.frame}, not {.cls {class(file_list_df)}}!"
+      )
     }
   } else {
     file_list_df <- flux_listall(
@@ -168,8 +170,8 @@ flux_download <- function(
   }
   # check that there are rows left after filtering
   if (nrow(file_list_df) == 0) {
-    stop(
-      "No files to download! Check that `site_ids` are correct or that files aren't already downloaded if `overwrite = FALSE`."
+    cli::cli_abort(
+      "No files to download! Check that {.arg site_ids} are correct or that files aren't already downloaded if {.arg overwrite = FALSE}."
     )
   }
   resp <- curl::multi_download(
