@@ -53,11 +53,12 @@ flux_listall <- function(
     shuttle_installed <- processx::run(
       "which",
       "fluxnet-shuttle",
+      error_on_status = FALSE,
       stderr = NULL,
       stdout = NULL
     )
     if (shuttle_installed$status > 0) {
-      stop(
+      stop( # TODO use cli and make this a clickable link
         "Please install the fluxnet-shuttle utility (https://github.com/fluxnet/shuttle)!"
       )
     }
@@ -153,7 +154,7 @@ flux_download <- function(
       cache_age = cache_age
     )
   }
-  if (site_ids != "all") {
+  if (length(site_ids) > 1 & !any(site_ids == "all")) {
     file_list_df <- file_list_df |> dplyr::filter(site_id %in% site_ids)
   }
 
