@@ -1,4 +1,5 @@
 #' Big thanks to Andrew Heiss for helping me figure this out!
+#' @noRd
 fluxnet_shuttle_executable <- function(virtualenv = "fluxnet") {
   #TODO: check if virtualenv already exists and print message if not
   reticulate::virtualenv_create(
