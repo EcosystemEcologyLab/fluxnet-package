@@ -49,19 +49,20 @@ flux_listall <- function(
     nrow(cached_snapshots |> dplyr::filter(!expired)) == 0 |
       isFALSE(use_cache)
   ) {
-    # Check that fluxnet-shuttle is installed
-    shuttle_installed <- processx::run(
-      "which",
-      "fluxnet-shuttle",
-      error_on_status = FALSE,
-      stderr = NULL,
-      stdout = NULL
-    )
-    if (shuttle_installed$status > 0) {
-      cli::cli_abort(
-        "To use {.fn flux_listall}, install the {.code fluxnet-shuttle} command-line utility at {.url https://github.com/fluxnet/shuttle}."
-      )
-    }
+    # # Check that fluxnet-shuttle is installed
+    # shuttle_installed <- processx::run(
+    #   "which",
+    #   "fluxnet-shuttle",
+    #   error_on_status = FALSE,
+    #   stderr = NULL,
+    #   stdout = NULL
+    # )
+    # if (shuttle_installed$status > 0) {
+    #   cli::cli_abort(
+    #     "To use {.fn flux_listall}, install the {.code fluxnet-shuttle} command-line utility at {.url https://github.com/fluxnet/shuttle}."
+    #   )
+    # }
+    fluxnet_shuttle <- fluxnet_shuttle_executable("fluxnet")
     cli::cli_inform("File list is expired, downloading the latest version")
     # Run from cache_dir instead of supplying cache_dir to -o flag because -l flag to set path
     # of logfile doesn't work (https://github.com/fluxnet/shuttle/issues/104)
@@ -71,7 +72,7 @@ flux_listall <- function(
       log_cmd <- c("-l", log_file)
     }
     listall <- processx::run(
-      "fluxnet-shuttle",
+      fluxnet_shuttle,
       c(log_cmd, "listall", "-o", fs::path_expand(cache_dir)),
       echo_cmd = echo_cmd
     )
