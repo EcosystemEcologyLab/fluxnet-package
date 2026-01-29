@@ -32,9 +32,11 @@ flux_extract <- function(
 ) {
   zip_files <- fs::dir_ls(zip_dir, glob = "*.zip")
   zip_avail <- dplyr::tibble(zip_path = zip_files) |>
-    dplyr::mutate(filename = fs::path_ext_remove(fs::path_file(zip_path))) |>
+    dplyr::mutate(
+      filename = fs::path_ext_remove(fs::path_file(.data[["zip_path"]]))
+    ) |>
     tidyr::separate_wider_delim(
-      filename,
+      "filename",
       delim = "_",
       names = c(
         "network",
@@ -45,16 +47,16 @@ flux_extract <- function(
         "release_version"
       )
     ) |>
-    dplyr::select(-FLUXNET) |>
+    dplyr::select(-dplyr::all_of("FLUXNET")) |>
     tidyr::separate_wider_delim(
-      year_range,
+      "year_range",
       delim = "-",
       names = c("year_start", "year_end")
     )
 
   if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {
     zip_to_extract <- zip_avail |>
-      dplyr::filter(site_id %in% site_ids)
+      dplyr::filter(.data[["site_id"]] %in% site_ids)
   } else {
     zip_to_extract <- zip_avail
   }
@@ -108,7 +110,7 @@ flux_extract_site <- function(
 
   data_avail <- dplyr::tibble(filename = data_files) |>
     tidyr::separate_wider_delim(
-      filename,
+      "filename",
       delim = "_",
       names = c(
         "network",
@@ -122,14 +124,17 @@ flux_extract_site <- function(
       ),
       cols_remove = FALSE
     ) |>
-    dplyr::select(-FLUXNET) |>
+    dplyr::select(-dplyr::all_of("FLUXNET")) |>
     dplyr::mutate(
-      release_version = stringr::str_remove(release_version, "\\.csv$")
+      release_version = stringr::str_remove(
+        .data[["release_version"]],
+        "\\.csv$"
+      )
     )
 
   varinfo_avail <- dplyr::tibble(filename = varinfo_files) |>
     tidyr::separate_wider_delim(
-      filename,
+      "filename",
       delim = "_",
       names = c(
         "network",
@@ -143,15 +148,22 @@ flux_extract_site <- function(
       ),
       cols_remove = FALSE
     ) |>
-    dplyr::select(-FLUXNET, -BIFVARINFO) |>
+    dplyr::select(-dplyr::all_of(c("FLUXNET", "BIFVARINFO"))) |>
     dplyr::mutate(
-      release_version = stringr::str_remove(release_version, "\\.csv$")
+      release_version = stringr::str_remove(
+        .data[["release_version"]],
+        "\\.csv$"
+      )
     )
 
   data_to_extract <- data_avail |>
-    dplyr::filter(resolution %in% toupper(paste0(resolutions, resolutions)))
+    dplyr::filter(
+      .data[["resolution"]] %in% toupper(paste0(resolutions, resolutions))
+    )
   varinfo_to_extract <- varinfo_avail |>
-    dplyr::filter(resolution %in% toupper(paste0(resolutions, resolutions)))
+    dplyr::filter(
+      .data[["resolution"]] %in% toupper(paste0(resolutions, resolutions))
+    )
 
   files_to_extract <- c(
     txt_files[extract_txt],
@@ -175,9 +187,7 @@ flux_extract_site <- function(
     if (length(files_to_extract) == 0) {
       out <- dplyr::tibble(
         zip_file = zip_file,
-        zip_file_error = glue::glue(
-          "All requested files already extracted, set `overwrite = TRUE` to overwrite."
-        )
+        zip_file_error = "All requested files already extracted, set `overwrite = TRUE` to overwrite."
       )
       return(out)
     }
