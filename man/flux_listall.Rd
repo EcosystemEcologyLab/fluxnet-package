@@ -44,5 +44,11 @@ be read in instead of downloading a new snapshot (unless \code{cache = FALSE}).
 \examples{
 \dontrun{
 fluxnet_files <- flux_listall()
+
+# Ignore cache
+fluxnet_files <- flux_listall(use_cache = FALSE)
+
+# Invalidate cache and update it
+fluxnet_files <- flux_listall(cache_age = -Inf)
 }
 }
