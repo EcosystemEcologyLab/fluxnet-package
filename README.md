@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of fluxnet is to ...
+`fluxnet` is an R package that provides utilities to download [FLUXNET](https://fluxnet.org) data from member networks, read in those data, perform basic quality control checks, and create exploratory visualizations and data inventories.
 
 ## Installation
 
