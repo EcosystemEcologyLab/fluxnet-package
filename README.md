@@ -2,6 +2,7 @@
 # fluxnet
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/EcosystemEcologyLab/fluxnet-package/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcosystemEcologyLab/fluxnet-package/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `fluxnet` is an R package that provides utilities to download [FLUXNET](https://fluxnet.org) data from member networks, read in those data, perform basic quality control checks, and create exploratory visualizations and data inventories.
