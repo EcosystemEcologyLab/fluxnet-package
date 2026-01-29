@@ -33,5 +33,8 @@ flux_listall()
 
 ## Download all available FLUXNET data
 flux_download()
+
+## Extract all the annual data files from the downloads
+flux_extract(resolutions = "y")
 ```
 
