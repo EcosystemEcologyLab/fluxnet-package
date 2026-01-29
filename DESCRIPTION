@@ -24,9 +24,9 @@ Imports:
     purrr,
     rappdirs,
     readr,
+    reticulate (>= 1.41),
     stringr,
     tidyr
-    reticulate (>= 1.41)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
