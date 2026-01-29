@@ -1,6 +1,6 @@
 Package: fluxnet
 Title: Download, read, and visualize FLUXNET data
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: c(
     person(c("David", "J.P."), "Moore", , "davidjpmoore@arizona.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6462-3288")),
