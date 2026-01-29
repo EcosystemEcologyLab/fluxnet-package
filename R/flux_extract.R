@@ -70,9 +70,10 @@ flux_extract <- function(
       extract_txt = extract_txt,
       overwrite = overwrite
     )
-  })
+  }) |>
+    purrr::list_rbind()
 
-  #TODO return tibble of files with success flag and warnings or errors attached
+  invisible(extracted_files)
 }
 
 
@@ -85,7 +86,20 @@ flux_extract_site <- function(
   extract_txt,
   overwrite
 ) {
-  all_files <- utils::unzip(zip_file, list = TRUE)$Name
+  # capture errors
+  safe_unzip <- purrr::safely(utils::unzip)
+
+  all_files_try <- safe_unzip(zip_file, list = TRUE)
+
+  if (!is.null(all_files_try$error)) {
+    out <- dplyr::tibble(
+      zip_file = zip_file,
+      zip_file_error = all_files_try$error$message
+    )
+    return(out)
+  } else {
+    all_files <- all_files_try$result$Name
+  }
 
   txt_files <- all_files[grepl(".txt$", all_files)]
   bif_file <- all_files[grepl("_BIF_", all_files)]
@@ -147,18 +161,48 @@ flux_extract_site <- function(
   )
 
   # Extract into folders named after zip file for tidier organization
-  extract_dir <- fs::path(
+  extract_dir <- fs::dir_create(fs::path(
     output_dir,
     fs::path_ext_remove(fs::path_file(zip_file))
-  )
+  ))
 
-  extracted <- utils::unzip(
+  # if overwrite = FALSE, don't even try to unzip
+  if (isFALSE(overwrite)) {
+    already_extracted <- fs::dir_ls(extract_dir) |> fs::path_file()
+    files_to_extract <- files_to_extract[
+      !files_to_extract %in% already_extracted
+    ]
+    if (length(files_to_extract) == 0) {
+      out <- dplyr::tibble(
+        zip_file = zip_file,
+        zip_file_error = glue::glue(
+          "All requested files already extracted, set `overwrite = TRUE` to overwrite."
+        )
+      )
+      return(out)
+    }
+  }
+  extracted_try <- safe_unzip(
     zipfile = zip_file,
     files = files_to_extract,
     overwrite = overwrite,
     exdir = extract_dir
   )
 
-  # Return
-  extracted
+  if (!is.null(extracted_try$error)) {
+    out <- dplyr::tibble(
+      zip_file = zip_file,
+      zip_file_error = all_files_try$error$message
+    )
+    return(out)
+  } else {
+    out <- dplyr::tibble(zip_file = zip_file, zip_file_error = NA)
+    if (length(extracted_try$result) > 1) {
+      out <- out |> tidyr::expand_grid(extracted_file = extracted_try$result)
+    }
+  }
+
+  
+# Return
+  return(out)
 }
