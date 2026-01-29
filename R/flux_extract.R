@@ -51,7 +51,7 @@ flux_extract <- function(
     tidyr::separate_wider_delim(
       "year_range",
       delim = "-",
-      names = c("year_start", "year_end")
+      names = c("start_year", "end_year")
     )
 
   if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {

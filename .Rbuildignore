@@ -1,5 +1,7 @@
 ^fluxnet\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
-^fluxnet/*
+^fluxnet$
 ^\.github$
+^CITATION\.cff$
+^scripts$

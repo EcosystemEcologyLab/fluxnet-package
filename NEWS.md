@@ -1,3 +1,7 @@
+# fluxnet (development version)
+
+* Added `flux_discover_files()` for creating a file manifest.
+
 # fluxnet 0.1.0
 
 * Added `flux_extract()` for extracting data from downloaded .zip files.
