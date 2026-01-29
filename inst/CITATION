@@ -1,0 +1,14 @@
+
+bibentry(bibtype = "Misc",
+         key = "moore_etall",
+         title = "fluxnet: Download, read, and visualize FLUXNET data",
+         author = c(person(given = "David J.P.",
+                           family = "Moore",
+                           email = "davidjpmoore@arizona.edu",
+                           comment = c(ORCID = "0000-0002-6462-3288")),
+                    person(given = "Eric R.",
+                           family = "Scott",
+                           comment = c(ORCID = "0000-0002-7430-7879"))),
+         url = "https://github.com/EcosystemEcologyLab/fluxnet-package",
+         abstract = "Utility functions to help download, read in, and work with data from FLUXNET.",
+         version = "0.1.0")
