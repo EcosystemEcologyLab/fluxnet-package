@@ -31,10 +31,10 @@ flux_extract <- function(
   overwrite = FALSE
 ) {
   zip_files <- fs::dir_ls(zip_dir, glob = "*.zip")
-  zip_avail <- dplyr::tibble(zip_path = zip_files) |>
+  zip_avail <- dplyr::tibble(zip_path = zip_files) %>%
     dplyr::mutate(
       filename = fs::path_ext_remove(fs::path_file(.data[["zip_path"]]))
-    ) |>
+    ) %>%
     tidyr::separate_wider_delim(
       "filename",
       delim = "_",
@@ -46,8 +46,8 @@ flux_extract <- function(
         "oneflux_version",
         "release_version"
       )
-    ) |>
-    dplyr::select(-dplyr::all_of("FLUXNET")) |>
+    ) %>%
+    dplyr::select(-dplyr::all_of("FLUXNET")) %>%
     tidyr::separate_wider_delim(
       "year_range",
       delim = "-",
@@ -55,7 +55,7 @@ flux_extract <- function(
     )
 
   if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {
-    zip_to_extract <- zip_avail |>
+    zip_to_extract <- zip_avail %>%
       dplyr::filter(.data[["site_id"]] %in% site_ids)
   } else {
     zip_to_extract <- zip_avail
@@ -63,7 +63,7 @@ flux_extract <- function(
 
   resolutions <- match.arg(resolutions, several.ok = TRUE)
   # TODO might be better to implement overwrite outside of unzip()
-  extracted_files <- purrr::map(zip_files, \(zip) {
+  extracted_files <- purrr::map(zip_files, function(zip) {
     flux_extract_site(
       zip,
       output_dir = output_dir,
@@ -72,7 +72,7 @@ flux_extract <- function(
       extract_txt = extract_txt,
       overwrite = overwrite
     )
-  }) |>
+  }) %>%
     purrr::list_rbind()
 
   invisible(extracted_files)
@@ -108,7 +108,7 @@ flux_extract_site <- function(
   varinfo_files <- all_files[grepl("_BIFVARINFO_", all_files)]
   data_files <- all_files[!all_files %in% c(txt_files, bif_file, varinfo_files)]
 
-  data_avail <- dplyr::tibble(filename = data_files) |>
+  data_avail <- dplyr::tibble(filename = data_files) %>%
     tidyr::separate_wider_delim(
       "filename",
       delim = "_",
@@ -123,8 +123,8 @@ flux_extract_site <- function(
         "release_version"
       ),
       cols_remove = FALSE
-    ) |>
-    dplyr::select(-dplyr::all_of("FLUXNET")) |>
+    ) %>%
+    dplyr::select(-dplyr::all_of("FLUXNET")) %>%
     dplyr::mutate(
       release_version = stringr::str_remove(
         .data[["release_version"]],
@@ -132,7 +132,7 @@ flux_extract_site <- function(
       )
     )
 
-  varinfo_avail <- dplyr::tibble(filename = varinfo_files) |>
+  varinfo_avail <- dplyr::tibble(filename = varinfo_files) %>%
     tidyr::separate_wider_delim(
       "filename",
       delim = "_",
@@ -147,8 +147,8 @@ flux_extract_site <- function(
         "release_version"
       ),
       cols_remove = FALSE
-    ) |>
-    dplyr::select(-dplyr::all_of(c("FLUXNET", "BIFVARINFO"))) |>
+    ) %>%
+    dplyr::select(-dplyr::all_of(c("FLUXNET", "BIFVARINFO"))) %>%
     dplyr::mutate(
       release_version = stringr::str_remove(
         .data[["release_version"]],
@@ -156,11 +156,11 @@ flux_extract_site <- function(
       )
     )
 
-  data_to_extract <- data_avail |>
+  data_to_extract <- data_avail %>%
     dplyr::filter(
       .data[["resolution"]] %in% toupper(paste0(resolutions, resolutions))
     )
-  varinfo_to_extract <- varinfo_avail |>
+  varinfo_to_extract <- varinfo_avail %>%
     dplyr::filter(
       .data[["resolution"]] %in% toupper(paste0(resolutions, resolutions))
     )
@@ -180,7 +180,7 @@ flux_extract_site <- function(
 
   # if overwrite = FALSE, don't even try to unzip
   if (isFALSE(overwrite)) {
-    already_extracted <- fs::dir_ls(extract_dir) |> fs::path_file()
+    already_extracted <- fs::dir_ls(extract_dir) %>% fs::path_file()
     files_to_extract <- files_to_extract[
       !files_to_extract %in% already_extracted
     ]
@@ -208,7 +208,7 @@ flux_extract_site <- function(
   } else {
     out <- dplyr::tibble(zip_file = zip_file, zip_file_error = NA)
     if (length(extracted_try$result) > 1) {
-      out <- out |> tidyr::expand_grid(extracted_file = extracted_try$result)
+      out <- out %>% tidyr::expand_grid(extracted_file = extracted_try$result)
     }
   }
 

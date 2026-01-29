@@ -20,6 +20,7 @@ Imports:
     dplyr,
     fs,
     lubridate,
+    magrittr,
     processx,
     purrr,
     rappdirs,

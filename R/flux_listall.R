@@ -39,14 +39,14 @@ flux_listall <- function(
       cache_dir,
       regexp = "fluxnet_shuttle_snapshot_\\d+T\\d+\\.csv$"
     )
-  ) |>
-    dplyr::mutate(timestamp = stringr::str_extract(path, "\\d+T\\d+")) |>
-    dplyr::mutate(datetime = lubridate::ymd_hms(timestamp)) |>
-    dplyr::mutate(expired = datetime + cache_age < Sys.time()) |>
+  ) %>%
+    dplyr::mutate(timestamp = stringr::str_extract(path, "\\d+T\\d+")) %>%
+    dplyr::mutate(datetime = lubridate::ymd_hms(timestamp)) %>%
+    dplyr::mutate(expired = datetime + cache_age < Sys.time()) %>%
     dplyr::arrange(desc(datetime))
 
   if (
-    nrow(cached_snapshots |> dplyr::filter(!expired)) == 0 |
+    nrow(cached_snapshots %>% dplyr::filter(!expired)) == 0 |
       isFALSE(use_cache)
   ) {
     fluxnet_shuttle <- fluxnet_shuttle_executable("fluxnet")
@@ -62,7 +62,7 @@ flux_listall <- function(
       c(log_cmd, "listall", "-o", fs::path_expand(cache_dir)),
       echo_cmd = echo_cmd
     )
-    csv_file <- listall$stdout |>
+    csv_file <- listall$stdout %>%
       stringr::str_extract("(?<=snapshot written to ).+")
 
     list <- readr::read_csv(
@@ -72,8 +72,8 @@ flux_listall <- function(
     return(list)
   } else {
     #just read the newest cached one
-    csv_path <- cached_snapshots |>
-      dplyr::filter(!expired & datetime == max(datetime)) |>
+    csv_path <- cached_snapshots %>%
+      dplyr::filter(!expired & datetime == max(datetime)) %>%
       dplyr::pull(path)
     list <- readr::read_csv(csv_path, show_col_types = FALSE)
     return(list)

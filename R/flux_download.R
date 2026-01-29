@@ -63,15 +63,15 @@ flux_download <- function(
     )
   }
   if (length(site_ids) > 1 & !any(site_ids == "all")) {
-    file_list_df <- file_list_df |> dplyr::filter(site_id %in% site_ids)
+    file_list_df <- file_list_df %>% dplyr::filter(site_id %in% site_ids)
   }
 
   # Check for existing files unless overwrite = TRUE
   fs::dir_create(download_dir)
 
   if (isFALSE(overwrite)) {
-    existing_files <- fs::dir_ls(download_dir) |> fs::path_file()
-    file_list_df <- file_list_df |>
+    existing_files <- fs::dir_ls(download_dir) %>% fs::path_file()
+    file_list_df <- file_list_df %>%
       dplyr::filter(!fluxnet_product_name %in% existing_files)
   }
   # check that there are rows left after filtering
