@@ -46,7 +46,7 @@ flux_read <- function(
   #TODO error if there are no files to read
 
   data_raw <- purrr::pmap(
-    files_df %>% dplyr::select(path, site_id, dataset),
+    files_df %>% dplyr::select(.data$path, .data$site_id, .data$dataset),
     function(path, site_id, dataset) {
       readr::read_csv(path, show_col_types = FALSE) %>%
         dplyr::mutate(site_id = site_id, dataset = dataset, .before = 1)
