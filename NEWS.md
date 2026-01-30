@@ -1,5 +1,6 @@
 # fluxnet (development version)
 
+* Added `flux_read()` for reading in FLUXNET data in a manifest.
 * Added `flux_discover_files()` for creating a file manifest.
 
 # fluxnet 0.1.0
