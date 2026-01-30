@@ -53,17 +53,16 @@ flux_extract <- function(
       delim = "-",
       names = c("start_year", "end_year")
     )
-
   if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {
     zip_to_extract <- zip_avail %>%
-      dplyr::filter(.data[["site_id"]] %in% site_ids)
+      dplyr::filter(.data$site_id %in% site_ids)
   } else {
     zip_to_extract <- zip_avail
   }
 
   resolutions <- match.arg(resolutions, several.ok = TRUE)
   # TODO might be better to implement overwrite outside of unzip()
-  extracted_files <- purrr::map(zip_files, function(zip) {
+  extracted_files <- purrr::map(zip_to_extract$zip_path, function(zip) {
     flux_extract_site(
       zip,
       output_dir = output_dir,
