@@ -37,5 +37,11 @@ flux_download()
 
 ## Extract all the annual data files from the downloads
 flux_extract(resolutions = "y")
+
+## Create manifest
+manifest <- flux_discover_files()
+
+## Read in data
+annual <- flux_read(manifest, resolution = "y")
 ```
 
