@@ -31,7 +31,9 @@ a vector of site IDs. For example, \code{c("UK-GaB", "CA-Ca2")}.}
 
 \item{download_dir}{The directory to download zip files to.}
 
-\item{overwrite}{Logical; overwrite already downloaded .zip files?}
+\item{overwrite}{Logical; overwrite already downloaded .zip files? If \code{FALSE}
+it will skip downloading existing files, unless they are invalid .zip files
+(e.g. due to partial download or corruption).}
 
 \item{use_cache}{Logical; use cached list of files available to download if
 it exists and is not older than \code{cache_age}?}

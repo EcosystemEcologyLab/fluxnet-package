@@ -14,7 +14,9 @@
 #' @param site_ids Character; either `"all"` to download all sites available, or
 #'   a vector of site IDs. For example, `c("UK-GaB", "CA-Ca2")`.
 #' @param download_dir The directory to download zip files to.
-#' @param overwrite Logical; overwrite already downloaded .zip files?
+#' @param overwrite Logical; overwrite already downloaded .zip files? If `FALSE`
+#'   it will skip downloading existing files, unless they are invalid .zip files
+#'   (e.g. due to partial download or corruption).
 #' @inheritParams flux_listall
 #'
 #' @returns Invisibly returns the output of [curl::multi_download()], which
@@ -66,13 +68,20 @@ flux_download <- function(
     file_list_df <- file_list_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 
-  # Check for existing files unless overwrite = TRUE
   fs::dir_create(download_dir)
 
+  # Check for existing files unless overwrite = TRUE
   if (isFALSE(overwrite)) {
-    existing_files <- fs::dir_ls(download_dir) %>% fs::path_file()
+    existing_paths <- fs::dir_ls(download_dir, glob = "*.zip")
+    existing_files <- existing_paths %>% fs::path_file()
+
+    existing_valid_files <- existing_files[purrr::map_lgl(
+      existing_paths,
+      check_zip
+    )]
+
     file_list_df <- file_list_df %>%
-      dplyr::filter(!.data$fluxnet_product_name %in% existing_files)
+      dplyr::filter(!.data$fluxnet_product_name %in% existing_valid_files)
   }
   # check that there are rows left after filtering
   if (nrow(file_list_df) == 0) {
@@ -82,8 +91,35 @@ flux_download <- function(
   }
   resp <- curl::multi_download(
     urls = file_list_df$download_link,
-    destfiles = fs::path(download_dir, file_list_df$fluxnet_product_name)
+    destfiles = fs::path(download_dir, file_list_df$fluxnet_product_name),
+    resume = TRUE,
+    useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
   )
-  # TODO: add retry with resume for failed and partial downloads.
+
+  failed <- resp |> dplyr::filter(success == FALSE)
+  if (nrow(failed) > 0) {
+    cli::cli_inform(
+      "Retrying {nrow(failed)} failed downloads{s?}."
+    )
+    # Retry failed downloads once
+    resp2 <- curl::multi_download(
+      urls = failed$url,
+      destfiles = failed$destfile,
+      resume = TRUE,
+      useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
+    )
+    resp <- dplyr::bind_rows(resp %>% dplyr::filter(success == TRUE), resp2)
+  }
+
   return(invisible(resp))
+}
+
+
+check_zip <- function(zip_file) {
+  test <- try(unzip(zip_file, list = TRUE), silent = TRUE)
+  if (inherits(test, "try-error")) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
 }
