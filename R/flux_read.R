@@ -6,6 +6,8 @@
 #' @param resolution The time resolution to read in.  Must be one of `"y"`
 #'   (annual), `"m"` (monthly), `"w"` (weekly), `"d"` (daily), or `"h"`
 #'   (hourly).
+#' @param datasets Character vector of one or both of `"FLUXMET"` or `"ERA5"`.
+#'   Defaults to both.
 #' @param site_ids A vector of site IDs to filter the manifest by.  If `"all"`
 #'   (the default), the manifest isn't filtered by site ID.
 #'
@@ -30,20 +32,26 @@
 flux_read <- function(
   manifest,
   resolution = c("y", "m", "w", "d", "h"),
+  datasets = c("ERA5", "FLUXMET"),
   site_ids = "all"
 ) {
+  datasets <- match.arg(datasets, several.ok = TRUE)
   resolution <- match.arg(resolution)
   resolution <- paste0(toupper(resolution), toupper(resolution))
 
   files_df <- manifest %>%
-    dplyr::filter(!.data$dataset %in% c("BIF", "BIFVARINFO")) %>%
+    dplyr::filter(.data$dataset %in% datasets) %>%
     dplyr::filter(.data$time_resolution == resolution)
 
   if (length(site_ids) > 1 & !any(site_ids == "all")) {
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 
-  #TODO error if there are no files to read
+  if (nrow(files_df) == 0) {
+    cli::cli_abort(
+      "No files to read. Check the {.var manifest} or choose different values for {.arg resolution} and {.arg datasets}."
+    )
+  }
 
   data_raw <- purrr::pmap(
     files_df %>% dplyr::select(.data$path, .data$site_id, .data$dataset),
@@ -59,7 +67,7 @@ flux_read <- function(
     resolution,
     YY = "TIMESTAMP",
     MM = "TIMESTAMP",
-    WW = "TIMESTAMP",
+    WW = c("TIMESTAMP_START", "TIMESTAMP_END"),
     DD = "TIMESTAMP",
     HH = c("TIMESTAMP_START", "TIMESTAMP_END")
   )

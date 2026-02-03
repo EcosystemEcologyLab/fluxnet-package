@@ -4,7 +4,12 @@
 \alias{flux_read}
 \title{Read in FLUXNET data}
 \usage{
-flux_read(manifest, resolution = c("y", "m", "w", "d", "h"), site_ids = "all")
+flux_read(
+  manifest,
+  resolution = c("y", "m", "w", "d", "h"),
+  datasets = c("ERA5", "FLUXMET"),
+  site_ids = "all"
+)
 }
 \arguments{
 \item{manifest}{A manifest data frame produced by \code{\link[=flux_discover_files]{flux_discover_files()}}.}
@@ -12,6 +17,9 @@ flux_read(manifest, resolution = c("y", "m", "w", "d", "h"), site_ids = "all")
 \item{resolution}{The time resolution to read in.  Must be one of \code{"y"}
 (annual), \code{"m"} (monthly), \code{"w"} (weekly), \code{"d"} (daily), or \code{"h"}
 (hourly).}
+
+\item{datasets}{Character vector of one or both of \code{"FLUXMET"} or \code{"ERA5"}.
+Defaults to both.}
 
 \item{site_ids}{A vector of site IDs to filter the manifest by.  If \code{"all"}
 (the default), the manifest isn't filtered by site ID.}
