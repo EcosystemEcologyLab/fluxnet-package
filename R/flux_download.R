@@ -96,7 +96,7 @@ flux_download <- function(
     useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
   )
 
-  failed <- resp |> dplyr::filter(success == FALSE)
+  failed <- resp |> dplyr::filter(.data$success == FALSE)
   if (nrow(failed) > 0) {
     cli::cli_inform(
       "Retrying {nrow(failed)} failed downloads{s?}."
@@ -108,7 +108,7 @@ flux_download <- function(
       resume = TRUE,
       useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
     )
-    resp <- dplyr::bind_rows(resp %>% dplyr::filter(success == TRUE), resp2)
+    resp <- dplyr::bind_rows(resp %>% dplyr::filter(.data$success == TRUE), resp2)
   }
 
   return(invisible(resp))
@@ -116,7 +116,7 @@ flux_download <- function(
 
 
 check_zip <- function(zip_file) {
-  test <- try(unzip(zip_file, list = TRUE), silent = TRUE)
+  test <- try(utils::unzip(zip_file, list = TRUE), silent = TRUE)
   if (inherits(test, "try-error")) {
     return(FALSE)
   } else {
