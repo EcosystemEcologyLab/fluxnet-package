@@ -1,0 +1,17 @@
+---
+title: "fluxnet"
+vignette: >
+  %\VignetteIndexEntry{fluxnet}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(fluxnet)
+```
+

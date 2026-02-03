@@ -6,3 +6,5 @@
 ^CITATION\.cff$
 ^scripts$
 ^\.vscode$
+^vignettes/\.quarto$
+^vignettes/*_files$
