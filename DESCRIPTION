@@ -12,7 +12,7 @@ Authors@R: c(
 Description: Utility functions to help download, read in, and work with
     data from FLUXNET.
 License: MIT + file LICENSE
-URL: https://github.com/EcosystemEcologyLab/fluxnet-package
+URL: https://github.com/EcosystemEcologyLab/fluxnet-package, https://ecosystemecologylab.github.io/fluxnet-package/
 BugReports: https://github.com/EcosystemEcologyLab/fluxnet-package/issues
 Imports: 
     cli,
