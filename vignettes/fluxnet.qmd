@@ -1,0 +1,128 @@
+---
+title: "fluxnet"
+vignette: >
+  %\VignetteIndexEntry{fluxnet}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(fluxnet)
+library(dplyr)
+```
+
+## Discovering what is available for download
+
+`flux_listall()` is an R wrapper around a command line program, `fluxnet-shuttle`, written in python.  The first time you run `flux_listall()`, a python virtual environment will be created and `fluxnet-shuttle` will be installed into it.  If you don't have an appropriate version of python installed, you may be prompted to install it with some tips on how.
+
+```{r}
+#| echo: false
+list <- flux_listall(cache_dir = "inst/listall", cache_age = Inf)
+```
+```{r}
+#| eval: false
+list <- flux_listall()
+```
+
+
+By default, the results of `flux_listall()` are saved in a user cache, so when you run it again it'll pull the results from there unless they are older than `cach_age`.  To ignore the cache, use `use_cache = FALSE`.  To *invalidate* the cache (and replace it with an updated one), use `cache_age = -Inf`.
+
+```{r}
+#| eval: false
+# Don't use cached results:
+list <- flux_listall(use_cache = FALSE)
+
+# Invalidate and replace cached results:
+list <- flux_listall(cache_age = -Inf)
+```
+
+
+The list returned by `flux_listall()` contains metadata on the available sites including, importantly, citations for site-level data attribution which is required by FLUXNET.
+
+```{r}
+colnames(list)
+list[,c("site_id", "product_citation")]
+```
+
+## Downloading data
+
+There are a few paths to downloading FLUXNET data.  If you just want to download everything available, simply run `flux_download()`.  You can download just specific sites with the `site_ids` argument, or you can filter the results of `flux_listall()` and pass those in.
+
+
+```{r}
+#| eval: false
+
+# Download everything available.
+flux_download()
+
+# Download just certain sites
+flux_download(site_ids = c("AR-CCg", "AR-TF1", "BR-CST"))
+
+# Filter list and download
+list_wet <- list[list$igbp == "WET",]
+flux_download(file_list_df = list_wet)
+```
+
+
+## Extracting data from .zip files
+
+`flux_extract()` allows you to unzip only desired files from all or some of the downloaded site .zip files.
+
+```{r}
+#| eval: false
+# Extract everything (not recommended!)
+flux_extract()
+
+# Extract just annual and monthly data
+flux_extract(resolutions = c("y", "m"))
+
+# Extract hourly data for just certain sites
+flux_extract(site_ids = c("AR-CCg", "AR-TF1"), resolutions = "h")
+
+# Don't extract BIF and BIFVARINFO CSVs
+flux_extract(extract_varinfo = FALSE)
+```
+
+## Discovering what data you have extracted
+
+`flux_discover_files()` is used to create a "manifest" of the data available to read in.
+You *must* create this manifest (and optionally filter it) to pass into `flux_read()`.
+
+```{r}
+#| eval: false
+manifest <- flux_discover_files()
+manifest
+```
+
+## Reading in data
+
+You can read in data by passing a manifest to `flux_read()`.
+You can read in data for just select sites with the `site_ids` argument, but for more complex filtering you can simply subset the manifest object first.
+
+```{r}
+#| eval: false
+# Read all available annual data
+annual <- flux_read(manifest, resolution = "y")
+
+# Read in hourly data from specific sites
+hourly <- flux_read(
+  manifest,
+  resolution = "h",
+  site_ids = c("AR-CCg", "AR-TF1")
+)
+
+# Read in only ERA5 data
+annual_era5 <- flux_read(manifest, resolution = "y", datasets = "ERA5")
+
+# Filter manifest to just sites with "WET" for IGBP
+n_wet_manifest <- 
+  left_join(manifest, list, by = join_by(site_id)) %>%
+  filter(igbp == "WET", location_lat > 0)
+
+n_wet_monthly <- flux_read(n_wet_manifest, resolution = "m")
+```
