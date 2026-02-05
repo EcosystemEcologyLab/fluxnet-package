@@ -7,7 +7,7 @@ utility's `listall` command, which downloads a data frame of available
 `rappdirs::user_cache_dir("fluxnet")`. If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than `cache_age`, it
 will be read in instead of downloading a new snapshot (unless
-`cache = FALSE`).
+`use_cache = FALSE`).
 
 ## Usage
 

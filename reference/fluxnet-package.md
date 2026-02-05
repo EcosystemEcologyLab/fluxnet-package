@@ -9,6 +9,8 @@ Useful links:
 
 - <https://github.com/EcosystemEcologyLab/fluxnet-package>
 
+- <https://ecosystemecologylab.github.io/fluxnet-package/>
+
 - Report bugs at
   <https://github.com/EcosystemEcologyLab/fluxnet-package/issues>
 

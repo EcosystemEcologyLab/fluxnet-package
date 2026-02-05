@@ -31,7 +31,7 @@ flux_download(
   but potentially filtered to exlude some rows. This provides an
   alternative way of downloading only specific sites. See the examples
   for a possible use case. If `file_list_df` is not `NULL`, `cache_dir`,
-  `cache`, and `cache_age` will be ingored but `site_ids` other than
+  `use_cache`, and `cache_age` will be ingored but `site_ids` other than
   `"all"` will still be used.
 
 - site_ids:
