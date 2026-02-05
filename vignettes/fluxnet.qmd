@@ -18,17 +18,19 @@ library(dplyr)
 
 ## Discovering what is available for download
 
-`flux_listall()` is an R wrapper around a command line program, `fluxnet-shuttle`, written in python.  The first time you run `flux_listall()`, a python virtual environment will be created and `fluxnet-shuttle` will be installed into it.  If you don't have an appropriate version of python installed, you may be prompted to install it with some tips on how.
+`flux_listall()` is an R wrapper around a command line program, [`fluxnet-shuttle`](https://github.com/fluxnet/shuttle), which requires Python.
+The first time you run `flux_listall()`, a Python virtual environment will be created and `fluxnet-shuttle` will be installed into it.
+If you don't have an appropriate version of Python installed, you may be prompted with tips on how to install it.
 
-```{r}
-#| echo: false
-list <- flux_listall(cache_dir = "inst/listall", cache_age = Inf)
-```
 ```{r}
 #| eval: false
 list <- flux_listall()
 ```
 
+```{r}
+#| echo: false
+list <- flux_listall(cache_dir = "inst/listall", cache_age = Inf)
+```
 
 By default, the results of `flux_listall()` are saved in a user cache, so when you run it again it'll pull the results from there unless they are older than `cach_age`.  To ignore the cache, use `use_cache = FALSE`.  To *invalidate* the cache (and replace it with an updated one), use `cache_age = -Inf`.
 
@@ -96,7 +98,6 @@ You *must* create this manifest (and optionally filter it) to pass into `flux_re
 ```{r}
 #| eval: false
 manifest <- flux_discover_files()
-manifest
 ```
 
 ## Reading in data
