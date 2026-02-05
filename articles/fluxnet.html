@@ -78,7 +78,11 @@
 </div>
 <section class="level2"><h2 id="discovering-what-is-available-for-download">Discovering what is available for download<a class="anchor" aria-label="anchor" href="#discovering-what-is-available-for-download"></a>
 </h2>
-<p><code><a href="../reference/flux_listall.html">flux_listall()</a></code> is an R wrapper around a command line program, <code>fluxnet-shuttle</code>, written in python. The first time you run <code><a href="../reference/flux_listall.html">flux_listall()</a></code>, a python virtual environment will be created and <code>fluxnet-shuttle</code> will be installed into it. If you don’t have an appropriate version of python installed, you may be prompted to install it with some tips on how.</p>
+<p><code><a href="../reference/flux_listall.html">flux_listall()</a></code> is an R wrapper around a command line program, <a href="https://github.com/fluxnet/shuttle" class="external-link"><code>fluxnet-shuttle</code></a>, which requires Python. The first time you run <code><a href="../reference/flux_listall.html">flux_listall()</a></code>, a Python virtual environment will be created and <code>fluxnet-shuttle</code> will be installed into it. If you don’t have an appropriate version of Python installed, you may be prompted with tips on how to install it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_listall.html">flux_listall</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; Using Python: /usr/bin/python3.12</span></span>
 <span><span class="co">#&gt; Creating virtual environment 'fluxnet' ...</span></span>
@@ -90,10 +94,6 @@
 <span><span class="co">#&gt; + /home/runner/.virtualenvs/fluxnet/bin/python -m pip install --upgrade --no-user 'git+https://github.com/fluxnet/shuttle.git'</span></span>
 <span><span class="co">#&gt; Virtual environment 'fluxnet' successfully created.</span></span>
 <span><span class="co">#&gt; File list is expired, downloading the latest version</span></span></code></pre>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_listall.html">flux_listall</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>By default, the results of <code><a href="../reference/flux_listall.html">flux_listall()</a></code> are saved in a user cache, so when you run it again it’ll pull the results from there unless they are older than <code>cach_age</code>. To ignore the cache, use <code>use_cache = FALSE</code>. To <em>invalidate</em> the cache (and replace it with an updated one), use <code>cache_age = -Inf</code>.</p>
 <div class="cell">
@@ -115,7 +115,7 @@
 <span><span class="co">#&gt; [13] "download_link"          "fluxnet_product_name"   "product_citation"      </span></span>
 <span><span class="co">#&gt; [16] "product_id"             "oneflux_code_version"   "product_source_network"</span></span>
 <span><span class="va">list</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"site_id"</span>, <span class="st">"product_citation"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; # A tibble: 195 × 2</span></span>
+<span><span class="co">#&gt; # A tibble: 198 × 2</span></span>
 <span><span class="co">#&gt;    site_id product_citation                                                     </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                                </span></span>
 <span><span class="co">#&gt;  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares gr…</span></span>
@@ -128,7 +128,7 @@
 <span><span class="co">#&gt;  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver…</span></span>
 <span><span class="co">#&gt;  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delt…</span></span>
 <span><span class="co">#&gt; 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver.…</span></span>
-<span><span class="co">#&gt; # ℹ 185 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 188 more rows</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h2 id="downloading-data">Downloading data<a class="anchor" aria-label="anchor" href="#downloading-data"></a>
 </h2>
@@ -167,8 +167,7 @@
 <p><code><a href="../reference/flux_discover_files.html">flux_discover_files()</a></code> is used to create a “manifest” of the data available to read in. You <em>must</em> create this manifest (and optionally filter it) to pass into <code><a href="../reference/flux_read.html">flux_read()</a></code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">manifest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_discover_files.html">flux_discover_files</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">manifest</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">manifest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_discover_files.html">flux_discover_files</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h2 id="reading-in-data">Reading in data<a class="anchor" aria-label="anchor" href="#reading-in-data"></a>
 </h2>

@@ -16,12 +16,17 @@ library(dplyr)
 ## Discovering what is available for download
 
 [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
-is an R wrapper around a command line program, `fluxnet-shuttle`,
-written in python. The first time you run
+is an R wrapper around a command line program,
+[`fluxnet-shuttle`](https://github.com/fluxnet/shuttle), which requires
+Python. The first time you run
 [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md),
-a python virtual environment will be created and `fluxnet-shuttle` will
-be installed into it. If you don’t have an appropriate version of python
-installed, you may be prompted to install it with some tips on how.
+a Python virtual environment will be created and `fluxnet-shuttle` will
+be installed into it. If you don’t have an appropriate version of Python
+installed, you may be prompted with tips on how to install it.
+
+``` r
+list <- flux_listall()
+```
 
     #> Using Python: /usr/bin/python3.12
     #> Creating virtual environment 'fluxnet' ...
@@ -33,10 +38,6 @@ installed, you may be prompted to install it with some tips on how.
     #> + /home/runner/.virtualenvs/fluxnet/bin/python -m pip install --upgrade --no-user 'git+https://github.com/fluxnet/shuttle.git'
     #> Virtual environment 'fluxnet' successfully created.
     #> File list is expired, downloading the latest version
-
-``` r
-list <- flux_listall()
-```
 
 By default, the results of
 [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
@@ -67,7 +68,7 @@ colnames(list)
 #> [13] "download_link"          "fluxnet_product_name"   "product_citation"      
 #> [16] "product_id"             "oneflux_code_version"   "product_source_network"
 list[,c("site_id", "product_citation")]
-#> # A tibble: 195 × 2
+#> # A tibble: 198 × 2
 #>    site_id product_citation                                                     
 #>    <chr>   <chr>                                                                
 #>  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares gr…
@@ -80,7 +81,7 @@ list[,c("site_id", "product_citation")]
 #>  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver…
 #>  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delt…
 #> 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver.…
-#> # ℹ 185 more rows
+#> # ℹ 188 more rows
 ```
 
 ## Downloading data
@@ -134,7 +135,6 @@ is used to create a “manifest” of the data available to read in. You
 
 ``` r
 manifest <- flux_discover_files()
-manifest
 ```
 
 ## Reading in data
