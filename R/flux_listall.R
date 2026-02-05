@@ -6,7 +6,8 @@
 #' default, the downloaded CSV is stored in
 #' `rappdirs::user_cache_dir("fluxnet")`.  If there is allready a FLUXNET
 #' shanpshot CSV file downloaded and it is more recent than `cache_age`, it will
-#' be read in instead of downloading a new snapshot (unless `cache = FALSE`).
+#' be read in instead of downloading a new snapshot (unless `use_cache =
+#' FALSE`).
 #'
 #' @param cache_dir The directory to store the list of available FLUXNET data
 #'   in.

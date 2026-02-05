@@ -39,7 +39,7 @@ This provides a wrapper around the
 default, the downloaded CSV is stored in
 \code{rappdirs::user_cache_dir("fluxnet")}.  If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than \code{cache_age}, it will
-be read in instead of downloading a new snapshot (unless \code{cache = FALSE}).
+be read in instead of downloading a new snapshot (unless \code{use_cache = FALSE}).
 }
 \examples{
 \dontrun{

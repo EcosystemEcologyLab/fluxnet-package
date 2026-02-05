@@ -12,6 +12,7 @@ Utility functions to help download, read in, and work with data from FLUXNET.
 Useful links:
 \itemize{
   \item \url{https://github.com/EcosystemEcologyLab/fluxnet-package}
+  \item \url{https://ecosystemecologylab.github.io/fluxnet-package/}
   \item Report bugs at \url{https://github.com/EcosystemEcologyLab/fluxnet-package/issues}
 }
 
