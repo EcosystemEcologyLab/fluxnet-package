@@ -7,7 +7,7 @@
 flux_listall(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
   use_cache = TRUE,
-  cache_age = as.difftime(30, units = "days"),
+  cache_age = as.difftime(1, units = "days"),
   log_file = NULL,
   echo_cmd = FALSE
 )
