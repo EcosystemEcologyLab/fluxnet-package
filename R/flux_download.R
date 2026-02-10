@@ -96,10 +96,11 @@ flux_download <- function(
     useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
   )
 
-  failed <- resp |> dplyr::filter(.data$success == FALSE)
+  # Failed or interrupted
+  failed <- resp |> dplyr::filter(.data$success == FALSE | is.na(.data$success))
   if (nrow(failed) > 0) {
     cli::cli_inform(
-      "Retrying {nrow(failed)} failed downloads{s?}."
+      "Retrying {nrow(failed)} failed downloads{?s}."
     )
     # Retry failed downloads once
     resp2 <- curl::multi_download(
@@ -108,9 +109,31 @@ flux_download <- function(
       resume = TRUE,
       useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
     )
-    resp <- dplyr::bind_rows(resp %>% dplyr::filter(.data$success == TRUE), resp2)
+    resp <- dplyr::bind_rows(
+      resp %>% dplyr::filter(.data$success == TRUE),
+      resp2
+    )
   }
+  # Failed or interrupted
+  failed2 <- resp %>%
+    dplyr::filter(.data$success == FALSE | is.na(.data$success))
+  # If there are still failures, print a warning
+  if (nrow(failed2) > 0) {
+    failed_sites <- dplyr::left_join(
+      failed2 %>%
+        dplyr::mutate(fluxnet_product_name = fs::path_file(.data$destfile)),
+      file_list_df,
+      by = "fluxnet_product_name"
+    ) %>%
+      dplyr::pull("site_id")
+    failed_sites_formatted <- glue::glue('"{failed_sites}"') %>%
+      glue::glue_collapse(", ")
 
+    cli::cli_warn(c(
+      "Incomplete downloads for {length(failed_sites)} site{?s}",
+      "i" = "Run {.run flux_download(site_ids = c({failed_sites_formatted}))} to try again."
+    ))
+  }
   return(invisible(resp))
 }
 
