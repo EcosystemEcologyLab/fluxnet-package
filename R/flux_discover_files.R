@@ -31,12 +31,12 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
       "filename",
       delim = "_",
       names = c(
-        "network",
+        "product_source_network",
         "site_id",
         "FLUXNET",
         "dataset",
         "year_range",
-        "oneflux_version",
+        "oneflux_code_version",
         "release_version"
       )
     ) %>%
@@ -44,15 +44,15 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
     tidyr::separate_wider_delim(
       "year_range",
       delim = "-",
-      names = c("start_year", "end_year")
+      names = c("first_year", "last_year")
     ) %>%
     dplyr::distinct(
-      .data$network,
+      .data$product_source_network,
       .data$site_id,
       .data$dataset,
-      .data$start_year,
-      .data$end_year,
-      .data$oneflux_version,
+      .data$first_year,
+      .data$last_year,
+      .data$oneflux_code_version,
       .data$release_version,
       .keep_all = TRUE
     ) %>%
@@ -67,13 +67,13 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
       "filename",
       delim = "_",
       names = c(
-        "network",
+        "product_source_network",
         "site_id",
         "FLUXNET",
         "dataset",
         "time_resolution",
         "year_range",
-        "oneflux_version",
+        "oneflux_code_version",
         "release_version"
       )
     ) %>%
@@ -81,16 +81,16 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
     tidyr::separate_wider_delim(
       "year_range",
       delim = "-",
-      names = c("start_year", "end_year")
+      names = c("first_year", "last_year")
     ) %>%
     dplyr::distinct(
-      .data$network,
+      .data$product_source_network,
       .data$site_id,
       .data$dataset,
       .data$time_resolution,
-      .data$start_year,
-      .data$end_year,
-      .data$oneflux_version,
+      .data$first_year,
+      .data$last_year,
+      .data$oneflux_code_version,
       .data$release_version,
       .keep_all = TRUE
     ) %>%
@@ -100,7 +100,7 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
       .data$site_id,
       .data$dataset,
       .data$time_resolution,
-      .data$start_year
+      .data$first_year
     )
 
   summary <- manifest %>%
@@ -109,7 +109,7 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
     dplyr::summarize(
       unique_sites = dplyr::n_distinct(.data$site_id),
       total_site_years = sum(
-        .data$end_year - .data$start_year + 1,
+        .data$last_year - .data$first_year + 1,
         na.rm = TRUE
       ),
       n_files = dplyr::n(),
