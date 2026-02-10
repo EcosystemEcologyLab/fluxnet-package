@@ -131,7 +131,7 @@ flux_download <- function(
 
     cli::cli_warn(c(
       "Incomplete downloads for {length(failed_sites)} site{?s}",
-      "i" = "Run {.run flux_download(site_ids = c({failed_sites_formatted}))} to try again."
+      "i" = "Run {.run fluxnet::flux_download(site_ids = c({failed_sites_formatted}))} to try again."
     ))
   }
   return(invisible(resp))
