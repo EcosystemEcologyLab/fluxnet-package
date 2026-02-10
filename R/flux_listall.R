@@ -24,10 +24,10 @@
 #' @examples
 #' \dontrun{
 #' fluxnet_files <- flux_listall()
-#' 
+#'
 #' # Ignore cache
 #' fluxnet_files <- flux_listall(use_cache = FALSE)
-#' 
+#'
 #' # Invalidate cache and update it
 #' fluxnet_files <- flux_listall(cache_age = -Inf)
 #' }
@@ -35,7 +35,7 @@
 flux_listall <- function(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
   use_cache = TRUE,
-  cache_age = as.difftime(30, units = "days"),
+  cache_age = as.difftime(1, units = "days"),
   log_file = NULL,
   echo_cmd = FALSE
 ) {
