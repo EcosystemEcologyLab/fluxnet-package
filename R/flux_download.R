@@ -126,8 +126,8 @@ flux_download <- function(
       by = "fluxnet_product_name"
     ) %>%
       dplyr::pull("site_id")
-    failed_sites_formatted <- glue::glue('"{failed_sites}"') %>%
-      glue::glue_collapse(", ")
+    failed_sites_formatted <- paste0('"', failed_sites, '"') %>%
+      paste0(collapse = ", ")
 
     cli::cli_warn(c(
       "Incomplete downloads for {length(failed_sites)} site{?s}",
