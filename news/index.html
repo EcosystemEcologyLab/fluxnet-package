@@ -36,6 +36,9 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="fluxnet-development-version">fluxnet (development version)<a class="anchor" aria-label="anchor" href="#fluxnet-development-version"></a></h2>
 <ul><li>
+<code><a href="../reference/flux_download.html">flux_download()</a></code> prints a warning when downloads fail.</li>
+<li>Changed default cache age for <code><a href="../reference/flux_listall.html">flux_listall()</a></code> to 1 day.</li>
+<li>
 <code><a href="../reference/flux_download.html">flux_download()</a></code> now retries failed downloads once and <code>overwrite = FALSE</code> no longer skips downloading corrupted or partial downloads.</li>
 <li>Added <code><a href="../reference/flux_read.html">flux_read()</a></code> for reading in FLUXNET data in a manifest.</li>
 <li>Added <code><a href="../reference/flux_discover_files.html">flux_discover_files()</a></code> for creating a file manifest.</li>
