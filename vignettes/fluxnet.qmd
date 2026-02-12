@@ -100,6 +100,14 @@ You *must* create this manifest (and optionally filter it) to pass into `flux_re
 manifest <- flux_discover_files()
 ```
 
+You can visualize the sites you have data for with `flux_map_sites()`.
+
+```{r}
+#| eval: false
+flux_map_sites(manifest)
+```
+
+
 ## Reading in data
 
 You can read in data by passing a manifest to `flux_read()`.
