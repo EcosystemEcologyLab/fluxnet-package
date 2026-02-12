@@ -41,6 +41,13 @@ default, the downloaded CSV is stored in
 shanpshot CSV file downloaded and it is more recent than \code{cache_age}, it will
 be read in instead of downloading a new snapshot (unless \code{use_cache = FALSE}).
 }
+\note{
+To force the \code{fluxnet} R package to re-install the \code{fluxnet-shuttle}
+utility, remove the Pyhton virtualenv it is installed in by running
+\code{reticulate::virtualenv_remove("fluxnet")}. Then, when you run
+\code{flux_listall()} next, the virtualenv will be re-created and
+\code{fluxnet-shuttle} will be re-installed.
+}
 \examples{
 \dontrun{
 fluxnet_files <- flux_listall()

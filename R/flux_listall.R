@@ -9,6 +9,13 @@
 #' be read in instead of downloading a new snapshot (unless `use_cache =
 #' FALSE`).
 #'
+#' 
+#' @note To force the `fluxnet` R package to re-install the `fluxnet-shuttle`
+#' utility, remove the Pyhton virtualenv it is installed in by running
+#' `reticulate::virtualenv_remove("fluxnet")`. Then, when you run
+#' `flux_listall()` next, the virtualenv will be re-created and
+#' `fluxnet-shuttle` will be re-installed.
+#' 
 #' @param cache_dir The directory to store the list of available FLUXNET data
 #'   in.
 #' @param use_cache Logical; use cached list of files available to download if

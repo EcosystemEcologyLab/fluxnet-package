@@ -45,3 +45,7 @@ manifest <- flux_discover_files()
 annual <- flux_read(manifest, resolution = "y")
 ```
 
+## Updating/reinstalling fluxnet-shuttle
+
+To force the `fluxnet` R package to re-install the `fluxnet-shuttle` utility, remove the Pyhton virtualenv it is installed in with `reticulate::virtualenv_remove("fluxnet")`.
+Then, the next time you run `flux_listall()`, the virtualenv will be re-created and `fluxnet-shuttle` will be re-installed.
