@@ -4,16 +4,18 @@
 \alias{flux_discover_files}
 \title{Create a "manifest" of downloaded and unzipped FLUXNET data files}
 \usage{
-flux_discover_files(data_dir = "fluxnet/unzipped")
+flux_discover_files(data_dir = "fluxnet/unzipped", ...)
 }
 \arguments{
 \item{data_dir}{The directory to look for FLUXNET CSV files in, typically the
 same as the \code{output_dir} used for \code{\link[=flux_extract]{flux_extract()}}.}
+
+\item{...}{Arguments passed to \code{\link[=flux_listall]{flux_listall()}}.}
 }
 \value{
 Prints a summary of discovered available data and returns
 (invisibly) a dataframe with file paths and metadata extracted from file
-names.
+names and merged in from \code{\link[=flux_listall]{flux_listall()}}.
 }
 \description{
 Create a "manifest" of downloaded and unzipped FLUXNET data files
