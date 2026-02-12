@@ -17,7 +17,7 @@
 #' @param overwrite Logical; overwrite already downloaded .zip files? If `FALSE`
 #'   it will skip downloading existing files, unless they are invalid .zip files
 #'   (e.g. due to partial download or corruption).
-#' @inheritParams flux_listall
+#' @param ... Arguments passed to [flux_listall()].
 #'
 #' @returns Invisibly returns the output of [curl::multi_download()], which
 #'   contains information on download success, download time, HTTP errors, etc.
@@ -45,11 +45,7 @@ flux_download <- function(
   site_ids = "all",
   download_dir = "fluxnet",
   overwrite = FALSE,
-  use_cache = TRUE,
-  cache_dir = rappdirs::user_cache_dir("fluxnet"),
-  cache_age = as.difftime(30, units = "days"),
-  log_file = NULL,
-  echo_cmd = FALSE
+  ...
 ) {
   if (!is.null(file_list_df)) {
     if (!is.data.frame(file_list_df)) {
@@ -58,11 +54,7 @@ flux_download <- function(
       )
     }
   } else {
-    file_list_df <- flux_listall(
-      cache_dir = cache_dir,
-      use_cache = use_cache,
-      cache_age = cache_age
-    )
+    file_list_df <- flux_listall(...)
   }
   if (length(site_ids) > 1 & !any(site_ids == "all")) {
     file_list_df <- file_list_df %>% dplyr::filter(.data$site_id %in% site_ids)
