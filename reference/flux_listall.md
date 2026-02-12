@@ -52,6 +52,14 @@ flux_listall(
 
 A data frame of stations with available data and their metadata.
 
+## Note
+
+To force the `fluxnet` R package to re-install the `fluxnet-shuttle`
+utility, remove the Pyhton virtualenv it is installed in by running
+`reticulate::virtualenv_remove("fluxnet")`. Then, when you run
+`flux_listall()` next, the virtualenv will be re-created and
+`fluxnet-shuttle` will be re-installed.
+
 ## Examples
 
 ``` r
