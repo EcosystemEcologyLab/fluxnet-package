@@ -10,11 +10,7 @@ flux_download(
   site_ids = "all",
   download_dir = "fluxnet",
   overwrite = FALSE,
-  use_cache = TRUE,
-  cache_dir = rappdirs::user_cache_dir("fluxnet"),
-  cache_age = as.difftime(30, units = "days"),
-  log_file = NULL,
-  echo_cmd = FALSE
+  ...
 )
 ```
 
@@ -49,30 +45,10 @@ flux_download(
   skip downloading existing files, unless they are invalid .zip files
   (e.g. due to partial download or corruption).
 
-- use_cache:
+- ...:
 
-  Logical; use cached list of files available to download if it exists
-  and is not older than `cache_age`?
-
-- cache_dir:
-
-  The directory to store the list of available FLUXNET data in.
-
-- cache_age:
-
-  A `difftime` object of length 1. If there are no cached snapshots more
-  recent than `cache_age`, a new one will be downloaded and stored. You
-  can force the cache to be invalidated with `cache_age = -Inf`.
-
-- log_file:
-
-  An optional file path (e.g. `"log.txt"`) to direct the
-  `fluxnet-shuttle` log to. Useful for debugging.
-
-- echo_cmd:
-
-  Set to `TRUE` to print the shell command in the console. Passed to
-  [`processx::run()`](http://processx.r-lib.org/reference/run.md).
+  Arguments passed to
+  [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md).
 
 ## Value
 

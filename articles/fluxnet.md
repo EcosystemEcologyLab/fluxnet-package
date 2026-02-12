@@ -68,7 +68,7 @@ colnames(list)
 #> [13] "download_link"          "fluxnet_product_name"   "product_citation"      
 #> [16] "product_id"             "oneflux_code_version"   "product_source_network"
 list[,c("site_id", "product_citation")]
-#> # A tibble: 226 × 2
+#> # A tibble: 238 × 2
 #>    site_id product_citation                                                     
 #>    <chr>   <chr>                                                                
 #>  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares gr…
@@ -81,7 +81,7 @@ list[,c("site_id", "product_citation")]
 #>  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver…
 #>  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delt…
 #> 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver.…
-#> # ℹ 216 more rows
+#> # ℹ 228 more rows
 ```
 
 ## Downloading data

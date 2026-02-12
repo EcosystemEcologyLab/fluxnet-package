@@ -5,7 +5,7 @@ Create a "manifest" of downloaded and unzipped FLUXNET data files
 ## Usage
 
 ``` r
-flux_discover_files(data_dir = "fluxnet/unzipped")
+flux_discover_files(data_dir = "fluxnet/unzipped", ...)
 ```
 
 ## Arguments
@@ -16,10 +16,17 @@ flux_discover_files(data_dir = "fluxnet/unzipped")
   the `output_dir` used for
   [`flux_extract()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_extract.md).
 
+- ...:
+
+  Arguments passed to
+  [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md).
+
 ## Value
 
 Prints a summary of discovered available data and returns (invisibly) a
-dataframe with file paths and metadata extracted from file names.
+dataframe with file paths and metadata extracted from file names and
+merged in from
+[`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md).
 
 ## Examples
 

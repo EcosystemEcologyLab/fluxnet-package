@@ -45,11 +45,7 @@
 <span>  site_ids <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  download_dir <span class="op">=</span> <span class="st">"fluxnet"</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cache_dir <span class="op">=</span> <span class="fu">rappdirs</span><span class="fu">::</span><span class="fu"><a href="https://rappdirs.r-lib.org/reference/user_cache_dir.html" class="external-link">user_cache_dir</a></span><span class="op">(</span><span class="st">"fluxnet"</span><span class="op">)</span>,</span>
-<span>  cache_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">as.difftime</a></span><span class="op">(</span><span class="fl">30</span>, units <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span>,</span>
-<span>  log_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  echo_cmd <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -83,30 +79,8 @@ it will skip downloading existing files, unless they are invalid .zip files
 (e.g. due to partial download or corruption).</p></dd>
 
 
-<dt id="arg-use-cache">use_cache<a class="anchor" aria-label="anchor" href="#arg-use-cache"></a></dt>
-<dd><p>Logical; use cached list of files available to download if
-it exists and is not older than <code>cache_age</code>?</p></dd>
-
-
-<dt id="arg-cache-dir">cache_dir<a class="anchor" aria-label="anchor" href="#arg-cache-dir"></a></dt>
-<dd><p>The directory to store the list of available FLUXNET data
-in.</p></dd>
-
-
-<dt id="arg-cache-age">cache_age<a class="anchor" aria-label="anchor" href="#arg-cache-age"></a></dt>
-<dd><p>A <code>difftime</code> object of length 1. If there are no cached
-snapshots more recent than <code>cache_age</code>, a new one will be downloaded and
-stored. You can force the cache to be invalidated with <code>cache_age = -Inf</code>.</p></dd>
-
-
-<dt id="arg-log-file">log_file<a class="anchor" aria-label="anchor" href="#arg-log-file"></a></dt>
-<dd><p>An optional file path (e.g. <code>"log.txt"</code>) to direct the
-<code>fluxnet-shuttle</code> log to. Useful for debugging.</p></dd>
-
-
-<dt id="arg-echo-cmd">echo_cmd<a class="anchor" aria-label="anchor" href="#arg-echo-cmd"></a></dt>
-<dd><p>Set to <code>TRUE</code> to print the shell command in the console.
-Passed to <code><a href="http://processx.r-lib.org/reference/run.html" class="external-link">processx::run()</a></code>.</p></dd>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Arguments passed to <code><a href="flux_listall.html">flux_listall()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
