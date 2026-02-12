@@ -2,9 +2,10 @@
 #'
 #' @param data_dir The directory to look for FLUXNET CSV files in, typically the
 #'   same as the `output_dir` used for [flux_extract()].
+#' @param ... Arguments passed to [flux_listall()].
 #' @returns Prints a summary of discovered available data and returns
 #'   (invisibly) a dataframe with file paths and metadata extracted from file
-#'   names.
+#'   names and merged in from [flux_listall()].
 #' @examples
 #' \dontrun{
 #' # Download data
@@ -17,7 +18,8 @@
 #' manifest <- flux_discover_files()
 #' }
 #' @export
-flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
+flux_discover_files <- function(data_dir = "fluxnet/unzipped", ...) {
+  metadata <- flux_listall(...)
   all_files <- fs::dir_ls(data_dir, glob = "*.csv", recurse = TRUE)
   bif_files <- all_files[grepl("_BIF_", all_files)]
   varinfo_files <- all_files[grepl("_BIFVARINFO_", all_files)]
@@ -133,5 +135,14 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped") {
   ) %>%
     cli::cli_inform()
 
-  invisible(manifest)
+  manifest_merged <- dplyr::left_join(
+    manifest,
+    metadata %>%
+      dplyr::select(
+        -dplyr::all_of(c("first_year", "last_year", "oneflux_code_version"))
+      ),
+    by = c("product_source_network", "site_id")
+  )
+
+  invisible(manifest_merged)
 }
