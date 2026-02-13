@@ -19,6 +19,7 @@ Imports:
     curl,
     dplyr,
     fs,
+    ggplot2,
     lubridate,
     magrittr,
     processx,

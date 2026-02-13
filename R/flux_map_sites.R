@@ -48,5 +48,5 @@ flux_map_sites <- function(
         color = .data[[color_var]]
       )
     ) +
-    labs(x = "", y = "")
+    ggplot2::labs(x = "", y = "")
 }
