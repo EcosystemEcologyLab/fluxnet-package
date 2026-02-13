@@ -33,7 +33,7 @@ flux_map_sites <- function(
   p_world <- ggplot2::ggplot() +
     ggplot2::geom_polygon(
       data = ggplot2::map_data("world"),
-      ggplot2::aes(x = long, y = lat, group = group),
+      ggplot2::aes(x = .data$long, y = .data$lat, group = .data$group),
       fill = "white",
       color = "grey50"
     ) +
@@ -43,8 +43,8 @@ flux_map_sites <- function(
     ggplot2::geom_point(
       data = manifest_summary,
       ggplot2::aes(
-        x = location_long,
-        y = location_lat,
+        x = .data$location_long,
+        y = .data$location_lat,
         color = .data[[color_var]]
       )
     ) +
