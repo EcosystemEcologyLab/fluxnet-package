@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     lubridate,
     magrittr,
+    maps,
     processx,
     purrr,
     rappdirs,
