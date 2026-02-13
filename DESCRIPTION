@@ -19,7 +19,7 @@ Imports:
     curl,
     dplyr,
     fs,
-    ggplot2,
+    ggplot2 (>= 4.0),
     lubridate,
     magrittr,
     maps,
