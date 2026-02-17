@@ -71,6 +71,8 @@ re-installed.
   : Extract FLUXNET data from downloaded zip files
 - [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
   : List available FLUXNET zip files for download
+- [`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md)
+  : Map sites with downloaded data
 - [`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md)
   : Read in FLUXNET data
 

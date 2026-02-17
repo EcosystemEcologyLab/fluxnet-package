@@ -2,6 +2,8 @@
 
 ## fluxnet (development version)
 
+- Added
+  [`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md)
 - [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
   prints a warning when downloads fail.
 - Changed default cache age for

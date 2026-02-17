@@ -68,7 +68,7 @@ colnames(list)
 #> [13] "download_link"          "fluxnet_product_name"   "product_citation"      
 #> [16] "product_id"             "oneflux_code_version"   "product_source_network"
 list[,c("site_id", "product_citation")]
-#> # A tibble: 238 × 2
+#> # A tibble: 241 × 2
 #>    site_id product_citation                                                     
 #>    <chr>   <chr>                                                                
 #>  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares gr…
@@ -81,7 +81,7 @@ list[,c("site_id", "product_citation")]
 #>  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver…
 #>  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delt…
 #> 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver.…
-#> # ℹ 228 more rows
+#> # ℹ 231 more rows
 ```
 
 ## Downloading data
@@ -135,6 +135,13 @@ is used to create a “manifest” of the data available to read in. You
 
 ``` r
 manifest <- flux_discover_files()
+```
+
+You can visualize the sites you have data for with
+[`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md).
+
+``` r
+flux_map_sites(manifest)
 ```
 
 ## Reading in data
