@@ -1,5 +1,6 @@
 # fluxnet (development version)
 
+* Added `flux_map_sites()`
 * `flux_download()` prints a warning when downloads fail.
 * Changed default cache age for `flux_listall()` to 1 day.
 * `flux_download()` now retries failed downloads once and `overwrite = FALSE` no longer skips downloading corrupted or partial downloads.

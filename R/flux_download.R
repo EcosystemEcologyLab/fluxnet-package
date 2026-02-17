@@ -89,7 +89,8 @@ flux_download <- function(
   )
 
   # Failed or interrupted
-  failed <- resp |> dplyr::filter(.data$success == FALSE | is.na(.data$success))
+  failed <- resp %>%
+    dplyr::filter(.data$success == FALSE | is.na(.data$success))
   if (nrow(failed) > 0) {
     cli::cli_inform(
       "Retrying {nrow(failed)} failed downloads{?s}."
