@@ -85,27 +85,52 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped", ...) {
       delim = "-",
       names = c("first_year", "last_year")
     ) %>%
-    dplyr::distinct(
-      .data$product_source_network,
-      .data$site_id,
-      .data$dataset,
-      .data$time_resolution,
-      .data$first_year,
-      .data$last_year,
-      .data$oneflux_code_version,
-      .data$release_version,
-      .keep_all = TRUE
-    ) %>%
     dplyr::mutate(dplyr::across(dplyr::ends_with("year"), as.integer)) %>%
     dplyr::bind_rows(bif_manifest) %>%
+    dplyr::mutate(
+      download_time = fs::file_info(.data$path)$birth_time
+    ) %>%
     dplyr::arrange(
       .data$site_id,
       .data$dataset,
       .data$time_resolution,
-      .data$first_year
+      .data$first_year,
+      dplyr::desc(.data$oneflux_code_version),
+      dplyr::desc(.data$release_version),
+      dplyr::desc(.data$download_time)
     )
 
-  summary <- manifest %>%
+  # Deduplicate and warn if there are multiple files for the same site, dataset,
+  # and time resolution
+  manifest_deduplicated <- manifest %>%
+    dplyr::distinct(
+      .data$site_id,
+      .data$dataset,
+      .data$time_resolution,
+      .keep_all = TRUE
+    )
+
+  if (nrow(manifest) != nrow(manifest_deduplicated)) {
+    removed <- dplyr::anti_join(
+      manifest,
+      manifest_deduplicated,
+      by = c(
+        "path",
+        "product_source_network",
+        "site_id",
+        "dataset",
+        "time_resolution",
+        "first_year",
+        "last_year",
+        "oneflux_code_version",
+        "release_version",
+        "download_time"
+      )
+    )
+    cli::cli_warn("{nrow(removed)} duplicate file{?s} removed: {removed$path}")
+  }
+
+  summary <- manifest_deduplicated %>%
     dplyr::filter(!.data$dataset %in% c("BIF", "BIFVARINFO")) %>%
     dplyr::group_by(.data$time_resolution, .data$dataset) %>%
     dplyr::summarize(
@@ -136,7 +161,7 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped", ...) {
     cli::cli_inform()
 
   manifest_merged <- dplyr::left_join(
-    manifest,
+    manifest_deduplicated,
     metadata %>%
       dplyr::select(
         -dplyr::all_of(c("first_year", "last_year", "oneflux_code_version"))
