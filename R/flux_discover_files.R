@@ -48,16 +48,6 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped", ...) {
       delim = "-",
       names = c("first_year", "last_year")
     ) %>%
-    dplyr::distinct(
-      .data$product_source_network,
-      .data$site_id,
-      .data$dataset,
-      .data$first_year,
-      .data$last_year,
-      .data$oneflux_code_version,
-      .data$release_version,
-      .keep_all = TRUE
-    ) %>%
     dplyr::mutate(dplyr::across(dplyr::ends_with("year"), as.integer))
 
   manifest <-
