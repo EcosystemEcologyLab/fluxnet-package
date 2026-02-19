@@ -24,22 +24,27 @@ test_that("deduplication works", {
   flux_extract(
     zip_dir = test_path("testdata"),
     resolutions = c("y", "m"),
-    output_dir = tempdir,
+    output_dir = fs::path(tempdir, "copy1"),
     extract_varinfo = TRUE,
     extract_txt = FALSE
   )
-  # Copy into nested folder
-  Sys.sleep(1)
-  fs::dir_copy(
-    path = fs::dir_ls(tempdir),
-    new_path = fs::path(tempdir, "nested_dir", fs::dir_ls(tempdir))
+  flux_extract(
+    zip_dir = test_path("testdata"),
+    resolutions = c("y", "m"),
+    output_dir = fs::path(tempdir, "copy2"),
+    extract_varinfo = TRUE,
+    extract_txt = FALSE
   )
   expect_warning(
     manifest <- flux_discover_files(data_dir = tempdir),
     "7 duplicate files removed:"
   )
   expect_equal(
-    nrow(manifest %>% dplyr::filter(stringr::str_detect(path, "nested"))),
+    nrow(manifest %>% dplyr::filter(stringr::str_detect(path, "copy2"))),
     7
   )
+    expect_equal(
+      nrow(manifest %>% dplyr::filter(stringr::str_detect(path, "copy1"))),
+      0
+    )
 })
