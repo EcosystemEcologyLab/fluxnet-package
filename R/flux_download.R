@@ -56,7 +56,8 @@ flux_download <- function(
   } else {
     file_list_df <- flux_listall(...)
   }
-  if (length(site_ids) > 1 & !any(site_ids == "all")) {
+  #TODO: warn if user supplies site ids AND "all"
+  if (!any(site_ids == "all")) {
     file_list_df <- file_list_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 
@@ -77,9 +78,10 @@ flux_download <- function(
   }
   # check that there are rows left after filtering
   if (nrow(file_list_df) == 0) {
-    cli::cli_abort(
+    cli::cli_warn(
       "No files to download! Check that {.arg site_ids} are correct or that files aren't already downloaded if {.arg overwrite = FALSE}."
     )
+    return(NULL)
   }
   resp <- curl::multi_download(
     urls = file_list_df$download_link,
@@ -94,7 +96,7 @@ flux_download <- function(
     dplyr::filter(.data$success == FALSE | is.na(.data$success))
   if (nrow(failed) > 0) {
     cli::cli_inform(
-      "Retrying {nrow(failed)} failed downloads{?s}."
+      "Retrying {nrow(failed)} failed download{?s}."
     )
     # Retry failed downloads once
     resp2 <- curl::multi_download(
