@@ -85,6 +85,7 @@ flux_download <- function(
     urls = file_list_df$download_link,
     destfiles = fs::path(download_dir, file_list_df$fluxnet_product_name),
     resume = TRUE,
+    multiplex = FALSE,
     useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
   )
 
@@ -100,6 +101,7 @@ flux_download <- function(
       urls = failed$url,
       destfiles = failed$destfile,
       resume = TRUE,
+      multiplex = FALSE,
       useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
     )
     resp <- dplyr::bind_rows(
