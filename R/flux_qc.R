@@ -82,11 +82,11 @@ flux_qc <- function(
   data2$pct_gapfilled <- pmax(0, pmin(1, data2$pct_gapfilled)) # clamp just in case
 
   data3 <- data2 %>%
-    mutate(
+    dplyr::mutate(
       is_bad = dplyr::case_when(
-        if_missing == "flag" & is.na(pct_gapfilled) ~ TRUE,
-        if_missing == "ignore" & is.na(pct_gapfilled) ~ NA,
-        .default = pct_gapfilled > max_gapfilled
+        if_missing == "flag" & is.na(.data$pct_gapfilled) ~ TRUE,
+        if_missing == "ignore" & is.na(.data$pct_gapfilled) ~ NA,
+        .default = .data$pct_gapfilled > max_gapfilled
       )
     )
   data3
