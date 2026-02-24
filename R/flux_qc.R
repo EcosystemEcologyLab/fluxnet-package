@@ -46,9 +46,11 @@ flux_qc <- function(
   # TODO allow to use different thresholds for different qc_vars
   # TODO option to switch between ANY and ALL variables meeting the threshsolds
   # TODO input validation
-  # - max_gapfilled between 0, 1
   # - length of qc_vars matches length of max_gapfilled if it is not length 1
 
+  if (!dplyr::between(max_gapfilled, 0, 1)) {
+    cli::cli_abort("{.arg max_gapfilled} must be between 0 and 1.")
+  }
   if_missing <- match.arg(if_missing)
   qc_cols <- paste0(qc_vars, "_QC")
   if (all(!qc_cols %in% colnames(data))) {
@@ -68,6 +70,8 @@ flux_qc <- function(
     rlang::inject(pmin(!!!data, na.rm = na.rm))
   }
 
+  # If *any* of the variables is more gap-filled than `max_gapfilled` it will be
+  # flagged as "bad"
   data2 <- data %>%
     # pct_gapfilled reflects the *most* gapfilled of the qc_vars
     dplyr::mutate(
@@ -86,4 +90,7 @@ flux_qc <- function(
       )
     )
   data3
+
+  # TODO: create an option where *all* of the variables must be more gap-filled
+  # than `max_gapfilled` for the row to be flagged as "bad".
 }
