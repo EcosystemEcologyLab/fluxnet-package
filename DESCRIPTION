@@ -17,10 +17,10 @@ URL: https://github.com/EcosystemEcologyLab/fluxnet-package,
 BugReports: https://github.com/EcosystemEcologyLab/fluxnet-package/issues
 Imports: 
     cli,
-    curl,
     dplyr,
     fs,
     ggplot2 (>= 4.0),
+    httr2 (>= 1.1.2),
     lubridate,
     magrittr,
     processx,
