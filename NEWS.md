@@ -1,5 +1,6 @@
 # fluxnet (development version)
 
+* `flux_download()` now uses `httr2` rather than `curl` for downloading files.  This fixed a bug where downloads were failing when attempting to download large numbers of sites at once. 
 * Added `flux_map_sites()`
 * `flux_download()` prints a warning when downloads fail.
 * Changed default cache age for `flux_listall()` to 1 day.
