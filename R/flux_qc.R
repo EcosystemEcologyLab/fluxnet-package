@@ -5,14 +5,24 @@
 #' @param data A data frame created by [flux_read()].
 #' @param qc_vars A character vector of column names with associated `*_QC`
 #'   columns to use for flagging.
-#' @param max_gapfilled Numeric between 0 and 1; cutoff for the `is_bad` flag to
-#'   be `TRUE`.
+#' @param max_gapfilled Numeric between 0 and 1; cutoff for the `qc_flagged` flag to
+#'   be `TRUE`.  Can be length 1 or the same length as `qc_vars` to supply a
+#'   different threshold for each variable.
+#' @param operator How to flag data when multiple `qc_vars` are supplied?  If
+#'   "any", the row will be marked as bad if *any* of the QC vars indicate
+#'   gap-filling above their `max_gapfill` threshold.  If "all" then the row
+#'   will be flagged only if *all* of the QC vars are above their `max_gapfill`.
 #' @param if_missing Set the behavior for rows with `NA` for the `*_QC`
-#'   columns.  If `"flag"`, an `NA` will get the `is_bad = TRUE` flag.  If
-#'   `"ignore"`, the `is_bad` flag will be `NA` also.
-#' @returns A tibble with the added columns `pct_gapfilled` (the maximum
-#'   proportion gapfilled of all the `qc_vars` for each row) and `is_bad` (a
-#'   flag indicating whether a row had `pct_gapfilled` > `max_gapfilled`).
+#'   columns.  If `"flag"`, an `NA` will get the `qc_flagged = TRUE` flag.  If
+#'   `"ignore"`, the `qc_flagged` flag will be `NA` also.
+#' @returns A tibble with the added columns `p_gapfilled` and `qc_flagged`. If
+#'   `operator = "any"`, `qc_flagged = TRUE` indicates that at least one of the
+#'   supplied QC variables was more gapfilled than `max_gapfilled` and
+#'   `p_gapfilled` will be the maximum proportion gapfilled across the QC vars
+#'   for each row. If `operator = "all"`, then `qc_flagged = TRUE` indicates
+#'   that *all* of the supplied QC variables were more gapfilled than the
+#'   thresholds supplies and `p_gapfilled` will be the minimum proportion
+#'   gapfilled across all QC variables for each row.
 #' @examples
 #' \dontrun{
 #'
@@ -22,16 +32,23 @@
 #' annual_flagged <- flux_qc(
 #'   annual,
 #'   qc_vars = "NEE_VUT_REF",
-#'   max_gapfilled = 0.5,
-#'   if_missing = "ignore"
+#'   max_gapfilled = 0.5
 #' )
 #'
-#' # Treat `NA`s in the `NEE_VUT_REF_QC` column as over the threshold
+#' # Use multiple variables each with a different threshold for QC
 #' annual_flagged2 <- flux_qc(
 #'   annual,
-#'   qc_vars = "NEE_VUT_REF",
-#'   max_gapfilled = 0.5,
-#'   if_missing = "flag"
+#'   qc_vars = c("NEE_VUT_REF", "TA_F"),
+#'   max_gapfilled = c(0.4, 0.6)
+#' )
+#'
+#' # Same as above, but require *both* variables to be above their thresholds
+#' # to consider that row a problem
+#' annual_flagged2 <- flux_qc(
+#'   annual,
+#'   qc_vars = c("NEE_VUT_REF", "TA_F"),
+#'   max_gapfilled = c(0.4, 0.6),
+#'   operator = "all"
 #' )
 #'
 #' }
@@ -41,56 +58,74 @@ flux_qc <- function(
   data,
   qc_vars,
   max_gapfilled = 0.5,
-  if_missing = c("flag", "ignore")
+  operator = c("any", "all"),
+  if_missing = c("ignore", "flag")
 ) {
-  # TODO allow to use different thresholds for different qc_vars
-  # TODO option to switch between ANY and ALL variables meeting the threshsolds
-  # TODO input validation
-  # - length of qc_vars matches length of max_gapfilled if it is not length 1
-
-  if (!dplyr::between(max_gapfilled, 0, 1)) {
-    cli::cli_abort("{.arg max_gapfilled} must be between 0 and 1.")
+  if (!all(dplyr::between(max_gapfilled, 0, 1))) {
+    cli::cli_abort("{.arg max_gapfilled} must have values between 0 and 1.")
   }
+
+  if (length(qc_vars) > 1 & length(max_gapfilled) == 1) {
+    max_gapfilled <- rep(max_gapfilled, length(qc_vars))
+  } else if (length(max_gapfilled) != length(qc_vars)) {
+    cli::cli_abort(
+      "{.arg max_gapfilled} must be length 1 or match the length of {.arg qc_vars}."
+    )
+  }
+
+  operator <- match.arg(operator)
+
   if_missing <- match.arg(if_missing)
   qc_cols <- paste0(qc_vars, "_QC")
   if (all(!qc_cols %in% colnames(data))) {
-    cli::cli_warn("QC column{?s} {qc_cols} not found. No filtering applied.")
-    df$pct_gapfilled <- NA_real_
-    df$is_bad <- if (if_missing == "flag") {
+    cli::cli_warn(
+      "QC column{?s} {.var {qc_cols}} not found. No filtering applied."
+    )
+    data$pct_gapfilled <- NA_real_
+    data$is_bad <- if (if_missing == "flag") {
       TRUE
     } else if (if_missing == "ignore") {
       NA
     }
-    return(df)
+    return(data)
   }
 
-  # works with code below becuase results of pick() is a tibble
-  # inject + !!! converts dataframe into df[[1]], df[[2]], df[[3]]...
-  pmin_df <- function(data, na.rm = TRUE) {
-    rlang::inject(pmin(!!!data, na.rm = na.rm))
-  }
+  operator_fun <- switch(
+    operator,
+    all = `&`,
+    any = `|`
+  )
 
-  # If *any* of the variables is more gap-filled than `max_gapfilled` it will be
-  # flagged as "bad"
-  data2 <- data %>%
-    # pct_gapfilled reflects the *most* gapfilled of the qc_vars
-    dplyr::mutate(
-      pct_gapfilled = 1 -
-        pmin_df(dplyr::pick(dplyr::any_of(qc_cols)), na.rm = TRUE)
+  # These may look reversed, but it's because they get applied to the QC columns
+  # which are the proprotion of data that is "good", not proportion gapfilled.
+  # Proportion gapfilled is 1-pfun(qc_cols). These work with code below becuase
+  # results of pick() is a tibble and inject + !!! converts a tibble into
+  # df[[1]], df[[2]], df[[3]]...
+  pfun <- switch(
+    operator,
+    all = function(data, na.rm = TRUE) {
+      rlang::inject(pmax(!!!data, na.rm = na.rm))
+    },
+    any = function(data, na.rm = TRUE) {
+      rlang::inject(pmin(!!!data, na.rm = na.rm))
+    }
+  )
+  data_flagged <- data %>%
+    mutate(
+      qc_flagged = map2(
+        data %>% select(qc_cols),
+        max_gapfilled,
+        function(col, threshold) {
+          # Optionally treat NAs as 100% gapfilled depending on `if_missing`
+          if (if_missing == "flag") {
+            col[is.na(col)] <- 0
+          }
+          col <= threshold
+        }
+      ) %>%
+        reduce(operator_fun),
+      p_gapfilled = 1 - pfun(pick(any_of(qc_cols)), na.rm = TRUE)
     )
-
-  data2$pct_gapfilled <- pmax(0, pmin(1, data2$pct_gapfilled)) # clamp just in case
-
-  data3 <- data2 %>%
-    dplyr::mutate(
-      is_bad = dplyr::case_when(
-        if_missing == "flag" & is.na(.data$pct_gapfilled) ~ TRUE,
-        if_missing == "ignore" & is.na(.data$pct_gapfilled) ~ NA,
-        .default = .data$pct_gapfilled > max_gapfilled
-      )
-    )
-  data3
-
-  # TODO: create an option where *all* of the variables must be more gap-filled
-  # than `max_gapfilled` for the row to be flagged as "bad".
+  # Return
+  data_flagged
 }
