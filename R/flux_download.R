@@ -107,15 +107,13 @@ flux_download <- function(
       on_error = "continue"
     )
 
-  # If there are errors, print a warning with instructions to re-run flux_download()
+  # If there are download errors, print a warning with instructions to re-run flux_download()
   failed <- httr2::resps_failures(resps)
   if(length(failed)>0) {
 
-    failed_sites <- dplyr::tibble(
-      download_link = failed %>% purrr::map_chr(httr2::resp_url)
-    ) %>%
-      dplyr::left_join(file_list_df) %>%
-      dplyr::pull(site_id)
+    failed_urls <- purrr::map_chr(failed, httr2::resp_url)
+    failed_sites <- file_list_df$site_id[file_list_df$download_link %in% failed_urls]
+  
     failed_sites_formatted <- paste0('"', failed_sites, '"') %>%
       paste0(collapse = ", ")
 
