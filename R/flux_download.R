@@ -84,7 +84,7 @@ flux_download <- function(
     cli::cli_warn(
       "No files to download! Check that {.arg site_ids} are correct or that files aren't already downloaded if {.arg overwrite = FALSE}."
     )
-    return(NULL)
+    return(invisible(NULL))
   }
 
   # Shuffle data to avoid putting pressure on a single data hub at a time when
