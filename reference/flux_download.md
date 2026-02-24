@@ -52,10 +52,8 @@ flux_download(
 
 ## Value
 
-Invisibly returns the output of
-[`curl::multi_download()`](https://jeroen.r-universe.dev/curl/reference/multi_download.html),
-which contains information on download success, download time, HTTP
-errors, etc.
+Invisibly returns a tibble with the download URL, path on disk, HTTP
+status code, and whether or not the download was successful.
 
 ## Examples
 

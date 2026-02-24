@@ -85,8 +85,8 @@ it will skip downloading existing files, unless they are invalid .zip files
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Invisibly returns the output of <code><a href="https://jeroen.r-universe.dev/curl/reference/multi_download.html" class="external-link">curl::multi_download()</a></code>, which
-contains information on download success, download time, HTTP errors, etc.</p>
+    <p>Invisibly returns a tibble with the download URL, path on disk, HTTP
+status code, and whether or not the download was successful.</p>
     </div>
 
     <div class="section level2">
