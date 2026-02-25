@@ -34,8 +34,8 @@ it will skip downloading existing files, unless they are invalid .zip files
 \item{...}{Arguments passed to \code{\link[=flux_listall]{flux_listall()}}.}
 }
 \value{
-Invisibly returns the output of \code{\link[curl:multi_download]{curl::multi_download()}}, which
-contains information on download success, download time, HTTP errors, etc.
+Invisibly returns a tibble with the download URL, path on disk, HTTP
+status code, and whether or not the download was successful.
 }
 \description{
 Downloads zip files (one per site) for available FLUXNET sites.

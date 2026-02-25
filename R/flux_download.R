@@ -19,8 +19,8 @@
 #'   (e.g. due to partial download or corruption).
 #' @param ... Arguments passed to [flux_listall()].
 #'
-#' @returns Invisibly returns the output of [curl::multi_download()], which
-#'   contains information on download success, download time, HTTP errors, etc.
+#' @returns Invisibly returns a tibble with the download URL, path on disk, HTTP
+#'   status code, and whether or not the download was successful.
 #' @examples
 #' \dontrun{
 #' # Download data for all available sites
@@ -56,8 +56,11 @@ flux_download <- function(
   } else {
     file_list_df <- flux_listall(...)
   }
-  if (length(site_ids) > 1 & !any(site_ids == "all")) {
+
+  if (all(site_ids != "all")) {
     file_list_df <- file_list_df %>% dplyr::filter(.data$site_id %in% site_ids)
+  } else {
+    cli::cli_inform("Downloading data from all available sites.")
   }
 
   fs::dir_create(download_dir)
@@ -75,50 +78,42 @@ flux_download <- function(
     file_list_df <- file_list_df %>%
       dplyr::filter(!.data$fluxnet_product_name %in% existing_valid_files)
   }
+
   # check that there are rows left after filtering
   if (nrow(file_list_df) == 0) {
-    cli::cli_abort(
+    cli::cli_warn(
       "No files to download! Check that {.arg site_ids} are correct or that files aren't already downloaded if {.arg overwrite = FALSE}."
     )
+    return(invisible(NULL))
   }
-  resp <- curl::multi_download(
-    urls = file_list_df$download_link,
-    destfiles = fs::path(download_dir, file_list_df$fluxnet_product_name),
-    resume = TRUE,
-    useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
-  )
 
-  # Failed or interrupted
-  failed <- resp %>%
-    dplyr::filter(.data$success == FALSE | is.na(.data$success))
-  if (nrow(failed) > 0) {
-    cli::cli_inform(
-      "Retrying {nrow(failed)} failed downloads{?s}."
+  # Shuffle data to avoid putting pressure on a single data hub at a time when
+  # there are multiple data hubs to download from.
+  file_list_df <- file_list_df %>% dplyr::slice_sample(prop = 1)
+
+  reqs <- purrr::map(file_list_df$download_link, function(url) {
+    httr2::request(url) %>%
+      httr2::req_user_agent(
+        "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
+      ) %>%
+      httr2::req_retry(max_tries = 3)
+  })
+
+  # TODO: customize progress bar?
+  resps <-
+    httr2::req_perform_parallel(
+      reqs,
+      paths = fs::path(download_dir, file_list_df$fluxnet_product_name),
+      on_error = "continue"
     )
-    # Retry failed downloads once
-    resp2 <- curl::multi_download(
-      urls = failed$url,
-      destfiles = failed$destfile,
-      resume = TRUE,
-      useragent = "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
-    )
-    resp <- dplyr::bind_rows(
-      resp %>% dplyr::filter(.data$success == TRUE),
-      resp2
-    )
-  }
-  # Failed or interrupted
-  failed2 <- resp %>%
-    dplyr::filter(.data$success == FALSE | is.na(.data$success))
-  # If there are still failures, print a warning
-  if (nrow(failed2) > 0) {
-    failed_sites <- dplyr::left_join(
-      failed2 %>%
-        dplyr::mutate(fluxnet_product_name = fs::path_file(.data$destfile)),
-      file_list_df,
-      by = "fluxnet_product_name"
-    ) %>%
-      dplyr::pull("site_id")
+
+  # If there are download errors, print a warning with instructions to re-run flux_download()
+  failed <- httr2::resps_failures(resps)
+  if(length(failed)>0) {
+
+    failed_urls <- purrr::map_chr(failed, httr2::resp_url)
+    failed_sites <- file_list_df$site_id[file_list_df$download_link %in% failed_urls]
+  
     failed_sites_formatted <- paste0('"', failed_sites, '"') %>%
       paste0(collapse = ", ")
 
@@ -127,7 +122,13 @@ flux_download <- function(
       "i" = "Run {.run fluxnet::flux_download(site_ids = c({failed_sites_formatted}))} to try again."
     ))
   }
-  return(invisible(resp))
+  out <- dplyr::tibble(
+    download_link = purrr::map_chr(resps, httr2::resp_url),
+    download_path = purrr::map_chr(resps, function(x) x$body),
+    status = purrr::map_int(resps, httr2::resp_status),
+    success = !purrr::map_lgl(resps, httr2::resp_is_error)
+  )
+  return(invisible(out))
 }
 
 

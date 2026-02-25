@@ -2,6 +2,8 @@
 
 * Added `flux_qc()`, a function to flag overly gapfilled rows of annual data.
 * Added `flux_map_sites()`.
+* `flux_download()` now uses `httr2` rather than `curl` for downloading files.  This fixed a bug where downloads were failing when attempting to download large numbers of sites at once. 
+* Added `flux_map_sites()`
 * `flux_download()` prints a warning when downloads fail.
 * Changed default cache age for `flux_listall()` to 1 day.
 * `flux_download()` now retries failed downloads once and `overwrite = FALSE` no longer skips downloading corrupted or partial downloads.
