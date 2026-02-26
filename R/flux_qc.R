@@ -61,6 +61,12 @@ flux_qc <- function(
   operator = c("any", "all"),
   if_missing = c("ignore", "flag")
 ) {
+  # Doesn't make sense for hourly resolution where _QC columns are categorical flags
+  if (attr(data, "flux_resolution") == "HH") {
+    cli::cli_abort(
+      "{.fun flux_qc()} doesn't work with hourly data where {.col *_QC} columns are categorical."
+    )
+  }
   if (!all(dplyr::between(max_gapfilled, 0, 1))) {
     cli::cli_abort("{.arg max_gapfilled} must have values between 0 and 1.")
   }
@@ -111,9 +117,9 @@ flux_qc <- function(
     }
   )
   data_flagged <- data %>%
-    mutate(
-      qc_flagged = map2(
-        data %>% select(qc_cols),
+    dplyr::mutate(
+      qc_flagged = purrr::map2(
+        data %>% dplyr::select(qc_cols),
         max_gapfilled,
         function(col, threshold) {
           # Optionally treat NAs as 100% gapfilled depending on `if_missing`
@@ -123,8 +129,8 @@ flux_qc <- function(
           col <= threshold
         }
       ) %>%
-        reduce(operator_fun),
-      p_gapfilled = 1 - pfun(pick(any_of(qc_cols)), na.rm = TRUE)
+        purrr::reduce(operator_fun),
+      p_gapfilled = 1 - pfun(dplyr::pick(dplyr::any_of(qc_cols)), na.rm = TRUE)
     )
   # Return
   data_flagged
