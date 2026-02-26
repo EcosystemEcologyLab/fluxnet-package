@@ -53,12 +53,14 @@ flux_read <- function(
     )
   }
 
+  cli::cli_inform("Reading {nrow(files_df)} file{?s}.")
   data_raw <- purrr::pmap(
     files_df %>% dplyr::select(dplyr::all_of(c("path", "site_id", "dataset"))),
     function(path, site_id, dataset) {
       readr::read_csv(path, show_col_types = FALSE) %>%
         dplyr::mutate(site_id = site_id, dataset = dataset, .before = 1)
-    }
+    },
+    .progress = TRUE
   ) %>%
     purrr::list_rbind()
 
@@ -100,6 +102,9 @@ flux_read <- function(
     dplyr::rename_with(function(col) {
       stringr::str_replace(col, "TIMESTAMP", timestamp_replace)
     })
+
+  # Append an attribute to more easily track the time resolution of the dataset
+  attr(data_clean, "flux_resolution") <- resolution
 
   data_clean
 }
