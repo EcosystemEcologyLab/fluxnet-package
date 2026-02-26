@@ -12,9 +12,6 @@
 #'   "any", the row will be marked as bad if *any* of the QC vars indicate
 #'   gap-filling above their `max_gapfill` threshold.  If "all" then the row
 #'   will be flagged only if *all* of the QC vars are above their `max_gapfill`.
-#' @param if_missing Set the behavior for rows with `NA` for the `*_QC`
-#'   columns.  If `"flag"`, an `NA` will get the `qc_flagged = TRUE` flag.  If
-#'   `"ignore"`, the `qc_flagged` flag will be `NA` also.
 #' @returns A tibble with the added columns `p_gapfilled` and `qc_flagged`. If
 #'   `operator = "any"`, `qc_flagged = TRUE` indicates that at least one of the
 #'   supplied QC variables was more gapfilled than `max_gapfilled` and
@@ -58,8 +55,7 @@ flux_qc <- function(
   data,
   qc_vars,
   max_gapfilled = 0.5,
-  operator = c("any", "all"),
-  if_missing = c("ignore", "flag")
+  operator = c("any", "all")
 ) {
   # Doesn't make sense for hourly resolution where _QC columns are categorical flags
   if (attr(data, "flux_resolution") == "HH") {
@@ -81,18 +77,14 @@ flux_qc <- function(
 
   operator <- match.arg(operator)
 
-  if_missing <- match.arg(if_missing)
   qc_cols <- paste0(qc_vars, "_QC")
   if (all(!qc_cols %in% colnames(data))) {
-    cli::cli_warn(
-      "QC column{?s} {.var {qc_cols}} not found. No filtering applied."
-    )
-    data$pct_gapfilled <- NA_real_
-    data$is_bad <- if (if_missing == "flag") {
-      TRUE
-    } else if (if_missing == "ignore") {
-      NA
-    }
+    cli::cli_warn(c(
+      "!" = "QC column{?s} {.var {qc_cols}} not found",
+      i = "No rows flagged"
+    ))
+    data$p_gapfilled <- NA_real_
+    data$qc_flagged <- NA
     return(data)
   }
 
@@ -122,11 +114,8 @@ flux_qc <- function(
         data %>% dplyr::select(qc_cols),
         max_gapfilled,
         function(col, threshold) {
-          # Optionally treat NAs as 100% gapfilled depending on `if_missing`
-          if (if_missing == "flag") {
-            col[is.na(col)] <- 0
-          }
-          col <= threshold
+          gapfilled <- 1 - col
+          gapfilled > threshold
         }
       ) %>%
         purrr::reduce(operator_fun),
