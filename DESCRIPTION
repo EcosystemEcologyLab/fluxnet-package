@@ -28,6 +28,7 @@ Imports:
     rappdirs,
     readr,
     reticulate (>= 1.41),
+    rlang,
     stringr,
     tidyr
 Suggests: 
