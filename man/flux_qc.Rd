@@ -4,13 +4,7 @@
 \alias{flux_qc}
 \title{Flag overly-gapfilled data}
 \usage{
-flux_qc(
-  data,
-  qc_vars,
-  max_gapfilled = 0.5,
-  operator = c("any", "all"),
-  if_missing = c("ignore", "flag")
-)
+flux_qc(data, qc_vars, max_gapfilled = 0.5, operator = c("any", "all"))
 }
 \arguments{
 \item{data}{A data frame created by \code{\link[=flux_read]{flux_read()}}.}
@@ -26,10 +20,6 @@ different threshold for each variable.}
 "any", the row will be marked as bad if \emph{any} of the QC vars indicate
 gap-filling above their \code{max_gapfill} threshold.  If "all" then the row
 will be flagged only if \emph{all} of the QC vars are above their \code{max_gapfill}.}
-
-\item{if_missing}{Set the behavior for rows with \code{NA} for the \verb{*_QC}
-columns.  If \code{"flag"}, an \code{NA} will get the \code{qc_flagged = TRUE} flag.  If
-\code{"ignore"}, the \code{qc_flagged} flag will be \code{NA} also.}
 }
 \value{
 A tibble with the added columns \code{p_gapfilled} and \code{qc_flagged}. If
