@@ -2,6 +2,12 @@
 
 ## fluxnet (development version)
 
+- Added
+  [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md),
+  a function to flag overly gapfilled rows of aggregated (not hourly)
+  data.
+- Added
+  [`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md).
 - [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
   now uses `httr2` rather than `curl` for downloading files. This fixed
   a bug where downloads were failing when attempting to download large

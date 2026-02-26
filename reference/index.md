@@ -12,5 +12,7 @@
   : List available FLUXNET zip files for download
 - [`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md)
   : Map sites with downloaded data
+- [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md)
+  : Flag overly-gapfilled data
 - [`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md)
   : Read in FLUXNET data
