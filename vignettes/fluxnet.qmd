@@ -12,6 +12,12 @@ knitr:
 
 ```{r}
 #| label: setup
+# Create temp dir for this vignette to use
+tmp <- withr::local_tempdir(pattern = "fluxnet_vignette")
+```
+
+```{r}
+#| label: packages
 library(fluxnet)
 library(dplyr)
 ```
@@ -29,7 +35,7 @@ list <- flux_listall()
 
 ```{r}
 #| echo: false
-list <- flux_listall(cache_dir = "inst/listall", cache_age = Inf)
+list <- flux_listall(cache_dir = fs::path(tmp, "cache"))
 ```
 
 By default, the results of `flux_listall()` are saved in a user cache, so when you run it again it'll pull the results from there unless they are older than `cach_age`.  To ignore the cache, use `use_cache = FALSE`.  To *invalidate* the cache (and replace it with an updated one), use `cache_age = -Inf`.
@@ -48,7 +54,7 @@ The list returned by `flux_listall()` contains metadata on the available sites i
 
 ```{r}
 colnames(list)
-list[,c("site_id", "product_citation")]
+list %>% select(site_id, product_citation)
 ```
 
 ## Downloading data
@@ -66,10 +72,17 @@ flux_download()
 flux_download(site_ids = c("AR-CCg", "AR-TF1", "BR-CST"))
 
 # Filter list and download
-list_wet <- list[list$igbp == "WET",]
+list_wet <- list %>% filter(igbp == "WET")
 flux_download(file_list_df = list_wet)
 ```
 
+```{r}
+#| echo: false
+# Actually download a sample of 5 sites
+set.seed(123)
+list_sample <- slice_sample(list, n = 5)
+flux_download(list_sample, download_dir = fs::path(tmp, "fluxnet"))
+```
 
 ## Extracting data from .zip files
 
@@ -90,6 +103,13 @@ flux_extract(site_ids = c("AR-CCg", "AR-TF1"), resolutions = "h")
 flux_extract(extract_varinfo = FALSE)
 ```
 
+```{r}
+#| echo: false
+
+# Actually extract annual and monthly data
+flux_extract(zip_dir = fs::path(tmp, "fluxnet"), resolutions = c("y", "m"))
+```
+
 ## Discovering what data you have extracted
 
 `flux_discover_files()` is used to create a "manifest" of the data available to read in.
@@ -98,12 +118,18 @@ You *must* create this manifest (and optionally filter it) to pass into `flux_re
 ```{r}
 #| eval: false
 manifest <- flux_discover_files()
+manifest
+```
+
+```{r}
+#| echo: false
+manifest <- flux_discover_files(data_dir = fs::path(tmp, "fluxnet", "unzipped"))
+manifest
 ```
 
 You can visualize the sites you have data for with `flux_map_sites()`.
 
 ```{r}
-#| eval: false
 flux_map_sites(manifest)
 ```
 
@@ -114,10 +140,13 @@ You can read in data by passing a manifest to `flux_read()`.
 You can read in data for just select sites with the `site_ids` argument, but for more complex filtering you can simply subset the manifest object first.
 
 ```{r}
-#| eval: false
 # Read all available annual data
 annual <- flux_read(manifest, resolution = "y")
+```
 
+```{r}
+#| eval: false
+## NOT RUN ##
 # Read in hourly data from specific sites
 hourly <- flux_read(
   manifest,
@@ -135,3 +164,47 @@ n_wet_manifest <-
 
 n_wet_monthly <- flux_read(n_wet_manifest, resolution = "m")
 ```
+
+
+## QC flagging
+
+Fluxnet data can be gapfilled to varying degrees.
+`flux_qc()` allows you to flag overly-gapfilled data using your choice of variables and gapfilling threshold(s).
+
+### Example 1: Flag rows where `NEE_VUT_REF` is more than 30% gapfilled
+
+```{r}
+flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", max_gapfilled = 0.3)
+flagged_nee %>% filter(qc_flagged) %>% select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, everything())
+```
+
+Notice that in this case `p_gapfilled` is just 1 - `NEE_VUT_REF_QC`.
+
+### Example 2: Flag rows where NEE_VUT_REF *or* TA_F are more than 30% gapfilled
+
+```{r}
+flagged_2 <- flux_qc(
+  annual,
+  qc_vars = c("NEE_VUT_REF", "TA_F"),
+  max_gapfilled = 0.3
+)
+flagged_2 %>% filter(qc_flagged) %>% select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
+```
+
+Now `p_gapfilled` is 1 - the smaller of `NEE_VUT_REF_QC` and `TA_F_QC`.
+
+### Example 3: Flag rows where NEE_VUT_REF is more than 30% gapfilled *and* TA_F is more than 10% gapfilled
+
+```{r}
+flagged_3 <- flux_qc(
+  annual,
+  qc_vars = c("NEE_VUT_REF", "TA_F"),
+  max_gapfilled = c(0.3, 0.1),
+  operator = "all"
+)
+flagged_3 %>%
+  filter(qc_flagged) %>%
+  select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
+```
+
+Because we've set `operator = "all"`, `p_gapfilled` is now 1 - the *larger* of `NEE_VUT_REF_QC` and `TA_F_QC` and all of the values are greater than the smaller of the `max_gapfilled` values.
