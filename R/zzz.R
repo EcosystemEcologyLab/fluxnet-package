@@ -9,7 +9,7 @@
   cli::cli_div(theme = list(span.emph = list(color = "orange")))
   cli::cli_inform(
     c(
-      "!" = "Please abide by FLUXNET data policies: {.url https://fluxnet.org/data/data-policy/}",
+      "!" = "Use of data downloaded by {.pkg fluxnet} requires you abide by FLUXNET data policies: {.url https://fluxnet.org/data/data-policy/}",
       i = "Citations for individual sites' datasets are returned by {.fun fluxnet::flux_listall}"
     ),
     class = "packageStartupMessage"
