@@ -2,12 +2,18 @@
 
 ``` r
 library(fluxnet)
+#> ! Use of data downloaded by fluxnet requires you abide by FLUXNET data
+#>   policies: <https://fluxnet.org/data/data-policy/>
+#> ℹ Citations for individual sites' datasets are returned by
+#>   `fluxnet::flux_listall()`
 library(dplyr)
 #> 
 #> Attaching package: 'dplyr'
+#> 
 #> The following objects are masked from 'package:stats':
 #> 
 #>     filter, lag
+#> 
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, setdiff, setequal, union
@@ -68,7 +74,7 @@ colnames(list)
 #> [13] "download_link"          "fluxnet_product_name"   "product_citation"      
 #> [16] "product_id"             "oneflux_code_version"   "product_source_network"
 list[,c("site_id", "product_citation")]
-#> # A tibble: 258 × 2
+#> # A tibble: 271 × 2
 #>    site_id product_citation                                                     
 #>    <chr>   <chr>                                                                
 #>  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares gr…
@@ -81,7 +87,7 @@ list[,c("site_id", "product_citation")]
 #>  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver…
 #>  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delt…
 #> 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver.…
-#> # ℹ 248 more rows
+#> # ℹ 261 more rows
 ```
 
 ## Downloading data

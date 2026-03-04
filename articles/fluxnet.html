@@ -66,12 +66,18 @@
     <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/EcosystemEcologyLab/fluxnet-package" class="external-link">fluxnet</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ! Use of data downloaded by fluxnet requires you abide by FLUXNET data</span></span>
+<span><span class="co">#&gt;   policies: &lt;https://fluxnet.org/data/data-policy/&gt;</span></span>
+<span><span class="co">#&gt; ℹ Citations for individual sites' datasets are returned by</span></span>
+<span><span class="co">#&gt;   `fluxnet::flux_listall()`</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre></div>
@@ -115,7 +121,7 @@
 <span><span class="co">#&gt; [13] "download_link"          "fluxnet_product_name"   "product_citation"      </span></span>
 <span><span class="co">#&gt; [16] "product_id"             "oneflux_code_version"   "product_source_network"</span></span>
 <span><span class="va">list</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"site_id"</span>, <span class="st">"product_citation"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; # A tibble: 258 × 2</span></span>
+<span><span class="co">#&gt; # A tibble: 271 × 2</span></span>
 <span><span class="co">#&gt;    site_id product_citation                                                     </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                                </span></span>
 <span><span class="co">#&gt;  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares gr…</span></span>
@@ -128,7 +134,7 @@
 <span><span class="co">#&gt;  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver…</span></span>
 <span><span class="co">#&gt;  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delt…</span></span>
 <span><span class="co">#&gt; 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver.…</span></span>
-<span><span class="co">#&gt; # ℹ 248 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 261 more rows</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h2 id="downloading-data">Downloading data<a class="anchor" aria-label="anchor" href="#downloading-data"></a>
 </h2>
