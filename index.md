@@ -24,10 +24,6 @@ each site in the result of
 and view the license document contained within each FLUXNET data product
 (downloaded zip files).
 
-To use the `fluxnet` R package to download data, you’ll also need to
-install the `fluxnet-shuttle` command-line utility, found at
-<https://github.com/fluxnet/shuttle>.
-
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
