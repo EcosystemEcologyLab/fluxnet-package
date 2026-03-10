@@ -1,17 +1,20 @@
 ---
-title: "fluxnet"
+title: "Getting Started"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{fluxnet}
-  %\VignetteEngine{quarto::html}
+  %\VignetteIndexEntry{test}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-knitr:
-  opts_chunk:
-    collapse: true
-    comment: '#>'
 ---
+
 
 ```{r}
 #| label: setup
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 # Create temp dir for this vignette to use
 tmp <- withr::local_tempdir(pattern = "fluxnet_vignette")
 ```
@@ -158,7 +161,7 @@ hourly <- flux_read(
 annual_era5 <- flux_read(manifest, resolution = "y", datasets = "ERA5")
 
 # Filter manifest to just sites with "WET" for IGBP
-n_wet_manifest <- 
+n_wet_manifest <-
   left_join(manifest, list, by = join_by(site_id)) %>%
   filter(igbp == "WET", location_lat > 0)
 
@@ -175,7 +178,9 @@ Fluxnet data can be gapfilled to varying degrees.
 
 ```{r}
 flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", max_gapfilled = 0.3)
-flagged_nee %>% filter(qc_flagged) %>% select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, everything())
+flagged_nee %>%
+  filter(qc_flagged) %>%
+  select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, everything())
 ```
 
 Notice that in this case `p_gapfilled` is just 1 - `NEE_VUT_REF_QC`.
@@ -188,7 +193,9 @@ flagged_2 <- flux_qc(
   qc_vars = c("NEE_VUT_REF", "TA_F"),
   max_gapfilled = 0.3
 )
-flagged_2 %>% filter(qc_flagged) %>% select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
+flagged_2 %>%
+  filter(qc_flagged) %>%
+  select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
 ```
 
 Now `p_gapfilled` is 1 - the smaller of `NEE_VUT_REF_QC` and `TA_F_QC`.

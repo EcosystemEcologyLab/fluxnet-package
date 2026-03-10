@@ -35,10 +35,10 @@ Suggests:
     knitr,
     maps,
     quarto,
+    rmarkdown,
     testthat (>= 3.0.0),
     withr
-VignetteBuilder: 
-    quarto
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
