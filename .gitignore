@@ -3,3 +3,5 @@ fluxnet
 inst/doc
 **/.quarto/
 docs
+/doc/
+/Meta/
