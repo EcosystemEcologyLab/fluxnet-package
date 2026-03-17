@@ -9,10 +9,10 @@ test_that("manifest is correct", {
   )
   expect_message(
     manifest <- flux_discover_files(data_dir = tempdir),
-    "MM / ERA5 → 1 site, 44 site-years across 1 file
-MM / FLUXMET → 1 site, 7 site-years across 1 file
-YY / ERA5 → 1 site, 44 site-years across 1 file
-YY / FLUXMET → 1 site, 7 site-years across 1 file"
+    "MM / ERA5 → 2 sites, 88 site-years across 2 files
+MM / FLUXMET → 2 sites, 22 site-years across 2 files
+YY / ERA5 → 2 sites, 88 site-years across 2 files
+YY / FLUXMET → 2 sites, 22 site-years across 2 files"
   )
   expect_s3_class(manifest, "data.frame")
 
@@ -23,6 +23,7 @@ test_that("deduplication works", {
   tempdir <- withr::local_tempdir()
   flux_extract(
     zip_dir = test_path("testdata"),
+    site_ids = "AR-CCg",
     resolutions = c("y", "m"),
     output_dir = fs::path(tempdir, "copy1"),
     extract_varinfo = TRUE,
@@ -30,6 +31,7 @@ test_that("deduplication works", {
   )
   flux_extract(
     zip_dir = test_path("testdata"),
+    site_ids = "AR-CCg",
     resolutions = c("y", "m"),
     output_dir = fs::path(tempdir, "copy2"),
     extract_varinfo = TRUE,

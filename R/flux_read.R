@@ -94,7 +94,7 @@ flux_read <- function(
 
   data_clean <- data_raw %>%
     dplyr::mutate(
-      dplyr::across(timestamp_col, timestamp_fun),
+      dplyr::across(dplyr::all_of(timestamp_col), timestamp_fun),
       dplyr::across(dplyr::where(is.numeric), function(x) {
         dplyr::na_if(x, -9999)
       })
