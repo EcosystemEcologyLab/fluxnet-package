@@ -73,7 +73,7 @@ flux_extract <- function(
       delim = "-",
       names = c("start_year", "end_year")
     ) %>%
-    dplyr::filter(.data$network %in% .env$network)
+    dplyr::filter(.data$network %in% network)
 
   if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {
     zip_to_extract <- zip_avail %>%
