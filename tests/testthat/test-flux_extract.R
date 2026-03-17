@@ -3,6 +3,7 @@ test_that("CSVs are extracted", {
   out_default <- flux_extract(
     zip_dir = test_path("testdata"),
     output_dir = tmpdir,
+    site_ids = "AR-CCg",
     resolutions = c("y", "m", "w", "d", "h"),
     extract_varinfo = TRUE,
     extract_txt = FALSE
@@ -16,6 +17,7 @@ test_that(".txt are extracted", {
   out_txt <- flux_extract(
     zip_dir = test_path("testdata"),
     output_dir = tmpdir,
+    site_ids = "AR-CCg",
     resolutions = c("y"),
     extract_varinfo = FALSE,
     extract_txt = TRUE
@@ -23,4 +25,18 @@ test_that(".txt are extracted", {
   files <- fs::path_file(out_txt$extracted_file)
   expect_true("README.txt" %in% files)
   expect_true("DATA_POLICY_LICENSE_AND_INSTRUCTIONS.txt" %in% files)
+})
+
+test_that("network arg works", {
+  tmpdir <- withr::local_tempdir()
+  out_tern <- flux_extract(
+    zip_dir = test_path("testdata"),
+    output_dir = tmpdir,
+    network = "TERN",
+    resolutions = c("y"),
+    extract_varinfo = FALSE,
+    extract_txt = TRUE
+  )
+  files <- fs::dir_ls(tmpdir)
+  expect_equal(fs::path_file(files), "TERN_AU-Wom_FLUXNET_2010-2024_v1.3_r1")
 })
