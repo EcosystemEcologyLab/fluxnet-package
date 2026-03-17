@@ -27,7 +27,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Arizona Board of Regents on behalf of The University of Arizona (https://ror.org/0054f1w39) [copyright holder]
+  \item Arizona Board of Regents on behalf of The University of Arizona (\href{https://ror.org/0054f1w39}{ROR}) [copyright holder]
 }
 
 }
