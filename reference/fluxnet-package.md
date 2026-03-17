@@ -26,4 +26,4 @@ Authors:
 Other contributors:
 
 - Arizona Board of Regents on behalf of The University of Arizona
-  (https://ror.org/0054f1w39) \[copyright holder\]
+  ([ROR](https://ror.org/0054f1w39)) \[copyright holder\]
