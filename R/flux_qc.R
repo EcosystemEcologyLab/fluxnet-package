@@ -111,7 +111,7 @@ flux_qc <- function(
   data_flagged <- data %>%
     dplyr::mutate(
       qc_flagged = purrr::map2(
-        data %>% dplyr::select(qc_cols),
+        data %>% dplyr::select(dplyr::any_of(qc_cols)),
         max_gapfilled,
         function(col, threshold) {
           gapfilled <- 1 - col
