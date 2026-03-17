@@ -47,7 +47,7 @@ flux_extract <- function(
   extract_txt = FALSE,
   overwrite = FALSE
 ) {
-  network <- match.arg(network, several.ok = TRUE)
+  network_choice <- match.arg(network, several.ok = TRUE)
 
   zip_files <- fs::dir_ls(zip_dir, glob = "*.zip")
 
@@ -73,7 +73,7 @@ flux_extract <- function(
       delim = "-",
       names = c("start_year", "end_year")
     ) %>%
-    dplyr::filter(.data$network %in% network)
+    dplyr::filter(.data$network %in% network_choice)
 
   if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {
     zip_to_extract <- zip_avail %>%
