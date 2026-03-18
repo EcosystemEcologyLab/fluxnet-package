@@ -8,6 +8,7 @@
 ^\.vscode$
 ^vignettes/\.quarto$
 ^vignettes/*_files$
+^vignettes/figure$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$

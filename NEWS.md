@@ -1,5 +1,6 @@
 # fluxnet (development version)
 
+* `flux_extract()` gains a `network` argument to specify a subset of networks (e.g. ICOS, TERN) to extract data from.  Suggested by @lbell3141.
 * Added `flux_qc()`, a function to flag overly gapfilled rows of aggregated (not hourly) data.
 * Added `flux_map_sites()`.
 * `flux_download()` now uses `httr2` rather than `curl` for downloading files.  This fixed a bug where downloads were failing when attempting to download large numbers of sites at once. 
