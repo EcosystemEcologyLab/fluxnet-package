@@ -2,6 +2,10 @@
 
 ## fluxnet (development version)
 
+- [`flux_extract()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_extract.md)
+  gains a `network` argument to specify a subset of networks (e.g. ICOS,
+  TERN) to extract data from. Suggested by
+  [@lbell3141](https://github.com/lbell3141).
 - Added
   [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md),
   a function to flag overly gapfilled rows of aggregated (not hourly)

@@ -35,7 +35,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="fluxnet-development-version">fluxnet (development version)<a class="anchor" aria-label="anchor" href="#fluxnet-development-version"></a></h2>
-<ul><li>Added <code><a href="../reference/flux_qc.html">flux_qc()</a></code>, a function to flag overly gapfilled rows of aggregated (not hourly) data.</li>
+<ul><li>
+<code><a href="../reference/flux_extract.html">flux_extract()</a></code> gains a <code>network</code> argument to specify a subset of networks (e.g. ICOS, TERN) to extract data from. Suggested by <a href="https://github.com/lbell3141" class="external-link">@lbell3141</a>.</li>
+<li>Added <code><a href="../reference/flux_qc.html">flux_qc()</a></code>, a function to flag overly gapfilled rows of aggregated (not hourly) data.</li>
 <li>Added <code><a href="../reference/flux_map_sites.html">flux_map_sites()</a></code>.</li>
 <li>
 <code><a href="../reference/flux_download.html">flux_download()</a></code> now uses <code>httr2</code> rather than <code>curl</code> for downloading files. This fixed a bug where downloads were failing when attempting to download large numbers of sites at once.</li>
