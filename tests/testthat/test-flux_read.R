@@ -37,3 +37,12 @@ test_that("datasets filter works", {
   expect_equal(unique(fluxmet$dataset), "FLUXMET")
   expect_equal(unique(era5$dataset), "ERA5")
 })
+
+test_that("site_id filter works", {
+  unzipped <- withr::local_tempdir()
+  flux_extract(test_path("testdata"), output_dir = unzipped)
+  manifest <- flux_discover_files(unzipped)
+
+  data <- flux_read(manifest, site_ids = "AR-CCg")
+  expect_equal(length(unique(data$site_id)), 1)
+})

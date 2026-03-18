@@ -43,7 +43,7 @@ flux_read <- function(
     dplyr::filter(.data$dataset %in% datasets) %>%
     dplyr::filter(.data$time_resolution == resolution)
 
-  if (length(site_ids) > 1 & !any(site_ids == "all")) {
+  if (length(site_ids) > 1 | !any(site_ids == "all")) {
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 
