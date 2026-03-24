@@ -1,3 +1,5 @@
+# fluxnet (development version)
+
 # fluxnet 0.2.0
 
 * Added `flux_varinfo()` and `flux_badm()` for reading and tidying "BIFVARINFO" and "BIF" files, respectively.
