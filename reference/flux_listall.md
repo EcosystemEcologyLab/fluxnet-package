@@ -6,16 +6,15 @@ utility's `listall` command, which downloads a data frame of available
 .zip files. By default, the downloaded CSV is stored in
 `rappdirs::user_cache_dir("fluxnet")`. If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than `cache_age`, it
-will be read in instead of downloading a new snapshot (unless
-`use_cache = FALSE`).
+will be read in instead of downloading a new snapshot.
 
 ## Usage
 
 ``` r
 flux_listall(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
-  use_cache = TRUE,
   cache_age = as.difftime(1, units = "days"),
+  clean_cache = 10L,
   log_file = NULL,
   echo_cmd = FALSE
 )
@@ -27,16 +26,16 @@ flux_listall(
 
   The directory to store the list of available FLUXNET data in.
 
-- use_cache:
-
-  Logical; use cached list of files available to download if it exists
-  and is not older than `cache_age`?
-
 - cache_age:
 
   A `difftime` object of length 1. If there are no cached snapshots more
   recent than `cache_age`, a new one will be downloaded and stored. You
   can force the cache to be invalidated with `cache_age = -Inf`.
+
+- clean_cache:
+
+  A number of files \\\geq 1\\ to keep in `cache_dir`. Defaults to 10,
+  which keeps only the 10 most recent snapshots.
 
 - log_file:
 
@@ -65,9 +64,6 @@ utility, remove the Pyhton virtualenv it is installed in by running
 ``` r
 if (FALSE) { # \dontrun{
 fluxnet_files <- flux_listall()
-
-# Ignore cache
-fluxnet_files <- flux_listall(use_cache = FALSE)
 
 # Invalidate cache and update it
 fluxnet_files <- flux_listall(cache_age = -Inf)

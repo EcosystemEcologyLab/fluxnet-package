@@ -16,12 +16,12 @@ Useful links:
 
 ## Author
 
-**Maintainer**: David J.P. Moore <davidjpmoore@arizona.edu>
-([ORCID](https://orcid.org/0000-0002-6462-3288))
+**Maintainer**: Eric R. Scott <ericrscott@arizona.edu>
+([ORCID](https://orcid.org/0000-0002-7430-7879))
 
 Authors:
 
-- Eric R. Scott ([ORCID](https://orcid.org/0000-0002-7430-7879))
+- David J.P. Moore ([ORCID](https://orcid.org/0000-0002-6462-3288))
 
 Other contributors:
 

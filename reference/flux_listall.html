@@ -5,13 +5,13 @@ listall command, which downloads a data frame of available .zip files. By
 default, the downloaded CSV is stored in
 rappdirs::user_cache_dir(&quot;fluxnet&quot;).  If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than cache_age, it will
-be read in instead of downloading a new snapshot (unless use_cache = FALSE)."><meta property="og:description" content="This provides a wrapper around the
+be read in instead of downloading a new snapshot."><meta property="og:description" content="This provides a wrapper around the
 fluxnet-shuttle command-line utility's
 listall command, which downloads a data frame of available .zip files. By
 default, the downloaded CSV is stored in
 rappdirs::user_cache_dir(&quot;fluxnet&quot;).  If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than cache_age, it will
-be read in instead of downloading a new snapshot (unless use_cache = FALSE)."></head><body>
+be read in instead of downloading a new snapshot."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -53,15 +53,15 @@ be read in instead of downloading a new snapshot (unless use_cache = FALSE)."></
 default, the downloaded CSV is stored in
 <code>rappdirs::user_cache_dir("fluxnet")</code>.  If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than <code>cache_age</code>, it will
-be read in instead of downloading a new snapshot (unless <code>use_cache = FALSE</code>).</p>
+be read in instead of downloading a new snapshot.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flux_listall</span><span class="op">(</span></span>
 <span>  cache_dir <span class="op">=</span> <span class="fu">rappdirs</span><span class="fu">::</span><span class="fu"><a href="https://rappdirs.r-lib.org/reference/user_cache_dir.html" class="external-link">user_cache_dir</a></span><span class="op">(</span><span class="st">"fluxnet"</span><span class="op">)</span>,</span>
-<span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cache_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">as.difftime</a></span><span class="op">(</span><span class="fl">1</span>, units <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span>,</span>
+<span>  clean_cache <span class="op">=</span> <span class="fl">10L</span>,</span>
 <span>  log_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  echo_cmd <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -76,15 +76,15 @@ be read in instead of downloading a new snapshot (unless <code>use_cache = FALSE
 in.</p></dd>
 
 
-<dt id="arg-use-cache">use_cache<a class="anchor" aria-label="anchor" href="#arg-use-cache"></a></dt>
-<dd><p>Logical; use cached list of files available to download if
-it exists and is not older than <code>cache_age</code>?</p></dd>
-
-
 <dt id="arg-cache-age">cache_age<a class="anchor" aria-label="anchor" href="#arg-cache-age"></a></dt>
 <dd><p>A <code>difftime</code> object of length 1. If there are no cached
 snapshots more recent than <code>cache_age</code>, a new one will be downloaded and
 stored. You can force the cache to be invalidated with <code>cache_age = -Inf</code>.</p></dd>
+
+
+<dt id="arg-clean-cache">clean_cache<a class="anchor" aria-label="anchor" href="#arg-clean-cache"></a></dt>
+<dd><p>A number of files \(\geq 1\) to keep in <code>cache_dir</code>.
+Defaults to 10, which keeps only the 10 most recent snapshots.</p></dd>
 
 
 <dt id="arg-log-file">log_file<a class="anchor" aria-label="anchor" href="#arg-log-file"></a></dt>
@@ -114,9 +114,6 @@ utility, remove the Pyhton virtualenv it is installed in by running
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">fluxnet_files</span> <span class="op">&lt;-</span> <span class="fu">flux_listall</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Ignore cache</span></span></span>
-<span class="r-in"><span><span class="va">fluxnet_files</span> <span class="op">&lt;-</span> <span class="fu">flux_listall</span><span class="op">(</span>use_cache <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalidate cache and update it</span></span></span>
 <span class="r-in"><span><span class="va">fluxnet_files</span> <span class="op">&lt;-</span> <span class="fu">flux_listall</span><span class="op">(</span>cache_age <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span><span class="op">)</span></span></span>

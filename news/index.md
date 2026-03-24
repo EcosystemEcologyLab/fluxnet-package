@@ -2,6 +2,13 @@
 
 ## fluxnet (development version)
 
+- The `use_cache` argument of
+  [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
+  has been removed.
+- [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
+  gained a `clean_cache` argument to set the number of recent snapshot
+  CSVs to keep. Defaults to 10.
+
 ## fluxnet 0.2.1
 
 - Eric Scott is now listed as package maintainer
