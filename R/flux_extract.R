@@ -9,7 +9,7 @@
 #' @param site_ids A character vector of site IDs (e.g. `c("AR-TF2", "CA-Ca2")`)
 #'   can be supplied to only unzip data for certain sites.  If `"all"`
 #'   (default), all zip files found in zip_dir will be unzipped.
-#' @param network A character vector indicating which networks to extract files
+#' @param networks A character vector indicating which networks to extract files
 #'   from. Multiple values may be provided. Defaults to all networks.
 #' @param resolutions A character vector indicating which time resolutions to
 #'   extract.  Options are yearly (`"y"`), monthly (`"m"`), daily (`"d"`),
@@ -31,7 +31,7 @@ flux_extract <- function(
   zip_dir = "fluxnet",
   output_dir = fs::path(zip_dir, "unzipped"),
   site_ids = "all",
-  network = c(
+  networks = c(
     "AMF",
     "CNF",
     "EUF",
@@ -47,7 +47,7 @@ flux_extract <- function(
   extract_txt = FALSE,
   overwrite = FALSE
 ) {
-  network_choice <- match.arg(network, several.ok = TRUE)
+  network_choice <- match.arg(networks, several.ok = TRUE)
 
   zip_files <- fs::dir_ls(zip_dir, glob = "*.zip")
 
