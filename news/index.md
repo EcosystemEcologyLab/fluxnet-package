@@ -1,6 +1,6 @@
 # Changelog
 
-## fluxnet (development version)
+## fluxnet 0.2.0
 
 - Added
   [`flux_varinfo()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_varinfo.md)
