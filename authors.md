@@ -14,14 +14,18 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/EcosystemEcologyLab/fluxnet-package/blob/v0.2.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/EcosystemEcologyLab/fluxnet-package/blob/main/inst/CITATION)
 
-Moore D, Scott E (????). “fluxnet: Download, read, and visualize FLUXNET
-data.” <https://ecosystemecologylab.github.io/fluxnet-package/>.
+Moore D, Scott E (2026). “fluxnet: Download, read, and visualize FLUXNET
+data.”
+[doi:10.5281/zenodo.19210221](https://doi.org/10.5281/zenodo.19210221),
+<https://ecosystemecologylab.github.io/fluxnet-package/>.
 
-    @Misc{moore_etall,
+    @Misc{moore_etall:2026,
       title = {fluxnet: Download, read, and visualize FLUXNET data},
       author = {David J.P. Moore and Eric R. Scott},
+      year = {2026},
+      doi = {10.5281/zenodo.19210221},
       url = {https://ecosystemecologylab.github.io/fluxnet-package/},
       abstract = {Utility functions to help download, read in, and work with data from FLUXNET.},
       version = {0.2.0},

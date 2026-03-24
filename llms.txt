@@ -24,6 +24,8 @@ each site in the result of
 and view the license document contained within each FLUXNET data product
 (downloaded zip files).
 
+Please also cite the `fluxnet` package:
+
 ## Typical usage
 
 ``` mermaid
