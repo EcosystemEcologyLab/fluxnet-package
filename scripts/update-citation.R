@@ -1,8 +1,13 @@
 library(cffr)
 cff <- cff_create(
-  dependencies = FALSE
+  dependencies = FALSE,
+  keys = list(
+    # This DOI always re-directs to the most recent version on Zenodo
+    doi = "10.5281/zenodo.19210221",
+    `date-released` = Sys.Date()
+  )
 )
 
 fs::file_delete("inst/CITATION")
-cff_write(cff)
 cff_write_citation(cff, file = "inst/CITATION")
+cff_write(cff)

@@ -1,6 +1,6 @@
 
 bibentry(bibtype = "Misc",
-         key = "moore_etall",
+         key = "moore_etall:2026",
          title = "fluxnet: Download, read, and visualize FLUXNET data",
          author = c(person(given = "David J.P.",
                            family = "Moore",
@@ -9,6 +9,8 @@ bibentry(bibtype = "Misc",
                     person(given = "Eric R.",
                            family = "Scott",
                            comment = c(ORCID = "0000-0002-7430-7879"))),
+         year = "2026",
+         doi = "10.5281/zenodo.19210221",
          url = "https://ecosystemecologylab.github.io/fluxnet-package/",
          abstract = "Utility functions to help download, read in, and work with data from FLUXNET.",
          version = "0.2.0")

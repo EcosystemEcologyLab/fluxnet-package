@@ -9,6 +9,7 @@ type: software
 license: MIT
 title: 'fluxnet: Download, read, and visualize FLUXNET data'
 version: 0.2.0
+doi: 10.5281/zenodo.19210221
 abstract: Utility functions to help download, read in, and work with data from FLUXNET.
 authors:
 - family-names: Moore
@@ -18,8 +19,25 @@ authors:
 - family-names: Scott
   given-names: Eric R.
   orcid: https://orcid.org/0000-0002-7430-7879
+preferred-citation:
+  type: generic
+  title: 'fluxnet: Download, read, and visualize FLUXNET data'
+  authors:
+  - family-names: Moore
+    given-names: David J.P.
+    email: davidjpmoore@arizona.edu
+    orcid: https://orcid.org/0000-0002-6462-3288
+  - family-names: Scott
+    given-names: Eric R.
+    orcid: https://orcid.org/0000-0002-7430-7879
+  year: '2026'
+  doi: 10.5281/zenodo.19210221
+  url: https://ecosystemecologylab.github.io/fluxnet-package/
+  abstract: Utility functions to help download, read in, and work with data from FLUXNET.
+  version: 0.2.0
 repository-code: https://github.com/EcosystemEcologyLab/fluxnet-package
 url: https://ecosystemecologylab.github.io/fluxnet-package/
+date-released: '2026-03-24'
 contact:
 - family-names: Moore
   given-names: David J.P.
