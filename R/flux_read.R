@@ -5,9 +5,11 @@
 #' @param manifest A manifest data frame produced by [flux_discover_files()].
 #' @param resolution The time resolution to read in.  Must be one of `"y"`
 #'   (annual), `"m"` (monthly), `"w"` (weekly), `"d"` (daily), or `"h"`
-#'   (hourly).
+#'   (hourly/half-hourly).
 #' @param datasets Character vector of one or both of `"FLUXMET"` or `"ERA5"`.
 #'   Defaults to both.
+#' @param networks A character vector indicating which networks to extract files
+#'   from. Multiple values may be provided. Defaults to all networks.
 #' @param site_ids A vector of site IDs to filter the manifest by.  If `"all"`
 #'   (the default), the manifest isn't filtered by site ID.
 #'
@@ -33,15 +35,28 @@ flux_read <- function(
   manifest,
   resolution = c("y", "m", "w", "d", "h"),
   datasets = c("ERA5", "FLUXMET"),
+  networks = c(
+    "AMF",
+    "CNF",
+    "EUF",
+    "FLX",
+    "ICOS",
+    "JPF",
+    "KOF",
+    "SAEON",
+    "TERN"
+  ),
   site_ids = "all"
 ) {
   datasets <- match.arg(datasets, several.ok = TRUE)
   resolution <- match.arg(resolution)
   resolution <- paste0(toupper(resolution), toupper(resolution))
+  network_choice <- match.arg(networks, several.ok = TRUE)
 
   files_df <- manifest %>%
     dplyr::filter(.data$dataset %in% datasets) %>%
-    dplyr::filter(.data$time_resolution == resolution)
+    dplyr::filter(.data$time_resolution == resolution) %>%
+    dplyr::filter(.data$product_source_network %in% network_choice)
 
   if (length(site_ids) > 1 | !any(site_ids == "all")) {
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
