@@ -64,7 +64,7 @@ flux_varinfo <- function(
       # 1 date fails to parse: "199601074000".  Seems like a mistake?
       DATE = dplyr::case_when(
         DATE == "199601074000" ~ "19960107",
-        .default = DATE
+        .default = .data$DATE
       ),
       DATE = lubridate::parse_date_time(
         .data$DATE,

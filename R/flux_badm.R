@@ -44,7 +44,7 @@ flux_badm <- function(
 
   bif_raw <- readr::read_csv(files_df$path, show_col_types = FALSE)
 
-  bif_var_group <- bif_raw %>% dplyr::filter(VARIABLE_GROUP %in% var_grp)
+  bif_var_group <- bif_raw %>% dplyr::filter(.data$VARIABLE_GROUP %in% var_grp)
 
   if (nrow(bif_var_group) == 0) {
     var_grp_cli <- cli::cli_vec(var_grp, style = list(vec_last = " or "))
