@@ -26,7 +26,7 @@ Please also cite the `fluxnet` package:
 
 
 ## Typical usage
-
+<!-- FIXME: this works on GitHub, but not on the pkgdown site -->
 ```mermaid
 flowchart TD
     A["`flux_listall()`"] -->|inspect available data| B["`flux_download()`"]
