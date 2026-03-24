@@ -8,6 +8,7 @@ flux_read(
   manifest,
   resolution = c("y", "m", "w", "d", "h"),
   datasets = c("ERA5", "FLUXMET"),
+  networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN"),
   site_ids = "all"
 )
 }
@@ -16,10 +17,13 @@ flux_read(
 
 \item{resolution}{The time resolution to read in.  Must be one of \code{"y"}
 (annual), \code{"m"} (monthly), \code{"w"} (weekly), \code{"d"} (daily), or \code{"h"}
-(hourly).}
+(hourly/half-hourly).}
 
 \item{datasets}{Character vector of one or both of \code{"FLUXMET"} or \code{"ERA5"}.
 Defaults to both.}
+
+\item{networks}{A character vector indicating which networks to extract files
+from. Multiple values may be provided. Defaults to all networks.}
 
 \item{site_ids}{A vector of site IDs to filter the manifest by.  If \code{"all"}
 (the default), the manifest isn't filtered by site ID.}

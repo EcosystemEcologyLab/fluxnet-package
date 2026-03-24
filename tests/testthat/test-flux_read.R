@@ -46,3 +46,12 @@ test_that("site_id filter works", {
   data <- flux_read(manifest, site_ids = "AR-CCg")
   expect_equal(length(unique(data$site_id)), 1)
 })
+
+test_that("network filter works", {
+  unzipped <- withr::local_tempdir()
+  flux_extract(test_path("testdata"), output_dir = unzipped)
+  manifest <- flux_discover_files(unzipped)
+
+  data <- flux_read(manifest, networks = "TERN")
+  expect_equal(length(unique(data$site_id)), 1)
+})
