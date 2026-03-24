@@ -1,4 +1,4 @@
-# fluxnet (development version)
+# fluxnet 0.2.0
 
 * Added `flux_varinfo()` and `flux_badm()` for reading and tidying "BIFVARINFO" and "BIF" files, respectively.
 * `flux_extract()` and `flux_read()` gain a `network` argument to specify a subset of networks (e.g. ICOS, TERN) to extract data from.  Suggested by @lbell3141.

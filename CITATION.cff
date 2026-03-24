@@ -8,7 +8,7 @@ message: 'To cite package "fluxnet" in publications use:'
 type: software
 license: MIT
 title: 'fluxnet: Download, read, and visualize FLUXNET data'
-version: 0.1.0
+version: 0.2.0
 abstract: Utility functions to help download, read in, and work with data from FLUXNET.
 authors:
 - family-names: Moore
@@ -19,7 +19,7 @@ authors:
   given-names: Eric R.
   orcid: https://orcid.org/0000-0002-7430-7879
 repository-code: https://github.com/EcosystemEcologyLab/fluxnet-package
-url: https://github.com/EcosystemEcologyLab/fluxnet-package
+url: https://ecosystemecologylab.github.io/fluxnet-package/
 contact:
 - family-names: Moore
   given-names: David J.P.
