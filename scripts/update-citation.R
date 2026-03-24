@@ -1,4 +1,5 @@
 library(cffr)
+fs::file_delete("inst/CITATION")
 cff <- cff_create(
   dependencies = FALSE,
   keys = list(
@@ -8,6 +9,5 @@ cff <- cff_create(
   )
 )
 
-fs::file_delete("inst/CITATION")
 cff_write_citation(cff, file = "inst/CITATION")
 cff_write(cff)
