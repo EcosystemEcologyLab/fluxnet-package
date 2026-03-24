@@ -1,5 +1,7 @@
 # Changelog
 
+## fluxnet (development version)
+
 ## fluxnet 0.2.1
 
 - Eric Scott is now listed as package maintainer
