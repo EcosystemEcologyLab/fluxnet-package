@@ -6,8 +6,8 @@
 \usage{
 flux_listall(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
-  use_cache = TRUE,
   cache_age = as.difftime(1, units = "days"),
+  clean_cache = 10L,
   log_file = NULL,
   echo_cmd = FALSE
 )
@@ -16,12 +16,12 @@ flux_listall(
 \item{cache_dir}{The directory to store the list of available FLUXNET data
 in.}
 
-\item{use_cache}{Logical; use cached list of files available to download if
-it exists and is not older than \code{cache_age}?}
-
 \item{cache_age}{A \code{difftime} object of length 1. If there are no cached
 snapshots more recent than \code{cache_age}, a new one will be downloaded and
 stored. You can force the cache to be invalidated with \code{cache_age = -Inf}.}
+
+\item{clean_cache}{A number of files \eqn{\geq 1} to keep in \code{cache_dir}.
+Defaults to 10, which keeps only the 10 most recent snapshots.}
 
 \item{log_file}{An optional file path (e.g. \code{"log.txt"}) to direct the
 \code{fluxnet-shuttle} log to. Useful for debugging.}
@@ -39,7 +39,7 @@ This provides a wrapper around the
 default, the downloaded CSV is stored in
 \code{rappdirs::user_cache_dir("fluxnet")}.  If there is allready a FLUXNET
 shanpshot CSV file downloaded and it is more recent than \code{cache_age}, it will
-be read in instead of downloading a new snapshot (unless \code{use_cache = FALSE}).
+be read in instead of downloading a new snapshot.
 }
 \note{
 To force the \code{fluxnet} R package to re-install the \code{fluxnet-shuttle}
@@ -51,9 +51,6 @@ utility, remove the Pyhton virtualenv it is installed in by running
 \examples{
 \dontrun{
 fluxnet_files <- flux_listall()
-
-# Ignore cache
-fluxnet_files <- flux_listall(use_cache = FALSE)
 
 # Invalidate cache and update it
 fluxnet_files <- flux_listall(cache_age = -Inf)

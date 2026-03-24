@@ -6,23 +6,22 @@
 #' default, the downloaded CSV is stored in
 #' `rappdirs::user_cache_dir("fluxnet")`.  If there is allready a FLUXNET
 #' shanpshot CSV file downloaded and it is more recent than `cache_age`, it will
-#' be read in instead of downloading a new snapshot (unless `use_cache =
-#' FALSE`).
+#' be read in instead of downloading a new snapshot.
 #'
-#' 
+#'
 #' @note To force the `fluxnet` R package to re-install the `fluxnet-shuttle`
 #' utility, remove the Pyhton virtualenv it is installed in by running
 #' `reticulate::virtualenv_remove("fluxnet")`. Then, when you run
 #' `flux_listall()` next, the virtualenv will be re-created and
 #' `fluxnet-shuttle` will be re-installed.
-#' 
+#'
 #' @param cache_dir The directory to store the list of available FLUXNET data
 #'   in.
-#' @param use_cache Logical; use cached list of files available to download if
-#'   it exists and is not older than `cache_age`?
 #' @param cache_age A `difftime` object of length 1. If there are no cached
 #'   snapshots more recent than `cache_age`, a new one will be downloaded and
 #'   stored. You can force the cache to be invalidated with `cache_age = -Inf`.
+#' @param clean_cache A number of files \eqn{\geq 1} to keep in `cache_dir`.
+#'   Defaults to 10, which keeps only the 10 most recent snapshots.
 #' @param log_file An optional file path (e.g. `"log.txt"`) to direct the
 #'   `fluxnet-shuttle` log to. Useful for debugging.
 #' @param echo_cmd Set to `TRUE` to print the shell command in the console.
@@ -32,17 +31,14 @@
 #' \dontrun{
 #' fluxnet_files <- flux_listall()
 #'
-#' # Ignore cache
-#' fluxnet_files <- flux_listall(use_cache = FALSE)
-#'
 #' # Invalidate cache and update it
 #' fluxnet_files <- flux_listall(cache_age = -Inf)
 #' }
 #' @export
 flux_listall <- function(
   cache_dir = rappdirs::user_cache_dir("fluxnet"),
-  use_cache = TRUE,
   cache_age = as.difftime(1, units = "days"),
+  clean_cache = 10L,
   log_file = NULL,
   echo_cmd = FALSE
 ) {
@@ -59,10 +55,7 @@ flux_listall <- function(
     dplyr::mutate(expired = .data$datetime + cache_age < Sys.time()) %>%
     dplyr::arrange(dplyr::desc(.data$datetime))
 
-  if (
-    nrow(cached_snapshots %>% dplyr::filter(!.data$expired)) == 0 |
-      isFALSE(use_cache)
-  ) {
+  if (nrow(cached_snapshots %>% dplyr::filter(!.data$expired)) == 0) {
     fluxnet_shuttle <- fluxnet_shuttle_executable("fluxnet")
     cli::cli_inform("File list is expired, downloading the latest version")
 
@@ -83,13 +76,27 @@ flux_listall <- function(
       fs::path(csv_file),
       show_col_types = FALSE
     )
-    return(list)
   } else {
     #just read the newest cached one
     csv_path <- cached_snapshots %>%
       dplyr::filter(!.data$expired & .data$datetime == max(.data$datetime)) %>%
       dplyr::pull(.data$path)
     list <- readr::read_csv(csv_path, show_col_types = FALSE)
-    return(list)
   }
+
+  # Remove oldest files so there's only at max `clean_cache` snapshots saved
+  if (clean_cache < 1) {
+    cli::cli_inform("{.arg clean_cache} must be \u2265 1. Setting to 1.")
+    clean_cache <- 1L
+  }
+  keep <- cached_snapshots %>% dplyr::slice_max(.data$datetime, n = clean_cache)
+  fs::file_delete(
+    dplyr::anti_join(
+      cached_snapshots,
+      keep,
+      by = c("path", "timestamp", "datetime", "expired")
+    )$path
+  )
+
+  return(list)
 }
