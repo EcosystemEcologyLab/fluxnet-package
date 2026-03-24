@@ -1,5 +1,8 @@
 # fluxnet (development version)
 
+* The `use_cache` argument of `flux_listall()` has been removed.
+* `flux_listall()` gained a `clean_cache` argument to set the number of recent snapshot CSVs to keep. Defaults to 10.
+
 # fluxnet 0.2.1
 
 * Eric Scott is now listed as package maintainer
