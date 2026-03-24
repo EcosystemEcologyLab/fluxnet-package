@@ -14,7 +14,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/EcosystemEcologyLab/fluxnet-package/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/EcosystemEcologyLab/fluxnet-package/blob/v0.2.0/inst/CITATION)
 
 Moore D, Scott E (????). “fluxnet: Download, read, and visualize FLUXNET
 data.” <https://ecosystemecologylab.github.io/fluxnet-package/>.
