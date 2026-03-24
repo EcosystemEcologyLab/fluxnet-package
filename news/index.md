@@ -2,8 +2,15 @@
 
 ## fluxnet (development version)
 
+- Added
+  [`flux_varinfo()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_varinfo.md)
+  and
+  [`flux_badm()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_badm.md)
+  for reading and tidying “BIFVARINFO” and “BIF” files, respectively.
 - [`flux_extract()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_extract.md)
-  gains a `network` argument to specify a subset of networks (e.g. ICOS,
+  and
+  [`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md)
+  gain a `network` argument to specify a subset of networks (e.g. ICOS,
   TERN) to extract data from. Suggested by
   [@lbell3141](https://github.com/lbell3141).
 - Added

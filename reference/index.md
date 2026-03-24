@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`flux_badm()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_badm.md)
+  : Read and tidy BADM subsets
 - [`flux_discover_files()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_discover_files.md)
   : Create a "manifest" of downloaded and unzipped FLUXNET data files
 - [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
@@ -16,3 +18,5 @@
   : Flag overly-gapfilled data
 - [`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md)
   : Read in FLUXNET data
+- [`flux_varinfo()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_varinfo.md)
+  : Read variable info from "BIFVARINFO" files

@@ -1,15 +1,13 @@
-# Read in FLUXNET data
+# Read variable info from "BIFVARINFO" files
 
-Reads and minimally cleans FLUXNET data found by
-[`flux_discover_files()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_discover_files.md).
+Extracts and tidies variable information from "BIFVARINFO" csv files.
 
 ## Usage
 
 ``` r
-flux_read(
+flux_varinfo(
   manifest,
   resolution = c("y", "m", "w", "d", "h"),
-  datasets = c("ERA5", "FLUXMET"),
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN"),
   site_ids = "all"
 )
@@ -28,11 +26,6 @@ flux_read(
   (monthly), `"w"` (weekly), `"d"` (daily), or `"h"`
   (hourly/half-hourly).
 
-- datasets:
-
-  Character vector of one or both of `"FLUXMET"` or `"ERA5"`. Defaults
-  to both.
-
 - networks:
 
   A character vector indicating which networks to extract files from.
@@ -43,22 +36,25 @@ flux_read(
   A vector of site IDs to filter the manifest by. If `"all"` (the
   default), the manifest isn't filtered by site ID.
 
+## Value
+
+A tibble
+
+## Note
+
+This only returns variable info (`VARIABLE_GROUP == GRP_VAR_INFO`) from
+the "BIFVARINFO" files as much of the other metadata they contain can be
+found in the results of
+[`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md).
+
+`HEIGHT` is returned as a character value because some heights are
+reported as ranges and cannot be parsed as a single numeric value.
+
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
 manifest <- flux_discover_files()
-daily <- flux_read(manifest, resolution = "d")
-annual <- flux_read(manifest, resolution = "y")
-
-# Filter manifest by metadata first
-metadata <- flux_listall()
-
-library(dplyr)
-manifest_enriched <- left_join(manifest, metadata, by = join_by(site_id))
-manifest_WET <- manifest_enriched %>% filter(igbp == "WET")
-annual_wet <- flux_read(manifest_WET, resolution = "y")
-
+flux_varinfo(manifest)
 } # }
-
 ```

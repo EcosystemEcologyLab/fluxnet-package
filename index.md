@@ -24,26 +24,18 @@ each site in the result of
 and view the license document contained within each FLUXNET data product
 (downloaded zip files).
 
-## Example
+## Typical usage
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(fluxnet)
-## List all available FLUXNET data
-flux_listall()
-
-## Download all available FLUXNET data
-flux_download()
-
-## Extract all the annual data files from the downloads
-flux_extract(resolutions = "y")
-
-## Create manifest
-manifest <- flux_discover_files()
-
-## Read in data
-annual <- flux_read(manifest, resolution = "y")
+``` mermaid
+flowchart TD
+    A["`flux_listall()`"] -->|inspect available data| B["`flux_download()`"]
+    B --> C["`flux_extract()`"]
+    C --> D{"`manifest <- flux_discover_files()`"}
+    D -->|Map sites| E["`flux_map_sites(manifest)`"]
+    D -->|Read in data| F["`flux_read(manifest)`"]
+    D -->|Read variable info| G["`flux_varinfo(manifest)`"]
+    D -->|Read BADM| I["`flux_badm(manifest, 'LAI')`"]
+    F --> |QA/QC| J["`flux_qc()`"]
 ```
 
 ## Updating/reinstalling fluxnet-shuttle
