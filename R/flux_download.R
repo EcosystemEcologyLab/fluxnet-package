@@ -47,6 +47,7 @@ flux_download <- function(
   overwrite = FALSE,
   ...
 ) {
+  file_list_null <- is.null(file_list_df)
   if (!is.null(file_list_df)) {
     if (!is.data.frame(file_list_df)) {
       cli::cli_abort(
@@ -59,8 +60,13 @@ flux_download <- function(
 
   if (all(site_ids != "all")) {
     file_list_df <- file_list_df %>% dplyr::filter(.data$site_id %in% site_ids)
+    cli::cli_inform("Downloading data from specified sites.")
   } else {
-    cli::cli_inform("Downloading data from all available sites.")
+    if (isTRUE(file_list_null)) {
+      cli::cli_inform("Downloading data from all available sites.")
+    } else {
+      cli::cli_inform("Downloading data from specified sites.")
+    }
   }
 
   fs::dir_create(download_dir)
