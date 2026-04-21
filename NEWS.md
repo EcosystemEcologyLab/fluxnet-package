@@ -1,5 +1,6 @@
 # fluxnet (development version)
 
+* Fixed a bug in `flux_badm()` that would cause it to error when some "BIF" files contained additional optional columns ([#57](https://github.com/EcosystemEcologyLab/fluxnet-package/issues/57))
 * The `use_cache` argument of `flux_listall()` has been removed.
 * `flux_listall()` gained a `clean_cache` argument to set the number of recent snapshot CSVs to keep. Defaults to 10.
 
