@@ -2,6 +2,11 @@
 
 ## fluxnet (development version)
 
+- Fixed a bug in
+  [`flux_badm()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_badm.md)
+  that would cause it to error when some “BIF” files contained
+  additional optional columns
+  ([\#57](https://github.com/EcosystemEcologyLab/fluxnet-package/issues/57))
 - The `use_cache` argument of
   [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
   has been removed.
