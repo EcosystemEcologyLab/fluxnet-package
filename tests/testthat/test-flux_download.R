@@ -12,9 +12,7 @@ test_that("download of all files works", {
 test_that("download of specified site_ids works", {
   skip_on_ci()
   download_dir <- withr::local_tempdir()
-  snapshot <- flux_listall()
   out <- flux_download(
-    file_list_df = snapshot,
     site_ids = c("NZ-ScF"),
     download_dir = download_dir
   )
