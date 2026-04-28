@@ -9,7 +9,8 @@ flux_listall(
   cache_age = as.difftime(1, units = "days"),
   clean_cache = 10L,
   log_file = NULL,
-  echo_cmd = FALSE
+  echo_cmd = FALSE,
+  ...
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ Defaults to 10, which keeps only the 10 most recent snapshots.}
 
 \item{echo_cmd}{Set to \code{TRUE} to print the shell command in the console.
 Passed to \code{\link[processx:run]{processx::run()}}.}
+
+\item{...}{Arguments passed to \code{\link[=flux_install_shuttle]{flux_install_shuttle()}}.}
 }
 \value{
 A data frame of stations with available data and their metadata.
