@@ -42,7 +42,26 @@ flux_badm <- function(
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 
-  bif_raw <- readr::read_csv(files_df$path, show_col_types = FALSE)
+  # Workaround for https://github.com/EcosystemEcologyLab/fluxnet-package/issues/57
+  # TODO: This workaround comes at a cost of speed.  There might be a better
+  # solution upstream in `readr` someday:
+  # https://github.com/tidyverse/readr/issues/1623
+
+  # bif_raw <- readr::read_csv(files_df$path, show_col_types = FALSE)
+  bif_raw <- purrr::map(files_df$path, function(x) {
+    readr::read_csv(
+      x,
+      col_select = c(
+        "SITE_ID",
+        "GROUP_ID",
+        "VARIABLE_GROUP",
+        "VARIABLE",
+        "DATAVALUE"
+      ),
+      show_col_types = FALSE
+    )
+  }) %>%
+    purrr::list_rbind()
 
   bif_var_group <- bif_raw %>% dplyr::filter(.data$VARIABLE_GROUP %in% var_grp)
 
