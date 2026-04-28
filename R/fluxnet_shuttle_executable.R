@@ -63,16 +63,20 @@ flux_install_shuttle <- function(
   reinitialize = FALSE
 ) {
   from <- match.arg(from)
-  if (isTRUE(reinitialize)) {
+  if (isTRUE(reinitialize) & reticulate::virtualenv_exists(venv)) {
     reticulate::virtualenv_remove(venv)
   }
 
   fmt_version <- if (version == "main") "development" else (version)
   fmt_from <- switch(from, github = "GitHub", pypi = "PyPI")
-  cli::cli_inform(c(
-    i = 'Initializing virtualenv "{venv}".',
-    i = 'Installing {.pkg fluxnet-shuttle} ({fmt_version}) from {fmt_from}. '
-  ))
+
+  # Print message only if virtualenv doesn't exist yet
+  if (!reticulate::virtualenv_exists(venv)) {
+    cli::cli_inform(c(
+      i = 'Initializing virtualenv "{venv}".',
+      i = 'Installing {.pkg fluxnet-shuttle} ({fmt_version}) from {fmt_from}. '
+    ))
+  }
 
   # TODO: eventually enable install with `pypi`
 
