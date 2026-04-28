@@ -10,13 +10,17 @@
 #'   exlude some rows. This provides an alternative way of downloading only
 #'   specific sites. See the examples for a possible use case. If `file_list_df`
 #'   is not `NULL`, `cache_dir`, `use_cache`, and `cache_age` will be ingored
-#'   but `site_ids` other than `"all"` will still be used.
-#' @param site_ids Character; either `"all"` to download all sites available, or
-#'   a vector of site IDs. For example, `c("UK-GaB", "CA-Ca2")`.
+#'   but `site_ids` will still be used.
+#' @param site_ids If `NULL` (default) all available sites will be downloaded.
+#'   Alternatively, supply a character vector of site IDs. For example,
+#'   `c("UK-GaB", "CA-Ca2")`.
 #' @param download_dir The directory to download zip files to.
 #' @param overwrite Logical; overwrite already downloaded .zip files? If `FALSE`
 #'   it will skip downloading existing files, unless they are invalid .zip files
 #'   (e.g. due to partial download or corruption).
+#' @param user_info An optional list with data-hub-specific user information.
+#'   Only AmeriFlux uses this currently. By default, these are retrieved from
+#'   environment variables by [flux_amf_credentials()].
 #' @param ... Arguments passed to [flux_listall()].
 #'
 #' @returns Invisibly returns a tibble with the download URL, path on disk, HTTP
@@ -42,11 +46,21 @@
 #' @export
 flux_download <- function(
   file_list_df = NULL,
-  site_ids = "all",
+  site_ids = NULL,
   download_dir = "fluxnet",
   overwrite = FALSE,
+  user_info = list(ameriflux = flux_amf_credentials()),
   ...
 ) {
+  if (!is.null(site_ids)) {
+    (site_ids == "all")
+    {
+      cli::cli_warn(
+        "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
+      )
+      site_ids <- NULL
+    }
+  }
   file_list_null <- is.null(file_list_df)
   if (!is.null(file_list_df)) {
     if (!is.data.frame(file_list_df)) {
@@ -58,15 +72,14 @@ flux_download <- function(
     file_list_df <- flux_listall(...)
   }
 
-  if (all(site_ids != "all")) {
-    file_list_df <- file_list_df %>% dplyr::filter(.data$site_id %in% site_ids)
-    cli::cli_inform("Downloading data from specified sites.")
-  } else {
-    if (isTRUE(file_list_null)) {
-      cli::cli_inform("Downloading data from all available sites.")
+  if (is.null(site_ids)) {
+    if (file_list_null) {
+      cli::cli_inform("Downloading data from all sites in {.arg file_list_df}.")
     } else {
-      cli::cli_inform("Downloading data from specified sites.")
+      cli::cli_inform("Downloading data from all available sites.")
     }
+  } else {
+    cli::cli_inform("Downloading data from specified sites.")
   }
 
   fs::dir_create(download_dir)
@@ -93,46 +106,18 @@ flux_download <- function(
     return(invisible(NULL))
   }
 
-  # Shuffle data to avoid putting pressure on a single data hub at a time when
-  # there are multiple data hubs to download from.
-  file_list_df <- file_list_df %>% dplyr::slice_sample(prop = 1)
+  file_list <- withr::local_tempfile()
+  readr::write_csv(file_list_df, file_list)
 
-  reqs <- purrr::map(file_list_df$download_link, function(url) {
-    httr2::request(url) %>%
-      httr2::req_user_agent(
-        "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
-      ) %>%
-      httr2::req_retry(max_tries = 3)
-  })
-
-  # TODO: customize progress bar?
-  resps <-
-    httr2::req_perform_parallel(
-      reqs,
-      paths = fs::path(download_dir, file_list_df$fluxnet_product_name),
-      on_error = "continue"
-    )
-
-  # If there are download errors, print a warning with instructions to re-run flux_download()
-  failed <- httr2::resps_failures(resps)
-  if(length(failed)>0) {
-
-    failed_urls <- purrr::map_chr(failed, httr2::resp_url)
-    failed_sites <- file_list_df$site_id[file_list_df$download_link %in% failed_urls]
-  
-    failed_sites_formatted <- paste0('"', failed_sites, '"') %>%
-      paste0(collapse = ", ")
-
-    cli::cli_warn(c(
-      "Incomplete downloads for {length(failed_sites)} site{?s}",
-      "i" = "Run {.run fluxnet::flux_download(site_ids = c({failed_sites_formatted}))} to try again."
-    ))
-  }
+  fluxnet_py <- reticulate::import("fluxnet_shuttle")
+  dl <- fluxnet_py$download(
+    site_ids = as.list(site_ids),
+    snapshot_file = file_list,
+    output_dir = download_dir,
+    user_info = user_info
+  )
   out <- dplyr::tibble(
-    download_link = purrr::map_chr(resps, httr2::resp_url),
-    download_path = purrr::map_chr(resps, function(x) x$body),
-    status = purrr::map_int(resps, httr2::resp_status),
-    success = !purrr::map_lgl(resps, httr2::resp_is_error)
+    download_path = dl,
   )
   return(invisible(out))
 }
