@@ -1,5 +1,6 @@
 # fluxnet (development version)
 
+* Adds a new function, `flux_install_shuttle()` which accepts the name of a virtualenv to use and a version of `fluxnet-shuttle` to install.  It pulls these from envvars, by default, making it easy to configure via a project-level .Renviron file.  It can be run as a separate step, but this is optional as it will be called automatically the first time `flux_listall()` or `flux_download()` are run.
 * `flux_download()` no longer shows a progress bar as it downloads files.
 * Optionally, you can provide a list containing your Ameriflux user name, email, and intended use to `flux_download()` via the new `user_info` argument and `flux_amf_credentials()` helper function.
 * To get all available sites with `flux_download()`, use `site_ids = NULL`. `site_ids = "all"` is deprecated.
