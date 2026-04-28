@@ -53,8 +53,7 @@ flux_download <- function(
   ...
 ) {
   if (!is.null(site_ids)) {
-    (site_ids == "all")
-    {
+    if (site_ids == "all") {
       cli::cli_warn(
         "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
       )
