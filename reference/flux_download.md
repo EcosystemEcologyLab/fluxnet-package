@@ -7,9 +7,10 @@ Downloads zip files (one per site) for available FLUXNET sites.
 ``` r
 flux_download(
   file_list_df = NULL,
-  site_ids = "all",
+  site_ids = NULL,
   download_dir = "fluxnet",
   overwrite = FALSE,
+  user_info = list(ameriflux = flux_amf_credentials()),
   ...
 )
 ```
@@ -27,13 +28,14 @@ flux_download(
   but potentially filtered to exlude some rows. This provides an
   alternative way of downloading only specific sites. See the examples
   for a possible use case. If `file_list_df` is not `NULL`, `cache_dir`,
-  `use_cache`, and `cache_age` will be ingored but `site_ids` other than
-  `"all"` will still be used.
+  `use_cache`, and `cache_age` will be ingored but `site_ids` will still
+  be used.
 
 - site_ids:
 
-  Character; either `"all"` to download all sites available, or a vector
-  of site IDs. For example, `c("UK-GaB", "CA-Ca2")`.
+  If `NULL` (default) all available sites will be downloaded.
+  Alternatively, supply a character vector of site IDs. For example,
+  `c("UK-GaB", "CA-Ca2")`.
 
 - download_dir:
 
@@ -44,6 +46,13 @@ flux_download(
   Logical; overwrite already downloaded .zip files? If `FALSE` it will
   skip downloading existing files, unless they are invalid .zip files
   (e.g. due to partial download or corruption).
+
+- user_info:
+
+  An optional list with data-hub-specific user information. Only
+  AmeriFlux uses this currently. By default, these are retrieved from
+  environment variables by
+  [`flux_amf_credentials()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_amf_credentials.md).
 
 - ...:
 

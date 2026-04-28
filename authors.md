@@ -19,7 +19,7 @@ Source:
 
 Scott E, Moore D (2026). “fluxnet: Download, read, and visualize FLUXNET
 data.”
-[doi:10.5281/zenodo.19210221](https://doi.org/10.5281/zenodo.19210221),
+[doi:10.5281/zenodo.19210221](https://doi.org/10.5281/zenodo.19210221).
 <https://ecosystemecologylab.github.io/fluxnet-package/>.
 
     @Misc{scott_etall:2026,

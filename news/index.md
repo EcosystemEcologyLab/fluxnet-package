@@ -2,6 +2,20 @@
 
 ## fluxnet (development version)
 
+- [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
+  no longer shows a progress bar as it downloads files.
+- Optionally, you can provide a list containing your Ameriflux user
+  name, email, and intended use to
+  [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
+  via the new `user_info` argument and
+  [`flux_amf_credentials()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_amf_credentials.md)
+  helper function.
+- To get all available sites with
+  [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md),
+  use `site_ids = NULL`. `site_ids = "all"` is deprecated.
+- [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
+  now uses the `fluxnet_shuttle` Python library rather than `httr2` to
+  perform downloads.
 - Fixed a bug in
   [`flux_badm()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_badm.md)
   that would cause it to error when some “BIF” files contained

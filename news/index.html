@@ -35,7 +35,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="fluxnet-development-version">fluxnet (development version)<a class="anchor" aria-label="anchor" href="#fluxnet-development-version"></a></h2>
-<ul><li>Fixed a bug in <code><a href="../reference/flux_badm.html">flux_badm()</a></code> that would cause it to error when some “BIF” files contained additional optional columns (<a href="https://github.com/EcosystemEcologyLab/fluxnet-package/issues/57" class="external-link">#57</a>)</li>
+<ul><li>
+<code><a href="../reference/flux_download.html">flux_download()</a></code> no longer shows a progress bar as it downloads files.</li>
+<li>Optionally, you can provide a list containing your Ameriflux user name, email, and intended use to <code><a href="../reference/flux_download.html">flux_download()</a></code> via the new <code>user_info</code> argument and <code><a href="../reference/flux_amf_credentials.html">flux_amf_credentials()</a></code> helper function.</li>
+<li>To get all available sites with <code><a href="../reference/flux_download.html">flux_download()</a></code>, use <code>site_ids = NULL</code>. <code>site_ids = "all"</code> is deprecated.</li>
+<li>
+<code><a href="../reference/flux_download.html">flux_download()</a></code> now uses the <code>fluxnet_shuttle</code> Python library rather than <code>httr2</code> to perform downloads.</li>
+<li>Fixed a bug in <code><a href="../reference/flux_badm.html">flux_badm()</a></code> that would cause it to error when some “BIF” files contained additional optional columns (<a href="https://github.com/EcosystemEcologyLab/fluxnet-package/issues/57" class="external-link">#57</a>)</li>
 <li>The <code>use_cache</code> argument of <code><a href="../reference/flux_listall.html">flux_listall()</a></code> has been removed.</li>
 <li>
 <code><a href="../reference/flux_listall.html">flux_listall()</a></code> gained a <code>clean_cache</code> argument to set the number of recent snapshot CSVs to keep. Defaults to 10.</li>
