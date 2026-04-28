@@ -18,10 +18,9 @@
 #' @param overwrite Logical; overwrite already downloaded .zip files? If `FALSE`
 #'   it will skip downloading existing files, unless they are invalid .zip files
 #'   (e.g. due to partial download or corruption).
-#' @param user_info An optional list with data-hub-specific user information,
-#'   such as Ameriflux user name, email, and intended use.  By default, these
-#'   are retrieved from environment variables for Ameriflux (the only hub that
-#'   currently uses `user_info`).
+#' @param user_info An optional list with data-hub-specific user information.
+#'   Only AmeriFlux uses this currently. By default, these are retrieved from
+#'   environment variables by [flux_amf_credentials()].
 #' @param ... Arguments passed to [flux_listall()].
 #'
 #' @returns Invisibly returns a tibble with the download URL, path on disk, HTTP
@@ -50,13 +49,7 @@ flux_download <- function(
   site_ids = NULL,
   download_dir = "fluxnet",
   overwrite = FALSE,
-  user_info = list(
-    ameriflux = list(
-      user_name = Sys.getenv("AMERIFLUX_USER_NAME"),
-      user_email = Sys.getenv("AMERIFLUX_USER_EMAIL"),
-      intended_use = Sys.getenv("AMERIFLUX_INTENDED_USE")
-    )
-  ),
+  user_info = list(ameriflux = flux_amf_credentials()),
   ...
 ) {
   if (!is.null(site_ids)) {
