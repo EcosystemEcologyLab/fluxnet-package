@@ -1,18 +1,3 @@
-#' Big thanks to Andrew Heiss for helping me figure this out!
-#' @noRd
-fluxnet_shuttle_executable <- function(virtualenv = "fluxnet") {
-  #TODO: check if virtualenv already exists and print message if not
-  reticulate::virtualenv_create(
-    virtualenv,
-    version = ">=3.11,<3.14",
-    packages = "git+https://github.com/fluxnet/shuttle.git@0.3.7"
-  )
-  env_path <- reticulate::virtualenv_python(virtualenv)
-  executable <- file.path(dirname(env_path), "fluxnet-shuttle")
-
-  executable
-}
-
 #' Install the fluxnet-shuttle CLI
 #'
 #' Uses `reticulate` to install the
@@ -22,13 +7,14 @@ fluxnet_shuttle_executable <- function(virtualenv = "fluxnet") {
 #'
 #' @note This will be run automatically the first time you run [flux_listall()]
 #'   or [flux_download()], so it is not necessary to run this function
-#'   separately first.
+#'   separately first.  Big thanks to Andrew Heiss for helping me figure this
+#'   all out!
 #'
 #' @param venv A name to use for creating a virtual environment.  Defaults to
 #'   `"fluxnet"`, but we recommend using a project-specific virtual environment.
 #'   You can set this in a project-level `.Renviron` file as
 #'   `FLUXNET_VENV=myproject` and it will be pulled from there.
-#' @param version A version tag (e.g. `"0.3.7"`) to install.  Defaults to GitHub
+#' @param shuttle_version A version tag (e.g. `"0.3.7"`) to install.  Defaults to GitHub
 #'   development version (for now). Can also be set as an environment variable
 #'   in `.Renviron`, E.g. `FLUXNET_SHUTTLE_VERSION=0.3.6`
 #' @param from Where to install from? Currently only `"github"` is available,
@@ -44,21 +30,22 @@ fluxnet_shuttle_executable <- function(virtualenv = "fluxnet") {
 #' flux_install_shuttle()
 #'
 #' # Specify a version
-#' flux_install_shuttle(version = "0.3.5")
+#' flux_install_shuttle(shuttle_version = "0.3.5")
 #'
 #' # When run a second time, even after restarting the R session, it skips
 #' # installation as long as the `venv` exists unless `reinitialize = TRUE`
-#' flux_install_shuttle(version = "0.3.6")
+#' flux_install_shuttle(shuttle_version = "0.3.6")
 #'
 #' # If you want to update the version, set `reinitilaize = TRUE`
-#' flux_install_shuttle(version = "0.3.6", reinitialize = TRUE)
+#' flux_install_shuttle(shuttle_version = "0.3.6", reinitialize = TRUE)
 #' }
 #'
 #' @returns The path to the `fluxnet-shuttle` CLI executable, silently.
+#'
 #' @export
 flux_install_shuttle <- function(
   venv = Sys.getenv("FLUXNET_VENV", unset = "fluxnet"),
-  version = Sys.getenv("FLUXNET_SHUTTLE_VERSION", unset = "main"),
+  shuttle_version = Sys.getenv("FLUXNET_SHUTTLE_VERSION", unset = "main"),
   from = c("github", "pypi"),
   reinitialize = FALSE
 ) {
@@ -67,19 +54,55 @@ flux_install_shuttle <- function(
     reticulate::virtualenv_remove(venv)
   }
 
-  fmt_version <- if (version == "main") "development" else (version)
-  fmt_from <- switch(from, github = "GitHub", pypi = "PyPI")
+  # If virtualenv already exists, check that it has the requested version of
+  # `fluxnet-shuttle` and advise if it doesn't
+  if (reticulate::virtualenv_exists(venv)) {
+    env_path <- reticulate::virtualenv_python(venv)
 
-  # Print message only if virtualenv doesn't exist yet
-  if (!reticulate::virtualenv_exists(venv)) {
-    cli::cli_inform(c(
-      i = 'Initializing virtualenv "{venv}".',
-      i = 'Installing {.pkg fluxnet-shuttle} ({fmt_version}) from {fmt_from}. '
-    ))
+    # If venv exists already but doesn't have fluxnet-shuttle installed, it was
+    # probably created for something else and we shouldn't overwrite it!
+    exe <- file.path(dirname(env_path), "fluxnet-shuttle")
+    withCallingHandlers(
+      installed_version_raw <- system2(
+        exe,
+        "--version",
+        stdout = TRUE,
+        stderr = FALSE
+      ),
+      error = function(cnd) {
+        cli::cli_abort(c(
+          `!` = 'The virtualenv "{venv}" already exists, but {.pgk fluxnet-shuttle} is not installed in it.',
+          i = "Use a different value for {.arg venv}!"
+          # Could also re-run with reinitialize = TRUE, but I'm assuming that
+          # would remove some venv created for another purpose, so not going to
+          # recommend it here!
+        ))
+      }
+    )
+    # Output: "fluxnet-shuttle 0.3.7.post1" — extract the version token
+    installed_version <- stringr::str_extract(
+      installed_version_raw[1],
+      "\\d+\\.\\d+\\.\\d+(\\..+)?"
+    )
+
+    if (shuttle_version != "main") {
+      if (shuttle_version != installed_version) {
+        cli::cli_warn(c(
+          `!` = '{.pkg fluxnet-shuttle} version {installed_version}, not version {shuttle_version}, is installed in the "{venv}" virtualenv.',
+          i = "Run the previous command with {.arg reinitialize = TRUE} to install version {shuttle_version}."
+        ))
+      }
+    }
   }
 
-  # TODO: eventually enable install with `pypi`
+  fmt_version <- if (shuttle_version == "main") {
+    "development"
+  } else {
+    shuttle_version
+  }
+  fmt_from <- switch(from, github = "GitHub", pypi = "PyPI")
 
+  # TODO: eventually enable install with `pypi` when it is available
   if (from == "pypi") {
     cli::cli_warn(c(
       "Installing {.pkg fluxnet-shuttle} from PyPI is not yet available.",
@@ -89,14 +112,22 @@ flux_install_shuttle <- function(
   }
 
   if (from == "github") {
-    if (version == "main") {
+    if (shuttle_version == "main") {
       pkg_string <- "git+https://github.com/fluxnet/shuttle.git"
     } else {
       pkg_string <- paste0(
         "git+https://github.com/fluxnet/shuttle.git@",
-        version
+        shuttle_version
       )
     }
+  }
+
+  # Print message only if virtualenv doesn't exist yet
+  if (!reticulate::virtualenv_exists(venv)) {
+    cli::cli_inform(c(
+      i = 'Initializing virtualenv "{venv}".',
+      i = 'Installing {.pkg fluxnet-shuttle} ({fmt_version}) from {fmt_from}. '
+    ))
   }
 
   reticulate::virtualenv_create(
