@@ -9,6 +9,10 @@ flux_download(
   site_ids = "all",
   download_dir = "fluxnet",
   overwrite = FALSE,
+  user_info = list(ameriflux = list(user_name = Sys.getenv("AMERIFLUX_USER_NAME"),
+    user_email = Sys.getenv("AMERIFLUX_USER_EMAIL"), intended_use =
+    Sys.getenv("AMERIFLUX_INTENDED_USE", unset = "6"), description =
+    Sys.getenv("AMERIFLUX_DESCRIPTION"))),
   ...
 )
 }
@@ -30,6 +34,21 @@ a vector of site IDs. For example, \code{c("UK-GaB", "CA-Ca2")}.}
 \item{overwrite}{Logical; overwrite already downloaded .zip files? If \code{FALSE}
 it will skip downloading existing files, unless they are invalid .zip files
 (e.g. due to partial download or corruption).}
+
+\item{user_info}{A list of optional information for specific data hubs.
+Currently, only used by AmeriFlux.  For AmeriFlux, please include your
+AmeriFlux \code{user_name}, \code{user_email}, \code{description}, and \code{intended_use}
+(1--6) as follows:
+\itemize{
+\item 1 = Synthesis / network synthesis analysis
+\item 2 = Land model/Earth system model
+\item 3 = Remote sensing research
+\item 4 = Other research
+\item 5 = Education (Teacher or Student)
+\item 6 = Other
+}
+It is recommended to set these options in a project-level \code{.Renviron} file,
+as the default is to pull them from environment variables.}
 
 \item{...}{Arguments passed to \code{\link[=flux_listall]{flux_listall()}}.}
 }

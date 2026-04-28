@@ -17,6 +17,20 @@
 #' @param overwrite Logical; overwrite already downloaded .zip files? If `FALSE`
 #'   it will skip downloading existing files, unless they are invalid .zip files
 #'   (e.g. due to partial download or corruption).
+#' @param user_info A list of optional information for specific data hubs.
+#'   Currently, only used by AmeriFlux.  For AmeriFlux, please include your
+#'   AmeriFlux `user_name`, `user_email`, `description`, and `intended_use`
+#'   (1--6) as follows:
+#'   \itemize{
+#'     \item 1 = Synthesis / network synthesis analysis
+#'     \item 2 = Land model/Earth system model
+#'     \item 3 = Remote sensing research
+#'     \item 4 = Other research
+#'     \item 5 = Education (Teacher or Student)
+#'     \item 6 = Other
+#'   }
+#'   It is recommended to set these options in a project-level `.Renviron` file,
+#'   as the default is to pull them from environment variables.
 #' @param ... Arguments passed to [flux_listall()].
 #'
 #' @returns Invisibly returns a tibble with the download URL, path on disk, HTTP
@@ -45,6 +59,14 @@ flux_download <- function(
   site_ids = "all",
   download_dir = "fluxnet",
   overwrite = FALSE,
+  user_info = list(
+    ameriflux = list(
+      user_name = Sys.getenv("AMERIFLUX_USER_NAME"),
+      user_email = Sys.getenv("AMERIFLUX_USER_EMAIL"),
+      intended_use = Sys.getenv("AMERIFLUX_INTENDED_USE", unset = "6"),
+      description = Sys.getenv("AMERIFLUX_DESCRIPTION")
+    )
+  ),
   ...
 ) {
   file_list_null <- is.null(file_list_df)
@@ -93,17 +115,33 @@ flux_download <- function(
     return(invisible(NULL))
   }
 
-  # Shuffle data to avoid putting pressure on a single data hub at a time when
-  # there are multiple data hubs to download from.
-  file_list_df <- file_list_df %>% dplyr::slice_sample(prop = 1)
+  amf_urls <- file_list_df$download_link[file_list_df$data_hub == "AmeriFlux"]
+  other_urls <- file_list_df$download_link[file_list_df$data_hub != "AmeriFlux"]
 
-  reqs <- purrr::map(file_list_df$download_link, function(url) {
+  # Validate AmeriFlux user info
+  amf_user_info <- user_info$ameriflux
+  if (!amf_user_info$intended_use %in% 1:6) {
+    cli::cli_abort("{.var user_info$ameriflux$intended_use} must be one of 1:6")
+  }
+
+  reqs_ameriflux <- purrr::map(amf_urls, function(url) {
     httr2::request(url) %>%
-      httr2::req_user_agent(
-        "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
-      ) %>%
-      httr2::req_retry(max_tries = 3)
+      httr2::req_body_json(amf_user_info) # sets method to POST
   })
+
+  reqs_other <- purrr::map(other_urls, httr2::request)
+
+  reqs <- c(reqs_ameriflux, reqs_other) %>%
+    purrr::map(function(req) {
+      req %>%
+        httr2::req_user_agent(
+          "fluxnet R package (https://github.com/EcosystemEcologyLab/fluxnet-package)"
+        ) %>%
+        httr2::req_retry(max_tries = 3)
+    }) %>%
+    # Shuffle requests to avoid putting pressure on a single data hub at a time when
+    # there are multiple data hubs to download from.
+    sample()
 
   # TODO: customize progress bar?
   resps <-
@@ -115,11 +153,12 @@ flux_download <- function(
 
   # If there are download errors, print a warning with instructions to re-run flux_download()
   failed <- httr2::resps_failures(resps)
-  if(length(failed)>0) {
-
+  if (length(failed) > 0) {
     failed_urls <- purrr::map_chr(failed, httr2::resp_url)
-    failed_sites <- file_list_df$site_id[file_list_df$download_link %in% failed_urls]
-  
+    failed_sites <- file_list_df$site_id[
+      file_list_df$download_link %in% failed_urls
+    ]
+
     failed_sites_formatted <- paste0('"', failed_sites, '"') %>%
       paste0(collapse = ", ")
 
