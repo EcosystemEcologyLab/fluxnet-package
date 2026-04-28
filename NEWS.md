@@ -1,9 +1,9 @@
 # fluxnet (development version)
 
 * `flux_download()` no longer shows a progress bar as it downloads files.
-* Optionally, you can provide a list containing your Ameriflux user name, email, and intended use to `flux_download()` via the new `user_info` argument.
+* Optionally, you can provide a list containing your Ameriflux user name, email, and intended use to `flux_download()` via the new `user_info` argument and `flux_amf_credentials()` helper function.
 * To get all available sites with `flux_download()`, use `site_ids = NULL`. `site_ids = "all"` is deprecated.
-* `flux_download()` now uses the `fluxnet_shuttle` Python library rather than the CLI internally.
+* `flux_download()` now uses the `fluxnet_shuttle` Python library rather than `httr2` to perform downloads.
 * The `use_cache` argument of `flux_listall()` has been removed.
 * `flux_listall()` gained a `clean_cache` argument to set the number of recent snapshot CSVs to keep. Defaults to 10.
 
