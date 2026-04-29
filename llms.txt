@@ -15,6 +15,15 @@ You can install the development version of fluxnet from
 pak::pak("EcosystemEcologyLab/fluxnet-package")
 ```
 
+This package also requires the `fluxnet-shuttle` Python library, but it
+will be installed automatically the first time you run
+[`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
+or
+[`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md).
+You can, however, manage its installaiton with
+[`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md)
+if you’d like!
+
 ## Data Use Requirements
 
 The FLUXNET data are shared under a CC-BY-4.0 data use license which
@@ -43,11 +52,9 @@ flowchart TD
 ## Updating/reinstalling fluxnet-shuttle
 
 To force the `fluxnet` R package to re-install the `fluxnet-shuttle`
-utility, remove the Pyhton virtualenv it is installed in with
-`reticulate::virtualenv_remove("fluxnet")`. Then, the next time you run
-[`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md),
-the virtualenv will be re-created and `fluxnet-shuttle` will be
-re-installed.
+utility, you can run
+[`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md)
+with `reinitialize = TRUE`.
 
 # Package index
 

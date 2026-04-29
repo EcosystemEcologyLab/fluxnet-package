@@ -2,6 +2,8 @@
 
 ## fluxnet (development version)
 
+## fluxnet 0.3.0
+
 - Adds a new function,
   [`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md)
   which accepts the name of a virtualenv to use and a version of

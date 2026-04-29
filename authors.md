@@ -17,17 +17,18 @@
 Source:
 [`inst/CITATION`](https://github.com/EcosystemEcologyLab/fluxnet-package/blob/main/inst/CITATION)
 
-Scott E, Moore D (2026). “fluxnet: Download, read, and visualize FLUXNET
-data.”
+Scott E, Moore D (2026). “fluxnet: Download, Read, and Visualize FLUXNET
+Data.”
 [doi:10.5281/zenodo.19210221](https://doi.org/10.5281/zenodo.19210221).
 <https://ecosystemecologylab.github.io/fluxnet-package/>.
 
     @Misc{scott_etall:2026,
-      title = {fluxnet: Download, read, and visualize FLUXNET data},
+      title = {fluxnet: Download, Read, and Visualize FLUXNET Data},
       author = {Eric R. Scott and David J.P. Moore},
       year = {2026},
       doi = {10.5281/zenodo.19210221},
       url = {https://ecosystemecologylab.github.io/fluxnet-package/},
       abstract = {Utility functions to help download, read in, and work with data from FLUXNET.},
-      version = {0.2.1},
+      keywords = {ameriflux,fluxnet},
+      version = {0.3.0},
     }

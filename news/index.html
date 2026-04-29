@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fluxnet</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="fluxnet-development-version">fluxnet (development version)<a class="anchor" aria-label="anchor" href="#fluxnet-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="fluxnet-030">fluxnet 0.3.0<a class="anchor" aria-label="anchor" href="#fluxnet-030"></a></h2>
 <ul><li>Adds a new function, <code><a href="../reference/flux_install_shuttle.html">flux_install_shuttle()</a></code> which accepts the name of a virtualenv to use and a version of <code>fluxnet-shuttle</code> to install. It pulls these from envvars, by default, making it easy to configure via a project-level .Renviron file. It can be run as a separate step, but this is optional as it will be called automatically the first time <code><a href="../reference/flux_listall.html">flux_listall()</a></code> or <code><a href="../reference/flux_download.html">flux_download()</a></code> are run.</li>
 <li>
 <code><a href="../reference/flux_download.html">flux_download()</a></code> no longer shows a progress bar as it downloads files.</li>
