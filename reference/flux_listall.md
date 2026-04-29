@@ -16,7 +16,8 @@ flux_listall(
   cache_age = as.difftime(1, units = "days"),
   clean_cache = 10L,
   log_file = NULL,
-  echo_cmd = FALSE
+  echo_cmd = FALSE,
+  ...
 )
 ```
 
@@ -46,6 +47,11 @@ flux_listall(
 
   Set to `TRUE` to print the shell command in the console. Passed to
   [`processx::run()`](http://processx.r-lib.org/reference/run.md).
+
+- ...:
+
+  Arguments passed to
+  [`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md).
 
 ## Value
 

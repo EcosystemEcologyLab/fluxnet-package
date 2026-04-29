@@ -2,6 +2,17 @@
 
 ## fluxnet (development version)
 
+- Adds a new function,
+  [`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md)
+  which accepts the name of a virtualenv to use and a version of
+  `fluxnet-shuttle` to install. It pulls these from envvars, by default,
+  making it easy to configure via a project-level .Renviron file. It can
+  be run as a separate step, but this is optional as it will be called
+  automatically the first time
+  [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
+  or
+  [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
+  are run.
 - [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
   no longer shows a progress bar as it downloads files.
 - Optionally, you can provide a list containing your Ameriflux user

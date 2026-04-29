@@ -20,6 +20,9 @@
 - [`flux_extract()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_extract.md)
   : Extract FLUXNET data from downloaded zip files
 
+- [`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md)
+  : Install the fluxnet-shuttle CLI
+
 - [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
   : List available FLUXNET zip files for download
 

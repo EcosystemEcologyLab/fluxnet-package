@@ -63,7 +63,8 @@ be read in instead of downloading a new snapshot.</p>
 <span>  cache_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">as.difftime</a></span><span class="op">(</span><span class="fl">1</span>, units <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span>,</span>
 <span>  clean_cache <span class="op">=</span> <span class="fl">10L</span>,</span>
 <span>  log_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  echo_cmd <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  echo_cmd <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,6 +96,10 @@ Defaults to 10, which keeps only the 10 most recent snapshots.</p></dd>
 <dt id="arg-echo-cmd">echo_cmd<a class="anchor" aria-label="anchor" href="#arg-echo-cmd"></a></dt>
 <dd><p>Set to <code>TRUE</code> to print the shell command in the console.
 Passed to <code><a href="http://processx.r-lib.org/reference/run.html" class="external-link">processx::run()</a></code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Arguments passed to <code><a href="flux_install_shuttle.html">flux_install_shuttle()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
