@@ -1,3 +1,5 @@
+# fluxnet (development version)
+
 # fluxnet 0.3.0
 
 * Adds a new function, `flux_install_shuttle()` which accepts the name of a virtualenv to use and a version of `fluxnet-shuttle` to install.  It pulls these from envvars, by default, making it easy to configure via a project-level .Renviron file.  It can be run as a separate step, but this is optional as it will be called automatically the first time `flux_listall()` or `flux_download()` are run.
