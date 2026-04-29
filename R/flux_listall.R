@@ -26,6 +26,7 @@
 #'   `fluxnet-shuttle` log to. Useful for debugging.
 #' @param echo_cmd Set to `TRUE` to print the shell command in the console.
 #'   Passed to [processx::run()].
+#' @param ... Arguments passed to [flux_install_shuttle()].
 #' @returns A data frame of stations with available data and their metadata.
 #' @examples
 #' \dontrun{
@@ -40,7 +41,8 @@ flux_listall <- function(
   cache_age = as.difftime(1, units = "days"),
   clean_cache = 10L,
   log_file = NULL,
-  echo_cmd = FALSE
+  echo_cmd = FALSE,
+  ...
 ) {
   # Check if there is already a recently downloaded list
   fs::dir_create(cache_dir)
@@ -56,7 +58,7 @@ flux_listall <- function(
     dplyr::arrange(dplyr::desc(.data$datetime))
 
   if (nrow(cached_snapshots %>% dplyr::filter(!.data$expired)) == 0) {
-    fluxnet_shuttle <- fluxnet_shuttle_executable("fluxnet")
+    fluxnet_shuttle <- flux_install_shuttle(...)
     cli::cli_inform("File list is expired, downloading the latest version")
 
     if (is.null(log_file)) {
