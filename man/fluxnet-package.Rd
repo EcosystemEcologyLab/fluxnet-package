@@ -4,7 +4,7 @@
 \name{fluxnet-package}
 \alias{fluxnet}
 \alias{fluxnet-package}
-\title{fluxnet: Download, read, and visualize FLUXNET data}
+\title{fluxnet: Download, Read, and Visualize FLUXNET Data}
 \description{
 Utility functions to help download, read in, and work with data from FLUXNET.
 }

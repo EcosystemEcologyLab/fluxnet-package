@@ -1,5 +1,5 @@
 Package: fluxnet
-Title: Download, read, and visualize FLUXNET data
+Title: Download, Read, and Visualize FLUXNET Data
 Version: 0.2.1.9000
 Authors@R: c(
     person(c("Eric", "R."), "Scott", , "ericrscott@arizona.edu", role = c("aut", "cre"),
@@ -20,7 +20,6 @@ Imports:
     dplyr,
     fs,
     ggplot2 (>= 4.0),
-    httr2 (>= 1.1.2),
     lubridate,
     magrittr,
     processx,
