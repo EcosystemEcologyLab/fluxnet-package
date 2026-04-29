@@ -1,4 +1,4 @@
-# fluxnet: Download, read, and visualize FLUXNET data
+# fluxnet: Download, Read, and Visualize FLUXNET Data
 
 Utility functions to help download, read in, and work with data from
 FLUXNET.
