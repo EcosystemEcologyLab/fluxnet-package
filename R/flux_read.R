@@ -80,7 +80,7 @@ flux_read <- function(
   data_raw <- purrr::pmap(
     files_df %>% dplyr::select(dplyr::all_of(c("path", "site_id", "dataset"))),
     function(path, site_id, dataset) {
-      readr::read_csv(path, show_col_types = FALSE) %>%
+      readr::read_csv(path, show_col_types = FALSE, na = c("", "NA", "-9999")) %>%
         dplyr::mutate(site_id = site_id, dataset = dataset, .before = 1)
     },
     .progress = TRUE
@@ -118,9 +118,6 @@ flux_read <- function(
   data_clean <- data_raw %>%
     dplyr::mutate(
       dplyr::across(dplyr::all_of(timestamp_col), timestamp_fun),
-      dplyr::across(dplyr::where(is.numeric), function(x) {
-        dplyr::na_if(x, -9999)
-      })
     ) %>%
     dplyr::rename_with(function(col) {
       stringr::str_replace(col, "TIMESTAMP", timestamp_replace)
