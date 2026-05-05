@@ -21,7 +21,7 @@ will be installed automatically the first time you run
 [`flux_listall()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_listall.md)
 or
 [`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md).
-You can, however, manage its installaiton with
+You can, however, manage its installation with
 [`flux_install_shuttle()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_install_shuttle.md)
 if you’d like!
 
