@@ -7,7 +7,7 @@
 flux_extract(
   zip_dir = "fluxnet",
   output_dir = fs::path(zip_dir, "unzipped"),
-  site_ids = "all",
+  site_ids = NULL,
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN"),
   resolutions = c("y", "m", "w", "d", "h"),
   extract_varinfo = TRUE,
@@ -22,8 +22,8 @@ flux_extract(
 data files will be nested by site.}
 
 \item{site_ids}{A character vector of site IDs (e.g. \code{c("AR-TF2", "CA-Ca2")})
-can be supplied to only unzip data for certain sites.  If \code{"all"}
-(default), all zip files found in zip_dir will be unzipped.}
+can be supplied to only unzip data for certain sites.  If \code{NULL} (default),
+all zip files found in \code{zip_dir} will be unzipped.}
 
 \item{networks}{A character vector indicating which networks to extract files
 from. Multiple values may be provided. Defaults to all networks.}

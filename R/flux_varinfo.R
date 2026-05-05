@@ -35,8 +35,16 @@ flux_varinfo <- function(
     "SAEON",
     "TERN"
   ),
-  site_ids = "all"
+  site_ids = NULL
 ) {
+  if (!is.null(site_ids)) {
+    if (site_ids == "all") {
+      cli::cli_warn(
+        "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
+      )
+      site_ids <- NULL
+    }
+  }
   resolution <- match.arg(resolution)
   resolution <- paste0(toupper(resolution), toupper(resolution))
   network_choice <- match.arg(networks, several.ok = TRUE)
@@ -46,7 +54,7 @@ flux_varinfo <- function(
     dplyr::filter(.data$time_resolution == resolution) %>%
     dplyr::filter(.data$product_source_network %in% network_choice)
 
-  if (length(site_ids) > 1 | !any(site_ids == "all")) {
+  if (!is.null(site_ids)) {
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 

@@ -7,7 +7,7 @@
 flux_badm(
   manifest,
   variable_group,
-  site_ids = "all",
+  site_ids = NULL,
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN")
 )
 }
@@ -18,7 +18,7 @@ flux_badm(
 Options can be viewed at
 \url{https://ameriflux.lbl.gov/data/badm/badm-standards/}}
 
-\item{site_ids}{A vector of site IDs to filter the manifest by.  If \code{"all"}
+\item{site_ids}{A vector of site IDs to filter the manifest by.  If \code{NULL}
 (the default), the manifest isn't filtered by site ID.}
 
 \item{networks}{A character vector indicating which networks to extract files

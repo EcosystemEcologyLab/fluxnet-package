@@ -7,8 +7,8 @@
 #' @param output_dir The directory to unzip files to.  Within this directory,
 #'   data files will be nested by site.
 #' @param site_ids A character vector of site IDs (e.g. `c("AR-TF2", "CA-Ca2")`)
-#'   can be supplied to only unzip data for certain sites.  If `"all"`
-#'   (default), all zip files found in zip_dir will be unzipped.
+#'   can be supplied to only unzip data for certain sites.  If `NULL` (default),
+#'   all zip files found in `zip_dir` will be unzipped.
 #' @param networks A character vector indicating which networks to extract files
 #'   from. Multiple values may be provided. Defaults to all networks.
 #' @param resolutions A character vector indicating which time resolutions to
@@ -30,7 +30,7 @@
 flux_extract <- function(
   zip_dir = "fluxnet",
   output_dir = fs::path(zip_dir, "unzipped"),
-  site_ids = "all",
+  site_ids = NULL,
   networks = c(
     "AMF",
     "CNF",
@@ -47,6 +47,14 @@ flux_extract <- function(
   extract_txt = FALSE,
   overwrite = FALSE
 ) {
+  if (!is.null(site_ids)) {
+    if (site_ids == "all") {
+      cli::cli_warn(
+        "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
+      )
+      site_ids <- NULL
+    }
+  }
   network_choice <- match.arg(networks, several.ok = TRUE)
 
   zip_files <- fs::dir_ls(zip_dir, glob = "*.zip")
@@ -75,7 +83,7 @@ flux_extract <- function(
     ) %>%
     dplyr::filter(.data$network %in% network_choice)
 
-  if (length(site_ids) == 1 && site_ids != "all" | length(site_ids) > 1) {
+  if (!is.null(site_ids)) {
     zip_to_extract <- zip_avail %>%
       dplyr::filter(.data$site_id %in% site_ids)
   } else {
