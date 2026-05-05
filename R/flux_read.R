@@ -10,7 +10,7 @@
 #'   Defaults to both.
 #' @param networks A character vector indicating which networks to extract files
 #'   from. Multiple values may be provided. Defaults to all networks.
-#' @param site_ids A vector of site IDs to filter the manifest by.  If `"all"`
+#' @param site_ids A vector of site IDs to filter the manifest by.  If `NULL`
 #'   (the default), the manifest isn't filtered by site ID.
 #'
 #' @examples
@@ -46,8 +46,16 @@ flux_read <- function(
     "SAEON",
     "TERN"
   ),
-  site_ids = "all"
+  site_ids = NULL
 ) {
+  if (!is.null(site_ids)) {
+    if (site_ids == "all") {
+      cli::cli_warn(
+        "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
+      )
+      site_ids <- NULL
+    }
+  }
   datasets <- match.arg(datasets, several.ok = TRUE)
   resolution <- match.arg(resolution)
   resolution <- paste0(toupper(resolution), toupper(resolution))
@@ -58,7 +66,7 @@ flux_read <- function(
     dplyr::filter(.data$time_resolution == resolution) %>%
     dplyr::filter(.data$product_source_network %in% network_choice)
 
-  if (length(site_ids) > 1 | !any(site_ids == "all")) {
+  if (!is.null(site_ids)) {
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 

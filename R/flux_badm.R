@@ -18,7 +18,7 @@
 flux_badm <- function(
   manifest,
   variable_group,
-  site_ids = "all",
+  site_ids = NULL,
   networks = c(
     "AMF",
     "CNF",
@@ -31,6 +31,14 @@ flux_badm <- function(
     "TERN"
   )
 ) {
+  if (!is.null(site_ids)) {
+    if (site_ids == "all") {
+      cli::cli_warn(
+        "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
+      )
+      site_ids <- NULL
+    }
+  }
   network_choice <- match.arg(networks, several.ok = TRUE)
 
   var_grp <- toupper(c(variable_group, paste0("GRP_", variable_group)))
@@ -38,7 +46,7 @@ flux_badm <- function(
   files_df <- manifest %>%
     dplyr::filter(.data$dataset == "BIF") %>%
     dplyr::filter(.data$product_source_network %in% network_choice)
-  if (length(site_ids) > 1 | !any(site_ids == "all")) {
+  if (!is.null(site_ids)) {
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 

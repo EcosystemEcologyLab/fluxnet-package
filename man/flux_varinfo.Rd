@@ -8,7 +8,7 @@ flux_varinfo(
   manifest,
   resolution = c("y", "m", "w", "d", "h"),
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN"),
-  site_ids = "all"
+  site_ids = NULL
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ flux_varinfo(
 \item{networks}{A character vector indicating which networks to extract files
 from. Multiple values may be provided. Defaults to all networks.}
 
-\item{site_ids}{A vector of site IDs to filter the manifest by.  If \code{"all"}
+\item{site_ids}{A vector of site IDs to filter the manifest by.  If \code{NULL}
 (the default), the manifest isn't filtered by site ID.}
 }
 \value{
