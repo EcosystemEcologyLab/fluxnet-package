@@ -19,7 +19,7 @@ pak::pak("EcosystemEcologyLab/fluxnet-package")
 ```
 
 This package also requires the `fluxnet-shuttle` Python library, but it will be installed automatically the first time you run `flux_listall()` or `flux_download()`.
-You can, however, manage its installaiton with `flux_install_shuttle()` if you'd like!
+You can, however, manage its installation with `flux_install_shuttle()` if you'd like!
 
 ## Data Use Requirements
 
