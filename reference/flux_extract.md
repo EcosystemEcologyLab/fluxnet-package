@@ -10,7 +10,7 @@ with options to extract only subsets of the files they contain.
 flux_extract(
   zip_dir = "fluxnet",
   output_dir = fs::path(zip_dir, "unzipped"),
-  site_ids = "all",
+  site_ids = NULL,
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN"),
   resolutions = c("y", "m", "w", "d", "h"),
   extract_varinfo = TRUE,
@@ -33,8 +33,8 @@ flux_extract(
 - site_ids:
 
   A character vector of site IDs (e.g. `c("AR-TF2", "CA-Ca2")`) can be
-  supplied to only unzip data for certain sites. If `"all"` (default),
-  all zip files found in zip_dir will be unzipped.
+  supplied to only unzip data for certain sites. If `NULL` (default),
+  all zip files found in `zip_dir` will be unzipped.
 
 - networks:
 

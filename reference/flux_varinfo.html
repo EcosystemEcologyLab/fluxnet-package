@@ -44,7 +44,7 @@
 <span>  <span class="va">manifest</span>,</span>
 <span>  resolution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"m"</span>, <span class="st">"w"</span>, <span class="st">"d"</span>, <span class="st">"h"</span><span class="op">)</span>,</span>
 <span>  networks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AMF"</span>, <span class="st">"CNF"</span>, <span class="st">"EUF"</span>, <span class="st">"FLX"</span>, <span class="st">"ICOS"</span>, <span class="st">"JPF"</span>, <span class="st">"KOF"</span>, <span class="st">"SAEON"</span>, <span class="st">"TERN"</span><span class="op">)</span>,</span>
-<span>  site_ids <span class="op">=</span> <span class="st">"all"</span></span>
+<span>  site_ids <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -68,7 +68,7 @@ from. Multiple values may be provided. Defaults to all networks.</p></dd>
 
 
 <dt id="arg-site-ids">site_ids<a class="anchor" aria-label="anchor" href="#arg-site-ids"></a></dt>
-<dd><p>A vector of site IDs to filter the manifest by.  If <code>"all"</code>
+<dd><p>A vector of site IDs to filter the manifest by.  If <code>NULL</code>
 (the default), the manifest isn't filtered by site ID.</p></dd>
 
 </dl></div>

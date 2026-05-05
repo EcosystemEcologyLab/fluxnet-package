@@ -11,6 +11,7 @@ You can install the development version of fluxnet from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("EcosystemEcologyLab/fluxnet-package")
 ```

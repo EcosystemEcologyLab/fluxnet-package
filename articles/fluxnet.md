@@ -1,6 +1,7 @@
 # Getting Started
 
 ``` r
+
 library(fluxnet)
 #> ! Use of data downloaded by fluxnet requires you abide by FLUXNET data policies: <
 #> ℹ Citations for individual sites' datasets are returned by `
@@ -19,6 +20,7 @@ be installed into it. If you don’t have an appropriate version of Python
 installed, you may be prompted with tips on how to install it.
 
 ``` r
+
 list <- flux_listall()
 ```
 
@@ -33,6 +35,7 @@ cache, use `use_cache = FALSE`. To *invalidate* the cache (and replace
 it with an updated one), use `cache_age = -Inf`.
 
 ``` r
+
 # Don't use cached results:
 list <- flux_listall(use_cache = FALSE)
 
@@ -46,6 +49,7 @@ contains metadata on the available sites including, importantly,
 citations for site-level data attribution which is required by FLUXNET.
 
 ``` r
+
 colnames(list)
 #>  [1] "data_hub"               "site_id"                "site_name"              "location_lat"           "location_long"          "igbp"                   "network"               
 #>  [8] "team_member_name"       "team_member_role"       "team_member_email"      "first_year"             "last_year"              "download_link"          "fluxnet_product_name"  
@@ -78,6 +82,7 @@ you can filter the results of
 and pass those in.
 
 ``` r
+
 # Download everything available.
 flux_download()
 
@@ -108,6 +113,7 @@ allows you to unzip only desired files from all or some of the
 downloaded site .zip files.
 
 ``` r
+
 # Extract everything (not recommended!)
 flux_extract()
 
@@ -129,6 +135,7 @@ is used to create a “manifest” of the data available to read in. You
 [`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md).
 
 ``` r
+
 manifest <- flux_discover_files()
 manifest
 ```
@@ -158,6 +165,7 @@ You can visualize the sites you have data for with
 [`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md).
 
 ``` r
+
 flux_map_sites(manifest)
 ```
 
@@ -174,12 +182,14 @@ but for more complex filtering you can simply subset the manifest object
 first.
 
 ``` r
+
 # Read all available annual data
 annual <- flux_read(manifest, resolution = "y")
 #> Reading 10 files.
 ```
 
 ``` r
+
 ## NOT RUN ##
 # Read in hourly data from specific sites
 hourly <- flux_read(
@@ -209,6 +219,7 @@ and gapfilling threshold(s).
 ### Example 1: Flag rows where `NEE_VUT_REF` is more than 30% gapfilled
 
 ``` r
+
 flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", max_gapfilled = 0.3)
 flagged_nee %>%
   filter(qc_flagged) %>%
@@ -228,6 +239,7 @@ Notice that in this case `p_gapfilled` is just 1 - `NEE_VUT_REF_QC`.
 ### Example 2: Flag rows where NEE_VUT_REF *or* TA_F are more than 30% gapfilled
 
 ``` r
+
 flagged_2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
@@ -259,6 +271,7 @@ Now `p_gapfilled` is 1 - the smaller of `NEE_VUT_REF_QC` and `TA_F_QC`.
 ### Example 3: Flag rows where NEE_VUT_REF is more than 30% gapfilled *and* TA_F is more than 10% gapfilled
 
 ``` r
+
 flagged_3 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),

@@ -11,7 +11,7 @@ flux_read(
   resolution = c("y", "m", "w", "d", "h"),
   datasets = c("ERA5", "FLUXMET"),
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN"),
-  site_ids = "all"
+  site_ids = NULL
 )
 ```
 
@@ -40,7 +40,7 @@ flux_read(
 
 - site_ids:
 
-  A vector of site IDs to filter the manifest by. If `"all"` (the
+  A vector of site IDs to filter the manifest by. If `NULL` (the
   default), the manifest isn't filtered by site ID.
 
 ## Examples

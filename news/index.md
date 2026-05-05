@@ -2,6 +2,9 @@
 
 ## fluxnet (development version)
 
+- `site_ids = "all"` is deprecated in favor of `site_ids = NULL` in all
+  functions with this argument.
+
 ## fluxnet 0.3.0
 
 - Adds a new function,

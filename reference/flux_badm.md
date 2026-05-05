@@ -9,7 +9,7 @@ Reads in BADM data from "BIF" csv files, subsets to a single
 flux_badm(
   manifest,
   variable_group,
-  site_ids = "all",
+  site_ids = NULL,
   networks = c("AMF", "CNF", "EUF", "FLX", "ICOS", "JPF", "KOF", "SAEON", "TERN")
 )
 ```
@@ -28,7 +28,7 @@ flux_badm(
 
 - site_ids:
 
-  A vector of site IDs to filter the manifest by. If `"all"` (the
+  A vector of site IDs to filter the manifest by. If `NULL` (the
   default), the manifest isn't filtered by site ID.
 
 - networks:
