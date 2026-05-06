@@ -91,16 +91,20 @@ flux_extract <- function(
   }
 
   resolutions <- match.arg(resolutions, several.ok = TRUE)
-  extracted_files <- purrr::map(zip_to_extract$zip_path, function(zip) {
-    flux_extract_site(
-      zip,
-      output_dir = output_dir,
-      resolutions = resolutions,
-      extract_varinfo = extract_varinfo,
-      extract_txt = extract_txt,
-      overwrite = overwrite
-    )
-  }) %>%
+  extracted_files <- purrr::map(
+    zip_to_extract$zip_path,
+    function(zip) {
+      flux_extract_site(
+        zip,
+        output_dir = output_dir,
+        resolutions = resolutions,
+        extract_varinfo = extract_varinfo,
+        extract_txt = extract_txt,
+        overwrite = overwrite
+      )
+    },
+    .progress = interactive()
+  ) %>%
     purrr::list_rbind()
 
   invisible(extracted_files)
