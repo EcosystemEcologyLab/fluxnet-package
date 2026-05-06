@@ -2,6 +2,9 @@
 #'
 #' @param data_dir The directory to look for FLUXNET CSV files in, typically the
 #'   same as the `output_dir` used for [flux_extract()].
+#' @param remove_duplicates Logical; if `TRUE` (default) duplicate rows will be
+#'   removed from the resulting dataset.  Note: this does *not* remove the
+#'   duplicate files!
 #' @param ... Arguments passed to [flux_listall()].
 #' @returns Prints a summary of discovered available data and returns
 #'   (invisibly) a dataframe with file paths and metadata extracted from file
@@ -18,7 +21,11 @@
 #' manifest <- flux_discover_files()
 #' }
 #' @export
-flux_discover_files <- function(data_dir = "fluxnet/unzipped", ...) {
+flux_discover_files <- function(
+  data_dir = "fluxnet/unzipped",
+  remove_duplicates = TRUE,
+  ...
+) {
   metadata <- flux_listall(...)
   all_files <- fs::dir_ls(data_dir, glob = "*.csv", recurse = TRUE)
   bif_files <- all_files[grepl("_BIF_", all_files)]
@@ -90,34 +97,40 @@ flux_discover_files <- function(data_dir = "fluxnet/unzipped", ...) {
       dplyr::desc(.data$download_time)
     )
 
-  # Deduplicate and warn if there are multiple files for the same site, dataset,
-  # and time resolution
-  manifest_deduplicated <- manifest %>%
-    dplyr::distinct(
-      .data$site_id,
-      .data$dataset,
-      .data$time_resolution,
-      .keep_all = TRUE
-    )
-
-  if (nrow(manifest) != nrow(manifest_deduplicated)) {
-    removed <- dplyr::anti_join(
-      manifest,
-      manifest_deduplicated,
-      by = c(
-        "path",
-        "product_source_network",
-        "site_id",
-        "dataset",
-        "time_resolution",
-        "first_year",
-        "last_year",
-        "oneflux_code_version",
-        "release_version",
-        "download_time"
+  if (isTRUE(remove_duplicates)) {
+    # Deduplicate and warn if there are multiple files for the same site, dataset,
+    # and time resolution
+    manifest_deduplicated <- manifest %>%
+      dplyr::distinct(
+        .data$site_id,
+        .data$dataset,
+        .data$time_resolution,
+        .keep_all = TRUE
       )
-    )
-    cli::cli_warn("{nrow(removed)} duplicate file{?s} removed: {removed$path}")
+
+    if (nrow(manifest) != nrow(manifest_deduplicated)) {
+      removed <- dplyr::anti_join(
+        manifest,
+        manifest_deduplicated,
+        by = c(
+          "path",
+          "product_source_network",
+          "site_id",
+          "dataset",
+          "time_resolution",
+          "first_year",
+          "last_year",
+          "oneflux_code_version",
+          "release_version",
+          "download_time"
+        )
+      )
+      cli::cli_warn(
+        "{nrow(removed)} duplicate file{?s} removed: {removed$path}"
+      )
+    }
+  } else {
+    manifest_deduplicated <- manifest
   }
 
   summary <- manifest_deduplicated %>%
