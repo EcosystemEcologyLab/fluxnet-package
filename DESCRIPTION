@@ -20,6 +20,7 @@ Imports:
     dplyr,
     fs,
     ggplot2 (>= 4.0),
+    glue,
     lubridate,
     magrittr,
     processx,
@@ -31,6 +32,7 @@ Imports:
     stringr,
     tidyr
 Suggests: 
+    arrow,
     knitr,
     maps,
     quarto,
