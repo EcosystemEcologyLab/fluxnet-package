@@ -4,11 +4,19 @@
 \alias{flux_discover_files}
 \title{Create a "manifest" of downloaded and unzipped FLUXNET data files}
 \usage{
-flux_discover_files(data_dir = "fluxnet/unzipped", ...)
+flux_discover_files(
+  data_dir = "fluxnet/unzipped",
+  remove_duplicates = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data_dir}{The directory to look for FLUXNET CSV files in, typically the
 same as the \code{output_dir} used for \code{\link[=flux_extract]{flux_extract()}}.}
+
+\item{remove_duplicates}{Logical; if \code{TRUE} (default) duplicate rows will be
+removed from the resulting dataset.  Note: this does \emph{not} remove the
+duplicate files!}
 
 \item{...}{Arguments passed to \code{\link[=flux_listall]{flux_listall()}}.}
 }
