@@ -2,6 +2,8 @@
 
 ## fluxnet (development version)
 
+## fluxnet 0.3.2
+
 - Fixes a bug introduced in 0.3.1 when more than one site id is provided
   to `site_ids`.
 
