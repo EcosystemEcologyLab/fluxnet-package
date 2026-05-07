@@ -6,7 +6,7 @@ flux_arrange_hive <- function(manifest, hive_root = "fluxnet/unzipped/") {
   if (!is_hive) {
     copy <- manifest %>%
       dplyr::mutate(
-        file = fs::path_file(path),
+        file = fs::path_file(.data$path),
         new_path = fs::path(
           hive_root,
           glue::glue("time_resolution={time_resolution}"),
@@ -16,7 +16,7 @@ flux_arrange_hive <- function(manifest, hive_root = "fluxnet/unzipped/") {
           file
         )
       ) %>%
-      select(path, new_path)
+      dplyr::select(dplyr::all_of(c("path", "new_path")))
 
     fs::dir_create(fs::path_dir(copy$new_path))
     fs::file_move(path = copy$path, new_path = copy$new_path)

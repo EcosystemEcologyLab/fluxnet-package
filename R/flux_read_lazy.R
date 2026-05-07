@@ -33,37 +33,37 @@ flux_read_lazy <- function(
   if (resolution == "YY") {
     dataset_clean <- dataset %>%
       dplyr::mutate(
-        YEAR = as.integer(TIMESTAMP),
+        YEAR = as.integer(.data$TIMESTAMP),
         .after = 1,
         .keep = "unused"
       )
   } else if (resolution == "MM") {
     dataset_clean <- dataset %>%
       dplyr::mutate(
-        DATE = lubridate::ym(TIMESTAMP),
+        DATE = lubridate::ym(.data$TIMESTAMP),
         .after = 1,
         .keep = "unused"
       )
   } else if (resolution == "WW") {
     dataset_clean <- dataset %>%
       dplyr::mutate(
-        DATE_START = lubridate::ymd(TIMESTAMP_START),
-        DATE_END = lubridate::ymd(TIMESTAMP_END),
+        DATE_START = lubridate::ymd(.data$TIMESTAMP_START),
+        DATE_END = lubridate::ymd(.data$TIMESTAMP_END),
         .after = 1,
         .keep = "unused"
       )
   } else if (resolution == "DD") {
     dataset_clean <- dataset %>%
       dplyr::mutate(
-        DATE = lubridate::ymd(TIMESTAMP),
+        DATE = lubridate::ymd(.data$TIMESTAMP),
         .after = 1,
         .keep = "unused"
       )
   } else if (resolution == "HH") {
     dataset_clean <- dataset %>%
       dplyr::mutate(
-        DATETIME_START = lubridate::ymd_hm(TIMESTAMP_START),
-        DATETIME_END = lubridate::ymd_hm(TIMESTAMP_END),
+        DATETIME_START = lubridate::ymd_hm(.data$TIMESTAMP_START),
+        DATETIME_END = lubridate::ymd_hm(.data$TIMESTAMP_END),
         .after = 1,
         .keep = "unused"
       )
