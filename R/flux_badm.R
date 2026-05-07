@@ -32,7 +32,7 @@ flux_badm <- function(
   )
 ) {
   if (!is.null(site_ids)) {
-    if (site_ids == "all") {
+    if (any(site_ids == "all")) {
       cli::cli_warn(
         "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
       )
