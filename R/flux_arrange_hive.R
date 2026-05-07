@@ -4,6 +4,14 @@ flux_arrange_hive <- function(manifest, hive_root = "fluxnet/unzipped/") {
     stringr::str_detect("resolution=.+/dataset=.+/data_hub=.+/site_id=.+") %>%
     all()
   if (!is_hive) {
+    cli::cli_inform(c(
+      `!` = "This function will move files in a way that may be difficult to reverse.",
+      `>` = "Continue?"
+    ))
+    continue <- utils::menu(choices = c("Yes", "No"))
+    if (continue == 2) {
+      return(invisible(NULL))
+    }
     copy <- manifest %>%
       dplyr::mutate(
         file = fs::path_file(.data$path),
