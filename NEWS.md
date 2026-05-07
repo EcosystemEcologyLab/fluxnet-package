@@ -1,5 +1,7 @@
 # fluxnet (development version)
 
+* Fixes a bug introduced in 0.3.1 when more than one site id is provided to `site_ids`.
+
 # fluxnet 0.3.1
 
 * `site_ids = "all"` is deprecated in favor of `site_ids = NULL` in all functions with this argument.
