@@ -46,3 +46,16 @@ test_that("network arg works", {
     )
   )
 })
+
+test_that("site_ids works", {
+  tmpdir <- withr::local_tempdir()
+  out <- flux_extract(
+    zip_dir = test_path("testdata"),
+    output_dir = tmpdir,
+    site_ids = c("AR-CCg", "AU-Wom"),
+    resolutions = c("y"),
+    extract_varinfo = FALSE,
+    extract_txt = FALSE
+  )
+  expect_s3_class(out, "data.frame")
+})
