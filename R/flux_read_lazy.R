@@ -68,4 +68,5 @@ flux_read_lazy <- function(
         .keep = "unused"
       )
   }
+  dataset_clean
 }
