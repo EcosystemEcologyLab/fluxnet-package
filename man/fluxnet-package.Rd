@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Eric R. Scott \email{ericrscott@arizona.edu} (\href{https://orcid.org/0000-0002-7430-7879}{ORCID})
   \item David J.P. Moore (\href{https://orcid.org/0000-0002-6462-3288}{ORCID})
 }
 
