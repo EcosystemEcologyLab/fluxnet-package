@@ -91,6 +91,7 @@ flux_extract <- function(
   }
 
   resolutions <- match.arg(resolutions, several.ok = TRUE)
+
   extracted_files <- purrr::map(zip_to_extract$zip_path, function(zip) {
     flux_extract_site(
       zip,
@@ -184,14 +185,16 @@ flux_extract_site <- function(
       )
     )
 
+  resolutions_fmt <- toupper(paste0(resolutions, resolutions))
+  # sometimes hourly is "HR" (https://github.com/EcosystemEcologyLab/fluxnet-package/issues/73)
+  if ("HH" %in% resolutions_fmt) {
+    resolutions_fmt <- c(resolutions_fmt, "HR")
+  }
+
   data_to_extract <- data_avail %>%
-    dplyr::filter(
-      .data[["resolution"]] %in% toupper(paste0(resolutions, resolutions))
-    )
+    dplyr::filter(.data[["resolution"]] %in% resolutions_fmt)
   varinfo_to_extract <- varinfo_avail %>%
-    dplyr::filter(
-      .data[["resolution"]] %in% toupper(paste0(resolutions, resolutions))
-    )
+    dplyr::filter(.data[["resolution"]] %in% resolutions_fmt)
 
   files_to_extract <- c(
     txt_files[extract_txt],
