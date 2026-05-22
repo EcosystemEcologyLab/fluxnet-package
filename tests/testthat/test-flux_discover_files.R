@@ -7,7 +7,7 @@ test_that("manifest is correct", {
     extract_varinfo = TRUE,
     extract_txt = FALSE
   )
-
+  manifest <- flux_discover_files(data_dir = tempdir)
   expect_s3_class(manifest, "data.frame")
 
   expect_equal(unique(manifest$time_resolution), c(NA, "MM", "YY"))

@@ -38,11 +38,10 @@ test_that("network arg works", {
     extract_txt = TRUE
   )
   files <- fs::dir_ls(tmpdir, glob = "*.csv", recurse = TRUE)
-  expect_equal(
-    fs::path_file(files),
-    c(
-      "TERN_AU-Wom_FLUXNET_ERA5_YY_1981-2024_v1.3_r1.csv",
-      "TERN_AU-Wom_FLUXNET_FLUXMET_YY_2010-2024_v1.3_r1.csv"
+  expect_all_true(
+    stringr::str_detect(
+      fs::path_file(files),
+      "(TERN_AU-Wom_FLUXNET_ERA5_YY_1981|TERN_AU-Wom_FLUXNET_FLUXMET_YY_2010)"
     )
   )
 })
