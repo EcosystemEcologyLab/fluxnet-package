@@ -43,7 +43,7 @@ test_that("site_id filter works", {
   flux_extract(test_path("testdata"), output_dir = unzipped)
   manifest <- flux_discover_files(unzipped)
 
-  data <- flux_read(manifest, site_ids = "AR-CCg")
+  data <- flux_read(manifest, site_ids = "US-MMS")
   expect_equal(length(unique(data$site_id)), 1)
 })
 

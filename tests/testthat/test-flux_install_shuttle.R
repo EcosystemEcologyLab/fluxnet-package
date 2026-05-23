@@ -5,7 +5,6 @@ test_that("installing fluxnet-shuttle dev version from github works", {
 })
 
 test_that("specifying a version works", {
-  # skip_on_ci() # not sure if this is really necessary
   exe <- flux_install_shuttle(
     venv = "fluxnet-package-tests",
     shuttle_version = "0.3.6"

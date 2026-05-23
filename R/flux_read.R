@@ -58,12 +58,17 @@ flux_read <- function(
   }
   datasets <- match.arg(datasets, several.ok = TRUE)
   resolution <- match.arg(resolution)
-  resolution <- paste0(toupper(resolution), toupper(resolution))
+  resolution_fmt <- paste0(toupper(resolution), toupper(resolution))
+
+  # Combine hourly (HR) and half-hourly (HH)
+  if (resolution_fmt == "HH") {
+    resolution_fmt <- c("HH", "HR")
+  }
   network_choice <- match.arg(networks, several.ok = TRUE)
 
   files_df <- manifest %>%
     dplyr::filter(.data$dataset %in% datasets) %>%
-    dplyr::filter(.data$time_resolution == resolution) %>%
+    dplyr::filter(.data$time_resolution %in% resolution_fmt) %>%
     dplyr::filter(.data$product_source_network %in% network_choice)
 
   if (!is.null(site_ids)) {
@@ -90,29 +95,29 @@ flux_read <- function(
   # Parse TIMESTAMP column differently depending on time resolution
   timestamp_col <- switch(
     resolution,
-    YY = "TIMESTAMP",
-    MM = "TIMESTAMP",
-    WW = c("TIMESTAMP_START", "TIMESTAMP_END"),
-    DD = "TIMESTAMP",
-    HH = c("TIMESTAMP_START", "TIMESTAMP_END")
+    y = "TIMESTAMP",
+    m = "TIMESTAMP",
+    w = c("TIMESTAMP_START", "TIMESTAMP_END"),
+    d = "TIMESTAMP",
+    h = c("TIMESTAMP_START", "TIMESTAMP_END")
   )
 
   timestamp_replace <- switch(
     resolution,
-    YY = "YEAR",
-    MM = "DATE",
-    WW = "DATE",
-    DD = "DATE",
-    HH = "DATETIME"
+    y = "YEAR",
+    m = "DATE",
+    w = "DATE",
+    d = "DATE",
+    h = "DATETIME"
   )
 
   timestamp_fun <- switch(
     resolution,
-    YY = as.integer,
-    MM = lubridate::ym,
-    WW = lubridate::ymd,
-    DD = lubridate::ymd,
-    HH = lubridate::ymd_hm
+    y = as.integer,
+    m = lubridate::ym,
+    w = lubridate::ymd,
+    d = lubridate::ymd,
+    h = lubridate::ymd_hm
   )
 
   data_clean <- data_raw %>%
