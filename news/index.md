@@ -2,6 +2,10 @@
 
 ## fluxnet (development version)
 
+- Fixed a bug where hourly data wasn’t being extracted or read in along
+  with half-hourly data
+  ([\#73](https://github.com/EcosystemEcologyLab/fluxnet-package/issues/73))
+
 ## fluxnet 0.3.2
 
 - Fixes a bug introduced in 0.3.1 when more than one site id is provided
