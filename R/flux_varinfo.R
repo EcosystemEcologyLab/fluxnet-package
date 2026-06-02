@@ -58,7 +58,13 @@ flux_varinfo <- function(
     files_df <- files_df %>% dplyr::filter(.data$site_id %in% site_ids)
   }
 
-  var_info_raw <- readr::read_csv(files_df$path, show_col_types = FALSE) %>%
+  # Convert from latin1 encoding to UTF-8 encoding to get "µ" symbol correctly
+  # parsed
+  var_info_raw <- readr::read_csv(
+    files_df$path,
+    locale = readr::locale(encoding = "latin1"),
+    show_col_types = FALSE
+  ) %>%
     dplyr::filter(.data$VARIABLE_GROUP %in% c("VAR_INFO", "GRP_VAR_INFO"))
 
   var_info_tidy <- var_info_raw %>%
