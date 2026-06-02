@@ -62,7 +62,7 @@ flux_varinfo <- function(
   # parsed
   var_info_raw <- readr::read_csv(
     files_df$path,
-    locale = locale(encoding = "latin1"),
+    locale = readr::locale(encoding = "latin1"),
     show_col_types = FALSE
   ) %>%
     dplyr::filter(.data$VARIABLE_GROUP %in% c("VAR_INFO", "GRP_VAR_INFO"))
