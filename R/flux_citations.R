@@ -1,7 +1,43 @@
+#' Output required per-dataset citations for FLUXNET data
+#'
+#' Given a vector of site IDs, this either returns a dataframe with or BibTeX
+#' citations for each site.
+#'
+#' @param site_ids Character vector of site IDs, e.g. `c("AR-Bal", "DE-Gwg")`.
+#' @param output Either `"data.frame"` to return a tibble or `"bibtex"` to
+#'   return (or write) BibTeX entries. See '**Value**' for more details.
+#' @param bibtex_path Path to a .bib file to write BibTeX to, passed to the
+#'   `con` argument of [writeLines()]. If `NULL` (default), BibTeX will be
+#'   returned as character. Has no effect if `output = 'data.frame'`.
+#' @param ... Additional arguments passed to [flux_listall()].
+#'
+#' @returns If `output = 'data.frame'`, a `tibble` is returned with a
+#'   `bibentry` list-column with elements of class [bibentry] and a `citation`
+#'   column with citations formatted in the default style (see the `format()`
+#'   method for [bibentry()] for more details).  If `output = 'bibtex'`, BibTeX
+#'   entries are either returned as an atomic character vector (if `bibtex_path`
+#'   is `NULL`) or written to a file.
+#' @examples
+#' # Return dataframe with bibentries and formatted citations
+#' flux_citations(c("AR-Bal", "DE-Gwg"))
+#'
+#' # Return BibTeX
+#' flux_citations(c("AR-Bal", "DE-Gwg"), output = "bibtex")
+#'
+#' # Append BibTeX entries to a file
+#' \dontrun{
+#' flux_citations(
+#'   c("AR-Bal", "DE-Gwg"),
+#'   output = "bibtex",
+#'   bibtex_path = "references.bib"
+#' )
+#' }
+#'
+#' @export
 flux_citations <- function(
   site_ids,
-  output = c("table", "bibtex"),
-  output_path = NULL,
+  output = c("data.frame", "bibtex"),
+  bibtex_path = NULL,
   ...
 ) {
   list <- flux_listall(...)
@@ -20,65 +56,87 @@ flux_citations <- function(
     site_citations_raw,
     site_citations_raw$data_hub
   )
-  amf_pattern <- "^(.+)\\((\\d{4})\\), (.+) Ver\\. .+, (.+), \\(Dataset\\)\\. (.+)$"
-  amf_split <- stringr::str_match(
-    by_hub$AmeriFlux$product_citation,
-    pattern = amf_pattern
-  ) %>%
-    as_tibble()
-  colnames(amf_split) <- c(
-    "product_citation",
-    "authors",
-    "year",
-    "title",
-    "publisher",
-    "url"
-  )
 
-  amf <- left_join(
-    by_hub$AmeriFlux,
-    amf_split,
-    by = join_by(product_citation)
-  ) %>%
-    mutate(doi = product_id)
-
-  # For ICOS, sometimes there is no author
-  icos_pattern <- "^(.+)?\\s?\\((\\d{4})\\)\\. (.+), FLUXNET, (https.+)$"
-  icos_split <- stringr::str_match(
-    by_hub$ICOS$product_citation,
-    pattern = icos_pattern
-  ) %>%
-    as_tibble()
-  colnames(icos_split) <- c(
-    "product_citation",
-    "authors",
-    "year",
-    "title",
-    "url"
-  )
-  icos <- left_join(by_hub$ICOS, icos_split, by = join_by(product_citation)) %>%
-    mutate(
-      publisher = "Ecosystem Thematic Centre",
-      pid = product_id
+  if (!is.null(by_hub$AmeriFlux)) {
+    amf_pattern <- "^(.+)\\((\\d{4})\\), (.+), Ver\\. .+, (.+), \\(Dataset\\)\\. (.+)$"
+    amf_split <- stringr::str_match(
+      by_hub$AmeriFlux$product_citation,
+      pattern = amf_pattern
+    ) %>%
+      as_tibble()
+    colnames(amf_split) <- c(
+      "product_citation",
+      "authors",
+      "year",
+      "title",
+      "publisher",
+      "url"
     )
 
-  tern_pattern <- "^(.+)\\((\\d{4})\\): (.+\\.).?Version.+"
-  tern_split <- stringr::str_match(
-    by_hub$TERN$product_citation,
-    pattern = tern_pattern
-  ) %>%
-    as_tibble()
-  colnames(tern_split) <- c("product_citation", "authors", "year", "title")
-  tern <- left_join(by_hub$TERN, tern_split, by = join_by(product_citation)) %>%
-    mutate(
-      publisher = "Terrestrial Ecosystem Research Network (TERN)",
-      url = product_id,
-      doi = stringr::str_remove(product_id, "https:\\/\\/dx.doi.org\\/")
-    )
+    amf <- left_join(
+      by_hub$AmeriFlux,
+      amf_split,
+      by = join_by(product_citation)
+    ) %>%
+      mutate(doi = product_id)
+  } else {
+    amf <- tibble()
+  }
 
-  bibentries <- bind_rows(amf, icos, tern) %>%
+  if (!is.null(by_hub$ICOS)) {
+    # For ICOS, sometimes there is no author
+    icos_pattern <- "^(.+)?\\s?\\((\\d{4})\\)\\. (.+), FLUXNET, (https.+)$"
+    icos_split <- stringr::str_match(
+      by_hub$ICOS$product_citation,
+      pattern = icos_pattern
+    ) %>%
+      as_tibble()
+    colnames(icos_split) <- c(
+      "product_citation",
+      "authors",
+      "year",
+      "title",
+      "url"
+    )
+    icos <- left_join(
+      by_hub$ICOS,
+      icos_split,
+      by = join_by(product_citation)
+    ) %>%
+      mutate(
+        publisher = "Ecosystem Thematic Centre",
+        pid = product_id
+      )
+  } else {
+    icos <- tibble()
+  }
+
+  if (!is.null(by_hub$TERN)) {
+    tern_pattern <- "^(.+)\\((\\d{4})\\): (.+\\.).?Version.+"
+    tern_split <- stringr::str_match(
+      by_hub$TERN$product_citation,
+      pattern = tern_pattern
+    ) %>%
+      as_tibble()
+    colnames(tern_split) <- c("product_citation", "authors", "year", "title")
+    tern <- left_join(
+      by_hub$TERN,
+      tern_split,
+      by = join_by(product_citation)
+    ) %>%
+      mutate(
+        publisher = "Terrestrial Ecosystem Research Network (TERN)",
+        url = product_id,
+        doi = stringr::str_remove(product_id, "https:\\/\\/dx.doi.org\\/")
+      )
+  } else {
+    tern <- tibble()
+  }
+  combined <- bind_rows(amf, icos, tern) %>%
     mutate(type = "dataset") %>%
-    select(-product_citation) %>%
+    select(-product_citation)
+
+  bibentries <- combined %>%
     nest(.by = c(site_id, site_name, product_id)) %>%
     mutate(
       bibentry = map(data, \(x) {
@@ -96,5 +154,33 @@ flux_citations <- function(
       })
     ) %>%
     select(-data)
+
+  # Add cite keys
+  # TODO: make these Zotero/BetterBibTex style with a piece of the title in them
+  # to make them more likely to be unique
+  bibentries$bibentry <- bibentries$bibentry %>%
+    map(\(x) {
+      first_author_family <- tolower(x$author[[1]]$family)
+      if (is.null(first_author_family)) {
+        first_author_family <- "noauthor"
+      }
+      x$key <- paste(first_author_family, x$year, sep = "_")
+      x
+    })
+
+  output <- match.arg(output)
+  if (output == "data.frame") {
+    bibentries %>% mutate(citation = map_chr(bibentry, format))
+  } else if (output == "bibtex") {
+    bibtex_list <- map_chr(bibentries$bibentry, \(x) {
+      format(x, style = "bibtex")
+    })
+    bibtex_text <- glue::glue_collapse(bibtex_list, sep = "\n")
+    if (is.null(bibtex_path)) {
+      return(bibtex_text)
+    } else {
+      writeLines(bibtex_text, bibtex_path)
+    }
+  }
 }
 
