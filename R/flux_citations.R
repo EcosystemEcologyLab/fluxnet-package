@@ -62,8 +62,7 @@ flux_citations <- function(
     amf_split <- stringr::str_match(
       by_hub$AmeriFlux$product_citation,
       pattern = amf_pattern
-    ) %>%
-      dplyr::as_tibble()
+    )
     colnames(amf_split) <- c(
       "product_citation",
       "authors",
@@ -72,6 +71,7 @@ flux_citations <- function(
       "publisher",
       "url"
     )
+    amf_split <- dplyr::as_tibble(amf_split)
 
     amf <- dplyr::left_join(
       by_hub$AmeriFlux,
@@ -89,8 +89,7 @@ flux_citations <- function(
     icos_split <- stringr::str_match(
       by_hub$ICOS$product_citation,
       pattern = icos_pattern
-    ) %>%
-      dplyr::as_tibble()
+    )
     colnames(icos_split) <- c(
       "product_citation",
       "authors",
@@ -98,6 +97,7 @@ flux_citations <- function(
       "title",
       "url"
     )
+    icos_split <- dplyr::as_tibble(icos_split)
     icos <- dplyr::left_join(
       by_hub$ICOS,
       icos_split,
@@ -116,9 +116,9 @@ flux_citations <- function(
     tern_split <- stringr::str_match(
       by_hub$TERN$product_citation,
       pattern = tern_pattern
-    ) %>%
-      dplyr::as_tibble()
+    )
     colnames(tern_split) <- c("product_citation", "authors", "year", "title")
+    tern_split <- dplyr::as_tibble(tern_split)
     tern <- dplyr::left_join(
       by_hub$TERN,
       tern_split,
@@ -175,9 +175,10 @@ flux_citations <- function(
     bibtex_list <- purrr::map_chr(bibentries$bibentry, \(x) {
       format(x, style = "bibtex")
     })
-    bibtex_text <- glue::glue_collapse(bibtex_list, sep = "\n")
+    bibtex_text <- paste0(bibtex_list, collapse = "\n")
     if (is.null(bibtex_path)) {
-      return(bibtex_text)
+      cat(bibtex_text) # print with nice formatting
+      return(invisible(bibtex_text)) # return character atomic vector
     } else {
       writeLines(bibtex_text, bibtex_path)
     }

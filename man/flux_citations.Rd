@@ -7,7 +7,7 @@
 flux_citations(
   site_ids,
   output = c("data.frame", "bibtex"),
-  output_path = NULL,
+  bibtex_path = NULL,
   ...
 )
 }
@@ -17,11 +17,11 @@ flux_citations(
 \item{output}{Either \code{"data.frame"} to return a tibble or \code{"bibtex"} to
 return (or write) BibTeX entries. See '\strong{Value}' for more details.}
 
-\item{...}{Additional arguments passed to \code{\link[=flux_listall]{flux_listall()}}.}
-
 \item{bibtex_path}{Path to a .bib file to write BibTeX to, passed to the
 \code{con} argument of \code{\link[=writeLines]{writeLines()}}. If \code{NULL} (default), BibTeX will be
 returned as character. Has no effect if \code{output = 'data.frame'}.}
+
+\item{...}{Additional arguments passed to \code{\link[=flux_listall]{flux_listall()}}.}
 }
 \value{
 If \code{output = 'data.frame'}, a \code{tibble} is returned with a
@@ -36,7 +36,6 @@ Given a vector of site IDs, this either returns a dataframe with or BibTeX
 citations for each site.
 }
 \examples{
-
 # Return dataframe with bibentries and formatted citations
 flux_citations(c("AR-Bal", "DE-Gwg"))
 
@@ -45,13 +44,11 @@ flux_citations(c("AR-Bal", "DE-Gwg"), output = "bibtex")
 
 # Append BibTeX entries to a file
 \dontrun{
-
 flux_citations(
   c("AR-Bal", "DE-Gwg"),
   output = "bibtex",
   bibtex_path = "references.bib"
 )
-
 }
 
 }
