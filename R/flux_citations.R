@@ -42,8 +42,8 @@ flux_citations <- function(
 ) {
   list <- flux_listall(...)
   site_citations_raw <- list %>%
-    filter(site_id %in% site_ids) %>%
-    select(
+    dplyr::filter(site_id %in% site_ids) %>%
+    dplyr::select(
       site_id,
       site_name,
       data_hub,
@@ -63,7 +63,7 @@ flux_citations <- function(
       by_hub$AmeriFlux$product_citation,
       pattern = amf_pattern
     ) %>%
-      as_tibble()
+      dplyr::as_tibble()
     colnames(amf_split) <- c(
       "product_citation",
       "authors",
@@ -73,14 +73,14 @@ flux_citations <- function(
       "url"
     )
 
-    amf <- left_join(
+    amf <- dplyr::left_join(
       by_hub$AmeriFlux,
       amf_split,
-      by = join_by(product_citation)
+      by = "product_citation"
     ) %>%
-      mutate(doi = product_id)
+      dplyr::mutate(doi = product_id)
   } else {
-    amf <- tibble()
+    amf <- dplyr::tibble()
   }
 
   if (!is.null(by_hub$ICOS)) {
@@ -90,7 +90,7 @@ flux_citations <- function(
       by_hub$ICOS$product_citation,
       pattern = icos_pattern
     ) %>%
-      as_tibble()
+      dplyr::as_tibble()
     colnames(icos_split) <- c(
       "product_citation",
       "authors",
@@ -98,17 +98,17 @@ flux_citations <- function(
       "title",
       "url"
     )
-    icos <- left_join(
+    icos <- dplyr::left_join(
       by_hub$ICOS,
       icos_split,
-      by = join_by(product_citation)
+      by = "product_citation"
     ) %>%
-      mutate(
+      dplyr::mutate(
         publisher = "Ecosystem Thematic Centre",
         pid = product_id
       )
   } else {
-    icos <- tibble()
+    icos <- dplyr::tibble()
   }
 
   if (!is.null(by_hub$TERN)) {
@@ -117,29 +117,29 @@ flux_citations <- function(
       by_hub$TERN$product_citation,
       pattern = tern_pattern
     ) %>%
-      as_tibble()
+      dplyr::as_tibble()
     colnames(tern_split) <- c("product_citation", "authors", "year", "title")
-    tern <- left_join(
+    tern <- dplyr::left_join(
       by_hub$TERN,
       tern_split,
-      by = join_by(product_citation)
+      by = "product_citation"
     ) %>%
-      mutate(
+      dplyr::mutate(
         publisher = "Terrestrial Ecosystem Research Network (TERN)",
         url = product_id,
         doi = stringr::str_remove(product_id, "https:\\/\\/dx.doi.org\\/")
       )
   } else {
-    tern <- tibble()
+    tern <- dplyr::tibble()
   }
-  combined <- bind_rows(amf, icos, tern) %>%
-    mutate(type = "dataset") %>%
-    select(-product_citation)
+  combined <- dplyr::bind_rows(amf, icos, tern) %>%
+    dplyr::mutate(type = "dataset") %>%
+    dplyr::select(-product_citation)
 
   bibentries <- combined %>%
-    nest(.by = c(site_id, site_name, product_id)) %>%
-    mutate(
-      bibentry = map(data, \(x) {
+    tidyr::nest(.by = c(site_id, site_name, product_id)) %>%
+    dplyr::mutate(
+      bibentry = purrr::map(data, \(x) {
         bibentry(
           "misc",
           author = x$authors,
@@ -153,13 +153,13 @@ flux_citations <- function(
         )
       })
     ) %>%
-    select(-data)
+    dplyr::select(-data)
 
   # Add cite keys
   # TODO: make these Zotero/BetterBibTex style with a piece of the title in them
   # to make them more likely to be unique
   bibentries$bibentry <- bibentries$bibentry %>%
-    map(\(x) {
+    purrr::map(\(x) {
       first_author_family <- tolower(x$author[[1]]$family)
       if (is.null(first_author_family)) {
         first_author_family <- "noauthor"
@@ -170,9 +170,9 @@ flux_citations <- function(
 
   output <- match.arg(output)
   if (output == "data.frame") {
-    bibentries %>% mutate(citation = map_chr(bibentry, format))
+    bibentries %>% dplyr::mutate(citation = purrr::map_chr(bibentry, format))
   } else if (output == "bibtex") {
-    bibtex_list <- map_chr(bibentries$bibentry, \(x) {
+    bibtex_list <- purrr::map_chr(bibentries$bibentry, \(x) {
       format(x, style = "bibtex")
     })
     bibtex_text <- glue::glue_collapse(bibtex_list, sep = "\n")
