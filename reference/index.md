@@ -11,6 +11,9 @@
 - [`flux_badm()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_badm.md)
   : Read and tidy BADM subsets
 
+- [`flux_citations()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_citations.md)
+  : Output required per-dataset citations for FLUXNET data
+
 - [`flux_discover_files()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_discover_files.md)
   : Create a "manifest" of downloaded and unzipped FLUXNET data files
 

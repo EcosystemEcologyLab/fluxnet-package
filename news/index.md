@@ -2,6 +2,10 @@
 
 ## fluxnet (development version)
 
+- Added
+  [`flux_citations()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_citations.md)
+  to generate site-level citations either as plain text or BibTex
+  entries.
 - Fixed a bug where hourly data wasn’t being extracted or read in along
   with half-hourly data
   ([\#73](https://github.com/EcosystemEcologyLab/fluxnet-package/issues/73))
