@@ -1,4 +1,4 @@
-# fluxnet (development version)
+# fluxnet 0.4.0
 
 * Added `flux_citations()` to generate site-level citations either as plain text or BibTex entries.
 * Fixed a bug where hourly data wasn't being extracted or read in along with half-hourly data ([#73](https://github.com/EcosystemEcologyLab/fluxnet-package/issues/73))
