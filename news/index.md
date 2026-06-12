@@ -1,6 +1,6 @@
 # Changelog
 
-## fluxnet (development version)
+## fluxnet 0.4.0
 
 - Added
   [`flux_citations()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_citations.md)
