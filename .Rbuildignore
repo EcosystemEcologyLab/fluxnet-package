@@ -4,7 +4,7 @@
 ^fluxnet$
 ^\.github$
 ^CITATION\.cff$
-^scripts$
+^release-checklist$
 ^\.vscode$
 ^vignettes/\.quarto$
 ^vignettes/*_files$
