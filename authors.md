@@ -30,5 +30,5 @@ Data.”
       url = {https://ecosystemecologylab.github.io/fluxnet-package/},
       abstract = {Utility functions to help download, read in, and work with data from FLUXNET.},
       keywords = {ameriflux,fluxnet},
-      version = {0.4.0},
+      version = {0.4.0.9000},
     }
