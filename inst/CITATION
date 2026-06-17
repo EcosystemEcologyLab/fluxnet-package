@@ -1,3 +1,4 @@
+cli::cli_alert_warning('In addition to citing this package, please cite all data used. See {.fun fluxnet::flux_citations}')
 
 bibentry(bibtype = "Misc",
          key = "scott_etall:2026",
@@ -14,4 +15,4 @@ bibentry(bibtype = "Misc",
          url = "https://ecosystemecologylab.github.io/fluxnet-package/",
          abstract = "Utility functions to help download, read in, and work with data from FLUXNET.",
          keywords = "ameriflux,fluxnet",
-         version = "0.4.0")
+         version = "0.4.0.9000")

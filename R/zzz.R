@@ -10,7 +10,7 @@
   cli::cli_inform(
     c(
       "!" = "Use of data downloaded by {.pkg fluxnet} requires you abide by FLUXNET data policies: {.url https://fluxnet.org/data/data-policy/}",
-      i = "Citations for individual sites' datasets are returned by {.fun fluxnet::flux_listall}"
+      i = "Citations for individual sites' datasets are returned by {.fun fluxnet::flux_citations}"
     ),
     class = "packageStartupMessage"
   )
