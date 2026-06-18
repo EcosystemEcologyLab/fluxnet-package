@@ -49,8 +49,10 @@ flux_extract <- function(
 ) {
   if (!is.null(site_ids)) {
     if (any(site_ids == "all")) {
-      cli::cli_warn(
-        "Setting {.arg site_ids = 'all'} is deprecated. Using {.arg site_ids = NULL} instead."
+      lifecycle::deprecate_warn(
+        "0.3.1",
+        "flux_read(site_ids = 'can no longer be set to \"all\"')",
+        details = "Using `site_ids = NULL`"
       )
       site_ids <- NULL
     }
