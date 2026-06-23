@@ -8,3 +8,4 @@ docs
 .Renviron
 
 *.zip
+!tests/testthat/testdata/*.zip
