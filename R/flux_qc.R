@@ -72,13 +72,15 @@ flux_qc <- function(
     )
     threshold <- max_gapfilled
   }
+  is_hourly <- attr(data, "flux_resolution") == "h"
   # Doesn't make sense for hourly resolution where _QC columns are categorical flags
-  if (attr(data, "flux_resolution") == "HH") {
-    cli::cli_abort(
-      "{.fun flux_qc()} doesn't work with hourly data where {.col *_QC} columns are categorical."
-    )
-  }
-  if (!all(dplyr::between(threshold, 0, 1))) {
+  if (is_hourly) {
+    if (!threshold %in% 0:3) {
+      cli::cli_abort(
+        "For hourly data, {.arg threshold} must be 0, 1, 2, or 3."
+      )
+    }
+  } else if (!all(dplyr::between(threshold, 0, 1))) {
     cli::cli_abort("{.arg threshold} must have values between 0 and 1.")
   }
 
@@ -123,19 +125,35 @@ flux_qc <- function(
       rlang::inject(pmin(!!!data, na.rm = na.rm))
     }
   )
-  data_flagged <- data %>%
-    dplyr::mutate(
-      qc_flagged = purrr::map2(
-        data %>% dplyr::select(dplyr::any_of(qc_cols)),
-        threshold,
-        function(col, threshold) {
-          gapfilled <- 1 - col
-          gapfilled > threshold
-        }
-      ) %>%
-        purrr::reduce(operator_fun),
-      p_gapfilled = 1 - pfun(dplyr::pick(dplyr::any_of(qc_cols)), na.rm = TRUE)
-    )
+
+  if (is_hourly) {
+    data_flagged <- data %>%
+      dplyr::mutate(
+        qc_flagged = purrr::map2(
+          data %>% dplyr::select(dplyr::any_of(qc_cols)),
+          threshold,
+          function(col, threshold) {
+            col > threshold
+          }
+        ) %>%
+          purrr::reduce(operator_fun)
+      )
+  } else {
+    data_flagged <- data %>%
+      dplyr::mutate(
+        qc_flagged = purrr::map2(
+          data %>% dplyr::select(dplyr::any_of(qc_cols)),
+          threshold,
+          function(col, threshold) {
+            gapfilled <- 1 - col
+            gapfilled > threshold
+          }
+        ) %>%
+          purrr::reduce(operator_fun),
+        p_gapfilled = 1 -
+          pfun(dplyr::pick(dplyr::any_of(qc_cols)), na.rm = TRUE)
+      )
+  }
   # Return
   data_flagged
 }

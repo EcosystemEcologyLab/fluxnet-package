@@ -1,5 +1,8 @@
 # fluxnet (development version)
 
+* `flux_qc()` now works with hourly data by supplying a `threshold` of 0, 1, 2, or 3.
+* The `max_gapfill` argument to `flux_qc()` has been renamed to `threshold`
+
 # fluxnet 0.4.0
 
 * Added `flux_citations()` to generate site-level citations either as plain text or BibTex entries.
