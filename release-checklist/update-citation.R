@@ -17,6 +17,8 @@ writeLines(
 )
 close(con)
 cff_write_citation(cff, file = "inst/CITATION", append = TRUE)
+# This creates a CITATION.bk1 for some reason—remove it
+fs::file_delete("inst/CITATION.bk1")
 
 
 # Write CITATION.cff

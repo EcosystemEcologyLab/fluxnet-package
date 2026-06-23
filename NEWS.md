@@ -1,4 +1,4 @@
-# fluxnet (development version)
+# fluxnet 0.5.0
 
 * `flux_qc()` now works with hourly data by supplying a `threshold` of 0, 1, 2, or 3.
 * The `max_gapfill` argument to `flux_qc()` has been renamed to `threshold`
