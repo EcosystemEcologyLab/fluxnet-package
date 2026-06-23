@@ -2,6 +2,13 @@
 
 ## fluxnet (development version)
 
+- [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md)
+  now works with hourly data by supplying a `threshold` of 0, 1, 2, or
+  3.
+- The `max_gapfill` argument to
+  [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md)
+  has been renamed to `threshold`
+
 ## fluxnet 0.4.0
 
 - Added

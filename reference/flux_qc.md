@@ -5,7 +5,13 @@ Flags rows of data based on variables with associated `_QC` columns.
 ## Usage
 
 ``` r
-flux_qc(data, qc_vars, max_gapfilled = 0.5, operator = c("any", "all"))
+flux_qc(
+  data,
+  qc_vars,
+  threshold = 0.5,
+  operator = c("any", "all"),
+  max_gapfilled = deprecated()
+)
 ```
 
 ## Arguments
@@ -20,11 +26,15 @@ flux_qc(data, qc_vars, max_gapfilled = 0.5, operator = c("any", "all"))
   A character vector of column names with associated `*_QC` columns to
   use for flagging.
 
-- max_gapfilled:
+- threshold:
 
-  Numeric between 0 and 1; cutoff for the `qc_flagged` flag to be
-  `TRUE`. Can be length 1 or the same length as `qc_vars` to supply a
-  different threshold for each variable.
+  For aggregated data (weekly, daily, monthly, annual), a number between
+  0 and 1. For hourly and half-hourly data, either 0, 1, 2, or 3
+  corresponding to 0 = measured, 1 = good quality gap-fill (MDS), 2 =
+  medium quality gap-fill, 3 = poor quality gap-fill. Rows with `_QC`
+  values greater than the number provided will be be flagged with
+  `qc_flagged = TRUE`. Input can be length 1 or the same length as
+  `qc_vars` to supply a different threshold for each variable.
 
 - operator:
 
@@ -33,11 +43,15 @@ flux_qc(data, qc_vars, max_gapfilled = 0.5, operator = c("any", "all"))
   above their `max_gapfill` threshold. If "all" then the row will be
   flagged only if *all* of the QC vars are above their `max_gapfill`.
 
+- max_gapfilled:
+
+  **\[deprecated\]** Deprecated; use `threshold` instead.
+
 ## Value
 
 A tibble with the added columns `p_gapfilled` and `qc_flagged`. If
 `operator = "any"`, `qc_flagged = TRUE` indicates that at least one of
-the supplied QC variables was more gapfilled than `max_gapfilled` and
+the supplied QC variables was more gapfilled than `threshold` and
 `p_gapfilled` will be the maximum proportion gapfilled across the QC
 vars for each row. If `operator = "all"`, then `qc_flagged = TRUE`
 indicates that *all* of the supplied QC variables were more gapfilled
@@ -55,14 +69,14 @@ annual <- flux_read(manifest, resolution = "y")
 annual_flagged <- flux_qc(
   annual,
   qc_vars = "NEE_VUT_REF",
-  max_gapfilled = 0.5
+  threshold = 0.5
 )
 
 # Use multiple variables each with a different threshold for QC
 annual_flagged2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = c(0.4, 0.6)
+  threshold = c(0.4, 0.6)
 )
 
 # Same as above, but require *both* variables to be above their thresholds
@@ -70,7 +84,7 @@ annual_flagged2 <- flux_qc(
 annual_flagged2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = c(0.4, 0.6),
+  threshold = c(0.4, 0.6),
   operator = "all"
 )
 
