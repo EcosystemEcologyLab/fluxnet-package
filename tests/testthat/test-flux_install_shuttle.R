@@ -1,10 +1,11 @@
 test_that("installing fluxnet-shuttle dev version from github works", {
+  on.exit(reticulate::virtualenv_remove("fluxnet-package-tests"), add = TRUE)
   exe <- flux_install_shuttle(venv = "fluxnet-package-tests")
   expect_type(exe, "character")
-  reticulate::virtualenv_remove("fluxnet-package-tests")
 })
 
 test_that("specifying a version works", {
+  on.exit(reticulate::virtualenv_remove("fluxnet-package-tests"), add = TRUE)
   exe <- flux_install_shuttle(
     venv = "fluxnet-package-tests",
     shuttle_version = "0.3.6"
