@@ -5,21 +5,27 @@
 #' @param data A data frame created by [flux_read()].
 #' @param qc_vars A character vector of column names with associated `*_QC`
 #'   columns to use for flagging.
-#' @param max_gapfilled Numeric between 0 and 1; cutoff for the `qc_flagged` flag to
-#'   be `TRUE`.  Can be length 1 or the same length as `qc_vars` to supply a
+#' @param threshold For aggregated data (weekly, daily, monthly, annual), a
+#'   number between 0 and 1. For hourly and half-hourly data, either 0, 1, 2, or
+#'   3 corresponding to 0 = measured, 1 = good quality gap-fill (MDS), 2 =
+#'   medium quality gap-fill, 3 = poor quality gap-fill. Rows with `_QC` values
+#'   greater than the number provided will be be flagged with `qc_flagged =
+#'   TRUE`. Input can be length 1 or the same length as `qc_vars` to supply a
 #'   different threshold for each variable.
 #' @param operator How to flag data when multiple `qc_vars` are supplied?  If
 #'   "any", the row will be marked as bad if *any* of the QC vars indicate
 #'   gap-filling above their `max_gapfill` threshold.  If "all" then the row
 #'   will be flagged only if *all* of the QC vars are above their `max_gapfill`.
+#' @param max_gapfilled `r lifecycle::badge("deprecated")` Deprecated; use
+#'   `threshold` instead.
 #' @returns A tibble with the added columns `p_gapfilled` and `qc_flagged`. If
 #'   `operator = "any"`, `qc_flagged = TRUE` indicates that at least one of the
-#'   supplied QC variables was more gapfilled than `max_gapfilled` and
-#'   `p_gapfilled` will be the maximum proportion gapfilled across the QC vars
-#'   for each row. If `operator = "all"`, then `qc_flagged = TRUE` indicates
-#'   that *all* of the supplied QC variables were more gapfilled than the
-#'   thresholds supplies and `p_gapfilled` will be the minimum proportion
-#'   gapfilled across all QC variables for each row.
+#'   supplied QC variables was more gapfilled than `threshold` and `p_gapfilled`
+#'   will be the maximum proportion gapfilled across the QC vars for each row.
+#'   If `operator = "all"`, then `qc_flagged = TRUE` indicates that *all* of the
+#'   supplied QC variables were more gapfilled than the thresholds supplies and
+#'   `p_gapfilled` will be the minimum proportion gapfilled across all QC
+#'   variables for each row.
 #' @examples
 #' \dontrun{
 #'
@@ -29,14 +35,14 @@
 #' annual_flagged <- flux_qc(
 #'   annual,
 #'   qc_vars = "NEE_VUT_REF",
-#'   max_gapfilled = 0.5
+#'   threshold = 0.5
 #' )
 #'
 #' # Use multiple variables each with a different threshold for QC
 #' annual_flagged2 <- flux_qc(
 #'   annual,
 #'   qc_vars = c("NEE_VUT_REF", "TA_F"),
-#'   max_gapfilled = c(0.4, 0.6)
+#'   threshold = c(0.4, 0.6)
 #' )
 #'
 #' # Same as above, but require *both* variables to be above their thresholds
@@ -44,7 +50,7 @@
 #' annual_flagged2 <- flux_qc(
 #'   annual,
 #'   qc_vars = c("NEE_VUT_REF", "TA_F"),
-#'   max_gapfilled = c(0.4, 0.6),
+#'   threshold = c(0.4, 0.6),
 #'   operator = "all"
 #' )
 #'
@@ -54,24 +60,33 @@
 flux_qc <- function(
   data,
   qc_vars,
-  max_gapfilled = 0.5,
-  operator = c("any", "all")
+  threshold = 0.5,
+  operator = c("any", "all"),
+  max_gapfilled = deprecated()
 ) {
+  if (lifecycle::is_present(max_gapfilled)) {
+    lifecycle::deprecate_warn(
+      "0.5.0",
+      "flux_qc(max_gapfilled)",
+      "flux_qc(threshold)"
+    )
+    threshold <- max_gapfilled
+  }
   # Doesn't make sense for hourly resolution where _QC columns are categorical flags
   if (attr(data, "flux_resolution") == "HH") {
     cli::cli_abort(
       "{.fun flux_qc()} doesn't work with hourly data where {.col *_QC} columns are categorical."
     )
   }
-  if (!all(dplyr::between(max_gapfilled, 0, 1))) {
-    cli::cli_abort("{.arg max_gapfilled} must have values between 0 and 1.")
+  if (!all(dplyr::between(threshold, 0, 1))) {
+    cli::cli_abort("{.arg threshold} must have values between 0 and 1.")
   }
 
-  if (length(qc_vars) > 1 & length(max_gapfilled) == 1) {
-    max_gapfilled <- rep(max_gapfilled, length(qc_vars))
-  } else if (length(max_gapfilled) != length(qc_vars)) {
+  if (length(qc_vars) > 1 & length(threshold) == 1) {
+    threshold <- rep(threshold, length(qc_vars))
+  } else if (length(threshold) != length(qc_vars)) {
     cli::cli_abort(
-      "{.arg max_gapfilled} must be length 1 or match the length of {.arg qc_vars}."
+      "{.arg threshold} must be length 1 or match the length of {.arg qc_vars}."
     )
   }
 
@@ -112,7 +127,7 @@ flux_qc <- function(
     dplyr::mutate(
       qc_flagged = purrr::map2(
         data %>% dplyr::select(dplyr::any_of(qc_cols)),
-        max_gapfilled,
+        threshold,
         function(col, threshold) {
           gapfilled <- 1 - col
           gapfilled > threshold

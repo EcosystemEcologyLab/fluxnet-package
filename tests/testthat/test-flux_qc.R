@@ -1,4 +1,4 @@
-test_that("flux_qc works", {
+test_that("flux_qc works with aggregated data", {
   tempdir <- withr::local_tempdir()
   flux_extract(
     zip_dir = test_path("testdata"),
@@ -14,7 +14,7 @@ test_that("flux_qc works", {
   expect_s3_class(annual1, "data.frame")
   annual2 <- flux_qc(annual, c("NEE_VUT_REF", "TA_F"))
   expect_s3_class(annual2, "data.frame")
-  expect_error(flux_qc(annual, "NEE_VUT_REF", max_gapfilled = c(0.4, 0.5)))
+  expect_error(flux_qc(annual, "NEE_VUT_REF", threshold = c(0.4, 0.5)))
   expect_lt(
     nrow(annual1 %>% dplyr::filter(qc_flagged)),
     nrow(annual2 %>% dplyr::filter(qc_flagged))
@@ -22,3 +22,5 @@ test_that("flux_qc works", {
   annual3 <- flux_qc(annual, c("NEE_VUT_REF", "TA_F"), operator = "all")
   expect_s3_class(annual3, "data.frame")
 })
+
+test_that("flux_qc works with hourly data", {})
