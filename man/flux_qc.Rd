@@ -4,7 +4,13 @@
 \alias{flux_qc}
 \title{Flag overly-gapfilled data}
 \usage{
-flux_qc(data, qc_vars, max_gapfilled = 0.5, operator = c("any", "all"))
+flux_qc(
+  data,
+  qc_vars,
+  threshold = 0.5,
+  operator = c("any", "all"),
+  max_gapfilled = deprecated()
+)
 }
 \arguments{
 \item{data}{A data frame created by \code{\link[=flux_read]{flux_read()}}.}
@@ -12,24 +18,30 @@ flux_qc(data, qc_vars, max_gapfilled = 0.5, operator = c("any", "all"))
 \item{qc_vars}{A character vector of column names with associated \verb{*_QC}
 columns to use for flagging.}
 
-\item{max_gapfilled}{Numeric between 0 and 1; cutoff for the \code{qc_flagged} flag to
-be \code{TRUE}.  Can be length 1 or the same length as \code{qc_vars} to supply a
+\item{threshold}{For aggregated data (weekly, daily, monthly, annual), a
+number between 0 and 1. For hourly and half-hourly data, either 0, 1, 2, or
+3 corresponding to 0 = measured, 1 = good quality gap-fill (MDS), 2 =
+medium quality gap-fill, 3 = poor quality gap-fill. Rows with \verb{_QC} values
+greater than the number provided will be be flagged with \code{qc_flagged = TRUE}. Input can be length 1 or the same length as \code{qc_vars} to supply a
 different threshold for each variable.}
 
 \item{operator}{How to flag data when multiple \code{qc_vars} are supplied?  If
 "any", the row will be marked as bad if \emph{any} of the QC vars indicate
 gap-filling above their \code{max_gapfill} threshold.  If "all" then the row
 will be flagged only if \emph{all} of the QC vars are above their \code{max_gapfill}.}
+
+\item{max_gapfilled}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated; use
+\code{threshold} instead.}
 }
 \value{
 A tibble with the added columns \code{p_gapfilled} and \code{qc_flagged}. If
 \code{operator = "any"}, \code{qc_flagged = TRUE} indicates that at least one of the
-supplied QC variables was more gapfilled than \code{max_gapfilled} and
-\code{p_gapfilled} will be the maximum proportion gapfilled across the QC vars
-for each row. If \code{operator = "all"}, then \code{qc_flagged = TRUE} indicates
-that \emph{all} of the supplied QC variables were more gapfilled than the
-thresholds supplies and \code{p_gapfilled} will be the minimum proportion
-gapfilled across all QC variables for each row.
+supplied QC variables was more gapfilled than \code{threshold} and \code{p_gapfilled}
+will be the maximum proportion gapfilled across the QC vars for each row.
+If \code{operator = "all"}, then \code{qc_flagged = TRUE} indicates that \emph{all} of the
+supplied QC variables were more gapfilled than the thresholds supplies and
+\code{p_gapfilled} will be the minimum proportion gapfilled across all QC
+variables for each row.
 }
 \description{
 Flags rows of data based on variables with associated \verb{_QC} columns.
@@ -43,14 +55,14 @@ annual <- flux_read(manifest, resolution = "y")
 annual_flagged <- flux_qc(
   annual,
   qc_vars = "NEE_VUT_REF",
-  max_gapfilled = 0.5
+  threshold = 0.5
 )
 
 # Use multiple variables each with a different threshold for QC
 annual_flagged2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = c(0.4, 0.6)
+  threshold = c(0.4, 0.6)
 )
 
 # Same as above, but require *both* variables to be above their thresholds
@@ -58,7 +70,7 @@ annual_flagged2 <- flux_qc(
 annual_flagged2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = c(0.4, 0.6),
+  threshold = c(0.4, 0.6),
   operator = "all"
 )
 
