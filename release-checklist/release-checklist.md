@@ -5,5 +5,5 @@
 5. Run the `update-citation.R` script
 6. Commit all the changes with a commit message like "increment package version"
 7. Push changes to GitHub
-8. Run `usethis::use_github_release()`
+8. Run `usethis::use_github_release()` (or make release on GitHub)
 9. Run `usethis::use_dev_version()` and push changes to main.
