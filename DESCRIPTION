@@ -2,9 +2,9 @@ Package: fluxnet
 Title: Download, Read, and Visualize FLUXNET Data
 Version: 0.5.0.9000
 Authors@R: c(
-    person(c("Eric", "R."), "Scott", , "ericrscott@arizona.edu", role = c("aut", "cre"),
+    person(c("Eric", "R."), "Scott", , "ericrscott@arizona.edu", role = "aut",
            comment = c(ORCID = "0000-0002-7430-7879")),
-    person(c("David", "J.P."), "Moore", role = "aut",
+    person(c("David", "J.P."), "Moore", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6462-3288")),
     person("Arizona Board of Regents on behalf of The University of Arizona", role = "cph",
            comment = c(ROR = "https://ror.org/0054f1w39"))
@@ -40,7 +40,7 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
+Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
