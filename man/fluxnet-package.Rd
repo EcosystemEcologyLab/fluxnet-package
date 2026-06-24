@@ -18,11 +18,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: David J.P. Moore (\href{https://orcid.org/0000-0002-6462-3288}{ORCID})
+\strong{Maintainer}: David J.P. Moore \email{davidjpmoore@arizona.edu} (\href{https://orcid.org/0000-0002-6462-3288}{ORCID})
 
 Authors:
 \itemize{
-  \item David J.P. Moore (\href{https://orcid.org/0000-0002-6462-3288}{ORCID})
+  \item David J.P. Moore \email{davidjpmoore@arizona.edu} (\href{https://orcid.org/0000-0002-6462-3288}{ORCID})
   \item Eric R. Scott \email{ericrscott@arizona.edu} (\href{https://orcid.org/0000-0002-7430-7879}{ORCID})
 }
 

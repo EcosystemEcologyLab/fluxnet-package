@@ -32,6 +32,9 @@ Imports:
     stringr,
     tidyr
 Suggests: 
+    DBI,
+    duckdb,
+    glue,
     knitr,
     maps,
     quarto,
