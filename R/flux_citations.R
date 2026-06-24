@@ -139,7 +139,7 @@ flux_citations <- function(
   bibentries <- combined %>%
     tidyr::nest(.by = c("site_id", "site_name", "product_id")) %>%
     dplyr::mutate(
-      bibentry = purrr::map(.data$data, \(x) {
+      bibentry = purrr::map(.data$data, function(x) {
         utils::bibentry(
           "misc",
           author = x$authors,
@@ -159,7 +159,7 @@ flux_citations <- function(
   # TODO: make these Zotero/BetterBibTex style with a piece of the title in them
   # to make them more likely to be unique
   bibentries$bibentry <- bibentries$bibentry %>%
-    purrr::map(\(x) {
+    purrr::map(function(x) {
       first_author_family <- tolower(x$author[[1]]$family)
       if (is.null(first_author_family)) {
         first_author_family <- "noauthor"
@@ -172,7 +172,7 @@ flux_citations <- function(
   if (output == "data.frame") {
     bibentries %>% dplyr::mutate(citation = purrr::map_chr(.data$bibentry, format))
   } else if (output == "bibtex") {
-    bibtex_list <- purrr::map_chr(bibentries$bibentry, \(x) {
+    bibtex_list <- purrr::map_chr(bibentries$bibentry, function(x) {
       format(x, style = "bibtex")
     })
     bibtex_text <- paste0(bibtex_list, collapse = "\n")
