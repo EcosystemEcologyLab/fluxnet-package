@@ -4,6 +4,7 @@
 
 * `flux_qc()` now works with hourly data by supplying a `threshold` of 0, 1, 2, or 3.
 * The `max_gapfill` argument to `flux_qc()` has been renamed to `threshold`
+* The output of `flux_read()` now includes a `time_resolution` column.  This may be especially useful for hourly (`"HR"`) and half-hourly (`"HH"`) frequency data, which are combined when `resolution = "h"`.
 
 # fluxnet 0.4.0
 

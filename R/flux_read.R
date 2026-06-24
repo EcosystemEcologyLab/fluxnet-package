@@ -85,10 +85,25 @@ flux_read <- function(
 
   cli::cli_inform("Reading {nrow(files_df)} file{?s}.")
   data_raw <- purrr::pmap(
-    files_df %>% dplyr::select(dplyr::all_of(c("path", "site_id", "dataset"))),
-    function(path, site_id, dataset) {
-      readr::read_csv(path, show_col_types = FALSE, na = c("", "NA", "-9999")) %>%
-        dplyr::mutate(site_id = site_id, dataset = dataset, .before = 1)
+    files_df %>%
+      dplyr::select(dplyr::all_of(c(
+        "path",
+        "site_id",
+        "dataset",
+        "time_resolution"
+      ))),
+    function(path, site_id, dataset, time_resolution) {
+      readr::read_csv(
+        path,
+        show_col_types = FALSE,
+        na = c("", "NA", "-9999")
+      ) %>%
+        dplyr::mutate(
+          site_id = site_id,
+          dataset = dataset,
+          time_resolution = time_resolution,
+          .before = 1
+        )
     },
     .progress = TRUE
   ) %>%
