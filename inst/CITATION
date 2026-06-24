@@ -9,10 +9,11 @@ bibentry(bibtype = "Misc",
                            comment = c(ORCID = "0000-0002-7430-7879")),
                     person(given = "David J.P.",
                            family = "Moore",
+                           email = "davidjpmoore@arizona.edu",
                            comment = c(ORCID = "0000-0002-6462-3288"))),
          year = "2026",
          doi = "10.5281/zenodo.19210221",
          url = "https://ecosystemecologylab.github.io/fluxnet-package/",
          abstract = "Utility functions to help download, read in, and work with data from FLUXNET.",
          keywords = "ameriflux,fluxnet",
-         version = "0.5.0")
+         version = "0.5.1")

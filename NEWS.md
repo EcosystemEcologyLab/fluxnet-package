@@ -1,4 +1,4 @@
-# fluxnet (development version)
+# fluxnet 0.5.1
 
 # fluxnet 0.5.0
 
