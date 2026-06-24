@@ -46,6 +46,12 @@ variables for each row.
 \description{
 Flags rows of data based on variables with associated \verb{_QC} columns.
 }
+\note{
+Most stations use Variable Ustar Threshold (VUT) method for NEE, but
+some use Constant Ustar Threshold (CUT), so when using NEE variables for QC
+flagging, it is a good idea to include both the VUT and CUT variant.  E.g.
+\code{qc_vars = c("NEE_VUT_REF", "NEE_CUT_REF")}.
+}
 \examples{
 \dontrun{
 
