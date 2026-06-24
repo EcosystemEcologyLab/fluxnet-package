@@ -1,6 +1,10 @@
 # fluxnet (development version)
 
+* Added experimental function `flux_db_connect()`, `flux_db_build()`, and `flux_db_update()` that ingest FLUXNET data into a DuckDB database that can be queried with `dplyr` without reading data into memory.
+
 # fluxnet 0.5.1
+
+* Switched package maintainer to Dave Moore.
 
 # fluxnet 0.5.0
 
