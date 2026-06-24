@@ -29,6 +29,28 @@ flux_db_connect <- function(
   con
 }
 
+# # TODO: flux_qc() relies on an attribute to know how to behave, so if flux_qc()
+# # is ever going to work with a lazy tibble, then a helper fun like this may be
+# # needed (or a re-design of flux_qc())
+# flux_db_tbl <- function(
+#   con,
+#   table = c("annual", "monthly", "weekly", "daily", "hourly", "manifest")
+# ) {
+#   flux_tbl <- tbl(con, table)
+#   res <- switch(
+#     table,
+#     annual = "y",
+#     monthy = "m",
+#     weekly = "w",
+#     daily = "d",
+#     hourly = "h"
+#   )
+#   if(!is.null(res)) {
+#     attr(flux_tbl, "flux_resolution") <- res
+#   }
+#   flux_tbl
+# }
+
 #' Ingest FLUXNET data into a DuckDB database
 #'
 #' `r lifecycle::badge("experimental")`
