@@ -4,6 +4,8 @@
 
 ## fluxnet 0.5.1
 
+- Switched package maintainer to Dave Moore.
+
 ## fluxnet 0.5.0
 
 - [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md)
