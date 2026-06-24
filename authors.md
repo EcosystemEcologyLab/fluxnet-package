@@ -2,10 +2,9 @@
 
 ## Authors
 
-- **Eric R. Scott**. Author, maintainer.
-  [](https://orcid.org/0000-0002-7430-7879)
+- **Eric R. Scott**. Author. [](https://orcid.org/0000-0002-7430-7879)
 
-- **David J.P. Moore**. Author.
+- **David J.P. Moore**. Author, maintainer.
   [](https://orcid.org/0000-0002-6462-3288)
 
 - **Arizona Board of Regents on behalf of The University of Arizona**.

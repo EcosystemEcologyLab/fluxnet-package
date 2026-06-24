@@ -10,6 +10,11 @@
 - The `max_gapfill` argument to
   [`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md)
   has been renamed to `threshold`
+- The output of
+  [`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md)
+  now includes a `time_resolution` column. This may be especially useful
+  for hourly (`"HR"`) and half-hourly (`"HH"`) frequency data, which are
+  combined when `resolution = "h"`.
 
 ## fluxnet 0.4.0
 

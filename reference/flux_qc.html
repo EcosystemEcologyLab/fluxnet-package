@@ -94,6 +94,13 @@ supplied QC variables were more gapfilled than the thresholds supplies and
 <code>p_gapfilled</code> will be the minimum proportion gapfilled across all QC
 variables for each row.</p>
     </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>Most stations use Variable Ustar Threshold (VUT) method for NEE, but
+some use Constant Ustar Threshold (CUT), so when using NEE variables for QC
+flagging, it is a good idea to include both the VUT and CUT variant.  E.g.
+<code>qc_vars = c("NEE_VUT_REF", "NEE_CUT_REF")</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
