@@ -100,7 +100,7 @@ flux_db_build <- function(
 
   # Convert vector of file paths to comma separated string for input to SQL
   # command
-  files_strings <- purrr::map(files_resolutions, \(x) {
+  files_strings <- purrr::map(files_resolutions, function(x) {
     glue::glue_collapse(glue::glue("'{x}'"), sep = ", ")
   })
 
@@ -385,7 +385,7 @@ flux_db_update <- function(
 
   # Convert vector of file paths to comma separated string for input to SQL
   # command
-  files_strings <- purrr::map(files_resolutions, \(x) {
+  files_strings <- purrr::map(files_resolutions, function(x) {
     glue::glue_collapse(glue::glue("'{x}'"), sep = ", ")
   })
 
@@ -655,7 +655,7 @@ flux_db_update <- function(
   tmp <- tempfile(fileext = ".csv")
   on.exit(unlink(tmp), add = TRUE)
   readr::write_csv(manifest_new, tmp)
-  DBI::dbExecute(
+  exe_manifest <- DBI::dbExecute(
     con,
     glue::glue(
       "
