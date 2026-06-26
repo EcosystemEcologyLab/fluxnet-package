@@ -1,6 +1,6 @@
 # Changelog
 
-## fluxnet (development version)
+## fluxnet 0.6.0
 
 - Added experimental functions
   [`flux_db_connect()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_connect.md),
