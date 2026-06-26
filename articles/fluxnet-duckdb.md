@@ -1,0 +1,323 @@
+# Working with larger-than-memory FLUXNET data
+
+``` r
+
+library(fluxnet)
+library(dplyr)
+```
+
+When working with a large number of site, especially with daily or
+hourly data, you may encounter out-of-memory errors when trying to read
+in data with
+[`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md).
+As an alternative, `fluxnet` has a set of experimental functions that
+ingest CSV files into a [DuckDB](https://duckdb.org) database that can
+be queried using `dplyr` functions without pulling data into memory.
+
+## Building the database
+
+Assuming you’ve already downloaded files with
+[`flux_download()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_download.md)
+and extracted the CSVs with
+[`flux_extract()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_extract.md)
+(see
+[`vignette("fluxnet", "fluxnet")`](https://ecosystemecologylab.github.io/fluxnet-package/articles/fluxnet.md)),
+you can build the database using
+[`flux_db_build()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_build.md).
+
+``` r
+
+flux_download(site_ids = c("AR-TF2", "NO-Hur", "AU-Emr"))
+flux_extract()
+manifest <- flux_discover_files()
+flux_db_build(manifest)
+```
+
+    #> Downloading data from specified sites.
+    #> DD / ERA5 → 3 sites, 134 site-years across 3 files
+    #> DD / FLUXMET → 3 sites, 8 site-years across 3 files
+    #> HH / ERA5 → 3 sites, 134 site-years across 3 files
+    #> HH / FLUXMET → 3 sites, 8 site-years across 3 files
+    #> MM / ERA5 → 3 sites, 134 site-years across 3 files
+    #> MM / FLUXMET → 3 sites, 8 site-years across 3 files
+    #> WW / ERA5 → 3 sites, 134 site-years across 3 files
+    #> WW / FLUXMET → 3 sites, 8 site-years across 3 files
+    #> YY / ERA5 → 3 sites, 134 site-years across 3 files
+    #> YY / FLUXMET → 3 sites, 8 site-years across 3 files
+    #> ℹ Opening DuckDB connection to ' ]8;;file:///var/folders/9x/8tfdxtbx3_173cs_8jqsyjph0000gn/T/Rtmp8bYb6v/fluxnet_vignette109c5441a5f55/fluxnet.duckdb/var/folders/9x/8tfdxtbx3_173cs_8jqsyjph0000gn/T/Rtmp8bYb6v/fluxnet_vignette109c5441a5f55/fluxnet.duckdb ]8;;'
+    #> 
+    #> 
+    ℹ Recording CSV manifest in database
+    #> 
+    ✔ Recording CSV manifest in database [18ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in annual data CSVs
+    #> 
+    ✔ Reading in annual data CSVs [44ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in monthly data CSVs
+    #> 
+    ✔ Reading in monthly data CSVs [67ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in weekly data CSVs
+    #> 
+    ✔ Reading in weekly data CSVs [285ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in daily data CSVs
+    #> 
+    ✔ Reading in daily data CSVs [945ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in hourly/half-hourly data CSVs
+    #> 
+    ✔ Reading in hourly/half-hourly data CSVs [8s]
+    #> 
+    #> 
+    #> 
+    ℹ Closing connection.
+    #> 
+    ✔ Closing connection. [1.6s]
+
+The DuckDB database will only contain data, not metadata from BIF or
+BIFVARINFO CSV files. See `?flux_badm()` and `?flux_varinfo()` for
+working with those files.
+
+## Using the database
+
+If you’re new to working with database connections in R, it may be
+helpful to start with the introduction vignette for `dbplyr`
+([`vignette("dbplyr", "dbplyr")`](https://dbplyr.tidyverse.org/articles/dbplyr.html)).
+[`flux_db_connect()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_connect.md)
+is a helpful wrapper around
+[`DBI::dbConnect()`](https://dbi.r-dbi.org/reference/dbConnect.html)
+that ensures the correct `duckdb()` driver is used.
+
+``` r
+
+con <- flux_db_connect()
+```
+
+    #> ℹ Opening DuckDB connection to '
+
+You can list the tables in the database with
+[`DBI::dbListTables()`](https://dbi.r-dbi.org/reference/dbListTables.html)
+and “open” a specific table with
+[`tbl()`](https://dplyr.tidyverse.org/reference/tbl.html)
+
+``` r
+
+DBI::dbListTables(con)
+#> [1] "annual"   "daily"    "hourly"   "manifest" "monthly"  "weekly"
+annual <- tbl(con, "annual")
+annual
+#> # Source:   table<annual> [?? x 335]
+#> # Database: DuckDB 1.5.2 [root@Darwin 25.5.0:R 4.6.0//private/var/folders/9x/8tfdxtbx3_173cs_8jqsyjph0000gn/T/Rtmp8bYb6v/fluxnet_vignette109c5441a5f55/fluxnet.duckdb]
+#>    TIMESTAMP TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY TA_ERA_DAY_SD SW_IN_ERA LW_IN_ERA VPD_ERA PA_ERA P_ERA WS_ERA TA_F_MDS
+#>        <int>  <dbl>        <dbl>           <dbl>      <dbl>         <dbl>     <dbl>     <dbl>   <dbl>  <dbl> <dbl>  <dbl>    <dbl>
+#>  1      1981   4.90         4.20           1.01        5.43          1.24     104.       278.    2.33   98.7 4035.   2.89       NA
+#>  2      1982   4.71         3.99           1.12        5.25          1.47     103.       277.    2.45   98.7 3769.   2.85       NA
+#>  3      1983   5.07         4.28           1.06        5.68          1.24      99.9      282.    2.38   98.7 3778.   2.82       NA
+#>  4      1984   4.61         3.86           1.06        5.17          1.31     101.       277.    2.40   98.8 3755.   2.73       NA
+#>  5      1985   4.33         3.50           1.04        4.97          1.32     100.       279.    2.26   98.7 3925.   2.79       NA
+#>  6      1986   3.52         2.62           0.998       4.20          1.31     106.       273.    2.16   98.5 3897.   3.02       NA
+#>  7      1987   4.20         3.34           1.05        4.84          1.38     104.       278.    2.32   98.7 3785.   2.86       NA
+#>  8      1988   4.24         3.42           1.03        4.84          1.34     104.       279.    2.28   98.8 3761.   2.90       NA
+#>  9      1989   4.44         3.59           1.07        5.11          1.38     102.       278.    2.39   98.7 3741.   2.94       NA
+#> 10      1990   4.26         3.46           1.02        4.87          1.28     105.       277.    2.34   98.6 3990.   2.93       NA
+#> # ℹ more rows
+#> # ℹ 322 more variables: TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>, TA_F_MDS_NIGHT_SD <dbl>, TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>,
+#> #   TA_F_MDS_DAY_SD <dbl>, TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>, TA_F_QC <dbl>, TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>,
+#> #   TA_F_DAY <dbl>, TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>,
+#> #   LW_IN_F_MDS <dbl>, LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>, LW_IN_F_QC <dbl>, LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>,
+#> #   LW_IN_JSB_F <dbl>, LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>, VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>, PA_F <dbl>, PA_F_QC <dbl>,
+#> #   P_F <dbl>, P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, PPFD_IN <dbl>, PPFD_IN_QC <dbl>, CO2_F_MDS <dbl>, …
+```
+
+Unlike the results of
+[`flux_read()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_read.md),
+this object is a “lazy” tibble, meaning it will only be pulled into
+memory when you want it to be by using
+[`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
+
+``` r
+
+class(annual)
+#> [1] "tbl_duckdb_connection" "tbl_dbi"               "tbl_sql"               "tbl_lazy"              "tbl"
+class(collect(annual))
+#> [1] "tbl_df"     "tbl"        "data.frame"
+```
+
+You can apply *many* `tidyverse` functions to a “lazy” tibble and only
+upon running
+[`collect()`](https://dplyr.tidyverse.org/reference/compute.html) will
+they be translated into a SQL database query and pull the results into
+memory.
+
+``` r
+
+annual %>%
+  mutate(p_gapfilled = 1 - NEE_VUT_REF_QC) %>%
+  filter(p_gapfilled < 0.5) %>%
+  select(site_id, TIMESTAMP, starts_with("GPP_"), starts_with("NEE_")) %>%
+  collect()
+#> # A tibble: 4 × 192
+#>   site_id TIMESTAMP GPP_NT_VUT_REF GPP_NT_VUT_USTAR50 GPP_NT_VUT_MEAN GPP_NT_VUT_SE GPP_NT_VUT_05 GPP_NT_VUT_16 GPP_NT_VUT_25
+#>   <chr>       <int>          <dbl>              <dbl>           <dbl>         <dbl>         <dbl>         <dbl>         <dbl>
+#> 1 AR-TF2       2017           301.               299.            296.         1.11           287.          288.          289.
+#> 2 AU-Emr       2012           537.               540.            536.         1.36           519.          525.          528.
+#> 3 AU-Emr       2013           399.               396.            396.         0.885          383.          389.          393.
+#> 4 NO-Hur       2024          1120.              1086.           1105.        11.2            958.         1021.         1059.
+#> # ℹ 183 more variables: GPP_NT_VUT_50 <dbl>, GPP_NT_VUT_75 <dbl>, GPP_NT_VUT_84 <dbl>, GPP_NT_VUT_95 <dbl>, GPP_NT_CUT_REF <dbl>,
+#> #   GPP_NT_CUT_USTAR50 <dbl>, GPP_NT_CUT_MEAN <dbl>, GPP_NT_CUT_SE <dbl>, GPP_NT_CUT_05 <dbl>, GPP_NT_CUT_16 <dbl>, GPP_NT_CUT_25 <dbl>,
+#> #   GPP_NT_CUT_50 <dbl>, GPP_NT_CUT_75 <dbl>, GPP_NT_CUT_84 <dbl>, GPP_NT_CUT_95 <dbl>, GPP_DT_VUT_REF <dbl>, GPP_DT_VUT_USTAR50 <dbl>,
+#> #   GPP_DT_VUT_MEAN <dbl>, GPP_DT_VUT_SE <dbl>, GPP_DT_VUT_05 <dbl>, GPP_DT_VUT_16 <dbl>, GPP_DT_VUT_25 <dbl>, GPP_DT_VUT_50 <dbl>,
+#> #   GPP_DT_VUT_75 <dbl>, GPP_DT_VUT_84 <dbl>, GPP_DT_VUT_95 <dbl>, GPP_DT_CUT_REF <dbl>, GPP_DT_CUT_USTAR50 <dbl>, GPP_DT_CUT_MEAN <dbl>,
+#> #   GPP_DT_CUT_SE <dbl>, GPP_DT_CUT_05 <dbl>, GPP_DT_CUT_16 <dbl>, GPP_DT_CUT_25 <dbl>, GPP_DT_CUT_50 <dbl>, GPP_DT_CUT_75 <dbl>,
+#> #   GPP_DT_CUT_84 <dbl>, GPP_DT_CUT_95 <dbl>, NEE_CUT_REF <dbl>, NEE_VUT_REF <dbl>, NEE_CUT_REF_QC <dbl>, NEE_VUT_REF_QC <dbl>, …
+```
+
+The “lazy” tibble `annual` above does *not* work with
+[`flux_qc()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_qc.md)
+(yet).
+
+When you are done, you can close the connection.
+
+``` r
+
+DBI::dbDisconnect(con)
+```
+
+## Updating the Database
+
+When you download new sites or updated releases of existing sites, you
+can update the database two ways. The first is to simply delete the
+`fluxnet.duckdb` file created by
+[`flux_db_build()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_build.md)
+and then run
+[`flux_db_build()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_build.md)
+again. However, this may take some time, especially with a lot of hourly
+data, and you may have deleted some of the CSVs already ingested into
+the database. As an alternative, you can run
+[`flux_db_update()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_update.md).
+
+``` r
+
+flux_download(site_ids = "BR-Ji3")
+flux_extract()
+manifest <- flux_discover_files()
+
+flux_db_update(manifest)
+```
+
+    #> Downloading data from specified sites.
+    #> DD / ERA5 → 4 sites, 179 site-years across 4 files
+    #> DD / FLUXMET → 4 sites, 15 site-years across 4 files
+    #> HH / ERA5 → 4 sites, 179 site-years across 4 files
+    #> HH / FLUXMET → 4 sites, 15 site-years across 4 files
+    #> MM / ERA5 → 4 sites, 179 site-years across 4 files
+    #> MM / FLUXMET → 4 sites, 15 site-years across 4 files
+    #> WW / ERA5 → 4 sites, 179 site-years across 4 files
+    #> WW / FLUXMET → 4 sites, 15 site-years across 4 files
+    #> YY / ERA5 → 4 sites, 179 site-years across 4 files
+    #> YY / FLUXMET → 4 sites, 15 site-years across 4 files
+    #> ℹ Opening DuckDB connection to ' ]8;;file:///var/folders/9x/8tfdxtbx3_173cs_8jqsyjph0000gn/T/Rtmp8bYb6v/fluxnet_vignette109c5441a5f55/fluxnet.duckdb/var/folders/9x/8tfdxtbx3_173cs_8jqsyjph0000gn/T/Rtmp8bYb6v/fluxnet_vignette109c5441a5f55/fluxnet.duckdb ]8;;'
+    #> 
+    #> 
+    ℹ Reading in annual data CSVs
+    #> 
+    ✔ Reading in annual data CSVs [22ms]
+    #> 
+    #> 
+    #> 
+    ℹ Updating/Inserting annual data into database
+    #> 
+    ✔ Updating/Inserting annual data into database [33ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in monthly data CSVs
+    #> 
+    ✔ Reading in monthly data CSVs [49ms]
+    #> 
+    #> 
+    #> 
+    ℹ Updating/Inserting monthly data into database
+    #> 
+    ✔ Updating/Inserting monthly data into database [36ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in weekly data CSVs
+    #> 
+    ✔ Reading in weekly data CSVs [126ms]
+    #> 
+    #> 
+    #> 
+    ℹ Updating/Inserting weekly data into database
+    #> 
+    ✔ Updating/Inserting weekly data into database [57ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in daily data CSVs
+    #> 
+    ✔ Reading in daily data CSVs [420ms]
+    #> 
+    #> 
+    #> 
+    ℹ Updating/Inserting daily data into database
+    #> 
+    ✔ Updating/Inserting daily data into database [444ms]
+    #> 
+    #> 
+    #> 
+    ℹ Reading in hourly/half-hourly data CSVs
+    #> 
+    ✔ Reading in hourly/half-hourly data CSVs [1.1s]
+    #> 
+    #> 
+    #> 
+    ℹ Updating/Inserting hourly data into database
+    #> 
+    ✔ Updating/Inserting hourly data into database [6.4s]
+    #> 
+    #> 
+    #> 
+    ℹ Updating CSV manifest in database
+    #> 
+    ✔ Updating CSV manifest in database [65ms]
+    #> 
+    #> 
+    #> 
+    ℹ Closing connection.
+    #> 
+    ✔ Closing connection. [176ms]
+
+Now we can see the new site is in the data
+
+``` r
+
+con <- flux_db_connect()
+hourly <- tbl(con, "hourly")
+hourly %>% pull(site_id) %>% unique()
+DBI::dbDisconnect(con)
+```
+
+    #> ℹ Opening DuckDB connection to '
+    #> [1] "AR-TF2" "AU-Emr" "NO-Hur" "BR-Ji3"
+
+Currently there is a known issue with
+[`flux_db_update()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_update.md)
+where it will fail if new CSVs have columns not already in the database
+tables. In that case, you’ll have to delete the database and regenerate
+it with
+[`flux_db_build()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_build.md)

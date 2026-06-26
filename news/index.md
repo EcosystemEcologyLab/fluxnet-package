@@ -2,6 +2,15 @@
 
 ## fluxnet (development version)
 
+- Added experimental function
+  [`flux_db_connect()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_connect.md),
+  [`flux_db_build()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_build.md),
+  and
+  [`flux_db_update()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_update.md)
+  that ingest FLUXNET data into a DuckDB database that can be queried
+  with `dplyr` without reading data into memory.
+- Added a vignette to demonstrate working with the new DuckDB functions.
+
 ## fluxnet 0.5.1
 
 - Switched package maintainer to Dave Moore.

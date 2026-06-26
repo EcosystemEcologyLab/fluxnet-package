@@ -14,6 +14,17 @@
 - [`flux_citations()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_citations.md)
   : Output required per-dataset citations for FLUXNET data
 
+- [`flux_db_build()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_build.md)
+  **\[experimental\]** : Ingest FLUXNET data into a DuckDB database
+
+- [`flux_db_connect()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_connect.md)
+  **\[experimental\]** : Connect to (or create) DuckDB database for
+  FLUXNET data
+
+- [`flux_db_update()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_db_update.md)
+  **\[experimental\]** : Update existing DuckDB database with new
+  FLUXNET data
+
 - [`flux_discover_files()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_discover_files.md)
   : Create a "manifest" of downloaded and unzipped FLUXNET data files
 

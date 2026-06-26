@@ -6,6 +6,16 @@ library(fluxnet)
 #> ! Use of data downloaded by fluxnet requires you abide by FLUXNET data policies: <
 #> ℹ Citations for individual sites' datasets are returned by `
 library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> 
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> 
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 ```
 
 ## Discovering what is available for download
@@ -51,24 +61,25 @@ citations for site-level data attribution which is required by FLUXNET.
 ``` r
 
 colnames(list)
-#>  [1] "data_hub"               "site_id"                "site_name"              "location_lat"           "location_long"          "igbp"                   "network"               
-#>  [8] "team_member_name"       "team_member_role"       "team_member_email"      "first_year"             "last_year"              "download_link"          "fluxnet_product_name"  
-#> [15] "product_citation"       "product_id"             "oneflux_code_version"   "product_source_network"
+#>  [1] "data_hub"               "site_id"                "site_name"              "location_lat"           "location_long"         
+#>  [6] "igbp"                   "network"                "team_member_name"       "team_member_role"       "team_member_email"     
+#> [11] "first_year"             "last_year"              "download_link"          "fluxnet_product_name"   "product_citation"      
+#> [16] "product_id"             "oneflux_code_version"   "product_source_network"
 list %>% select(site_id, product_citation)
-#> # A tibble: 301 × 2
-#>    site_id product_citation                                                                                                                                                                           
-#>    <chr>   <chr>                                                                                                                                                                                      
-#>  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares grassland, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2469434                                  
-#>  2 AR-TF1  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF1 Rio Moat bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1818370                                               
-#>  3 AR-TF2  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF2 Rio Pipo bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2571120                                               
-#>  4 BR-CST  Antonio Antonino (2025), AmeriFlux FLUXNET-1F BR-CST Caatinga Serra Talhada, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1902820                                  
-#>  5 CA-ARB  Aaron Todd, Elyn Humphreys (2025), AmeriFlux FLUXNET-1F CA-ARB Attawapiskat River Bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1902821                        
-#>  6 CA-Ca1  T. Andrew Black (2025), AmeriFlux FLUXNET-1F CA-Ca1 British Columbia - 1949 Douglas-fir stand, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2007163                
-#>  7 CA-Ca2  T. Andrew Black (2025), AmeriFlux FLUXNET-1F CA-Ca2 British Columbia - Clearcut Douglas-fir stand (harvested winter 1999/2000), Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10…
-#>  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1881564                                              
-#>  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delta Burns Bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1881565                              
-#> 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2571137                                               
-#> # ℹ 291 more rows
+#> # A tibble: 767 × 2
+#>    site_id product_citation                                                                                                               
+#>    <chr>   <chr>                                                                                                                          
+#>  1 AR-Bal  Maria Isabel Gassmann, Natalia Edith Tonti (2026), AmeriFlux FLUXNET-1F AR-Bal Balcarce BA, Ver. v1.3_r1, AmeriFlux AMP, (Data…
+#>  2 AR-CCa  Gabriela Posse (2026), AmeriFlux FLUXNET-1F AR-CCa Carlos Casares agriculture, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https:/…
+#>  3 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares grassland, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://d…
+#>  4 AR-TF1  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF1 Rio Moat bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.171…
+#>  5 AR-TF2  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF2 Rio Pipo bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.171…
+#>  6 BR-CST  Antonio Antonino (2025), AmeriFlux FLUXNET-1F BR-CST Caatinga Serra Talhada, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://d…
+#>  7 BR-ITA  Joannès Guillemot (2026), AmeriFlux FLUXNET-1F BR-ITA MataFLUX: Multi-species tree restoration planting, Ver. v1.3_r1, AmeriFl…
+#>  8 BR-Ji3  Alessandro Araujo (2026), AmeriFlux FLUXNET-1F BR-Ji3 Ji-Paraná/RO - Reserva Biológica do Jaru (RBJ), Ver. v1.3_r1, AmeriFlux …
+#>  9 BR-Ma2  Alessandro Araujo, Celso von Randow, Antonio Manzi, Antonio Nobre, Gilberto Pastorello, Julie Andrews de França e Silva, Leila…
+#> 10 BR-Ma3  Alessandro Araujo (2026), AmeriFlux FLUXNET-1F BR-Ma3 ZF3, Colosso farm, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.o…
+#> # ℹ 757 more rows
 ```
 
 ## Downloading data
@@ -95,16 +106,6 @@ flux_download(file_list_df = list_wet)
 ```
 
     #> Downloading data from all available sites.
-    #> 
-    [working] (0 + 0) -> 4 -> 1 | ■■■■■■■                           20%
-    #> 
-    [working] (0 + 0) -> 3 -> 2 | ■■■■■■■■■■■■■                     40%
-    #> 
-    [working] (0 + 0) -> 2 -> 3 | ■■■■■■■■■■■■■■■■■■■               60%
-    #> 
-    [working] (0 + 0) -> 1 -> 4 | ■■■■■■■■■■■■■■■■■■■■■■■■■         80%
-    #> 
-                                                                       
 
 ## Extracting data from .zip files
 
@@ -140,26 +141,27 @@ manifest <- flux_discover_files()
 manifest
 ```
 
-    #> MM / ERA5 → 5 sites, 221 site-years across 5 files
-    #> MM / FLUXMET → 5 sites, 18 site-years across 5 files
-    #> YY / ERA5 → 5 sites, 221 site-years across 5 files
-    #> YY / FLUXMET → 5 sites, 18 site-years across 5 files
+    #> MM / ERA5 → 5 sites, 225 site-years across 5 files
+    #> MM / FLUXMET → 5 sites, 59 site-years across 5 files
+    #> YY / ERA5 → 5 sites, 225 site-years across 5 files
+    #> YY / FLUXMET → 5 sites, 59 site-years across 5 files
     #> # A tibble: 35 × 23
-    #>    path       product_source_network site_id dataset time_resolution first_year last_year oneflux_code_version release_version download_time       data_hub site_name location_lat location_long igbp 
-    #>    <fs::path> <chr>                  <chr>   <chr>   <chr>                <int>     <int> <chr>                <chr>           <dttm>              <chr>    <chr>            <dbl>         <dbl> <chr>
-    #>  1 ….3_r1.csv AMF                    CA-MA1  BIF     <NA>                  2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  2 ….3_r1.csv AMF                    CA-MA1  BIFVAR… MM                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  3 ….3_r1.csv AMF                    CA-MA1  BIFVAR… YY                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  4 ….3_r1.csv AMF                    CA-MA1  ERA5    MM                    1981      2024 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  5 ….3_r1.csv AMF                    CA-MA1  ERA5    YY                    1981      2024 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  6 ….3_r1.csv AMF                    CA-MA1  FLUXMET MM                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  7 ….3_r1.csv AMF                    CA-MA1  FLUXMET YY                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  
-    #>  8 ….3_r1.csv ICOS                   DE-Amv  BIF     <NA>                  2023      2024 v1.3                 r1              2026-03-17 14:47:12 ICOS     Amtsvenn          52.2          6.96 WET  
-    #>  9 ….3_r1.csv ICOS                   DE-Amv  BIFVAR… MM                    2023      2024 v1.3                 r1              2026-03-17 14:47:12 ICOS     Amtsvenn          52.2          6.96 WET  
-    #> 10 ….3_r1.csv ICOS                   DE-Amv  BIFVAR… YY                    2023      2024 v1.3                 r1              2026-03-17 14:47:12 ICOS     Amtsvenn          52.2          6.96 WET  
+    #>    path                   product_source_network site_id dataset time_resolution first_year last_year oneflux_code_version release_version
+    #>    <fs::path>             <chr>                  <chr>   <chr>   <chr>                <int>     <int> <chr>                <chr>          
+    #>  1 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  BIF     <NA>                  2015      2024 v1.3                 r1             
+    #>  2 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  BIFVAR… MM                    2015      2024 v1.3                 r1             
+    #>  3 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  BIFVAR… YY                    2015      2024 v1.3                 r1             
+    #>  4 …1981-2025_v1.3_r1.csv ICOS                   CZ-Lnz  ERA5    MM                    1981      2025 v1.3                 r1             
+    #>  5 …1981-2025_v1.3_r1.csv ICOS                   CZ-Lnz  ERA5    YY                    1981      2025 v1.3                 r1             
+    #>  6 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  FLUXMET MM                    2015      2024 v1.3                 r1             
+    #>  7 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  FLUXMET YY                    2015      2024 v1.3                 r1             
+    #>  8 …2015-2020_v1.3_r1.csv JPF                    MN-Hst  BIF     <NA>                  2015      2020 v1.3                 r1             
+    #>  9 …2015-2020_v1.3_r1.csv JPF                    MN-Hst  BIFVAR… MM                    2015      2020 v1.3                 r1             
+    #> 10 …2015-2020_v1.3_r1.csv JPF                    MN-Hst  BIFVAR… YY                    2015      2020 v1.3                 r1             
     #> # ℹ 25 more rows
-    #> # ℹ 8 more variables: network <chr>, team_member_name <chr>, team_member_role <chr>, team_member_email <chr>, download_link <chr>, fluxnet_product_name <chr>, product_citation <chr>,
-    #> #   product_id <chr>
+    #> # ℹ 14 more variables: download_time <dttm>, data_hub <chr>, site_name <chr>, location_lat <dbl>, location_long <dbl>, igbp <chr>,
+    #> #   network <chr>, team_member_name <chr>, team_member_role <chr>, team_member_email <chr>, download_link <chr>,
+    #> #   fluxnet_product_name <chr>, product_citation <chr>, product_id <chr>
 
 You can visualize the sites you have data for with
 [`flux_map_sites()`](https://ecosystemecologylab.github.io/fluxnet-package/reference/flux_map_sites.md).
@@ -220,18 +222,25 @@ and gapfilling threshold(s).
 
 ``` r
 
-flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", max_gapfilled = 0.3)
+flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", threshold = 0.3)
 flagged_nee %>%
   filter(qc_flagged) %>%
   select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, everything())
-#> # A tibble: 0 × 337
-#> # ℹ 337 variables: qc_flagged <lgl>, p_gapfilled <dbl>, NEE_VUT_REF_QC <dbl>, site_id <chr>, dataset <chr>, YEAR <int>, TA_ERA <dbl>, TA_ERA_NIGHT <dbl>, TA_ERA_NIGHT_SD <dbl>, TA_ERA_DAY <dbl>,
-#> #   TA_ERA_DAY_SD <dbl>, SW_IN_ERA <dbl>, LW_IN_ERA <dbl>, VPD_ERA <dbl>, PA_ERA <dbl>, P_ERA <dbl>, WS_ERA <dbl>, TA_F_MDS <dbl>, TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>, TA_F_MDS_NIGHT_SD <dbl>,
-#> #   TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>, TA_F_MDS_DAY_SD <dbl>, TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>, TA_F_QC <dbl>, TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>, TA_F_DAY <dbl>,
-#> #   TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>, LW_IN_F_MDS <dbl>, LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>, LW_IN_F_QC <dbl>,
-#> #   LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>, LW_IN_JSB_F <dbl>, LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>, VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>, PA_F <dbl>, PA_F_QC <dbl>,
-#> #   P_F <dbl>, P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, PPFD_IN <dbl>, PPFD_IN_QC <dbl>, PPFD_OUT <dbl>, PPFD_OUT_QC <dbl>, CO2_F_MDS <dbl>, CO2_F_MDS_QC <dbl>,
-#> #   TS_F_MDS_1 <dbl>, TS_F_MDS_2 <dbl>, TS_F_MDS_1_QC <dbl>, TS_F_MDS_2_QC <dbl>, SWC_F_MDS_1 <dbl>, SWC_F_MDS_1_QC <dbl>, G_F_MDS <dbl>, G_F_MDS_QC <dbl>, LE_F_MDS <dbl>, LE_F_MDS_QC <dbl>, …
+#> # A tibble: 5 × 344
+#>   qc_flagged p_gapfilled NEE_VUT_REF_QC site_id dataset time_resolution  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY TA_ERA_DAY_SD
+#>   <lgl>            <dbl>          <dbl> <chr>   <chr>   <chr>           <int>  <dbl>        <dbl>           <dbl>      <dbl>         <dbl>
+#> 1 TRUE             0.412          0.588 NL-Loo  FLUXMET YY               2019   10.8         9.61            1.75       11.7          2.40
+#> 2 TRUE             0.352          0.648 US-KFS  FLUXMET YY               2009   12.1        11.2             2.62       13.0          3.13
+#> 3 TRUE             0.305          0.695 US-KFS  FLUXMET YY               2014   11.9        10.7             2.80       12.9          3.29
+#> 4 TRUE             0.337          0.663 US-KFS  FLUXMET YY               2017   13.9        12.8             2.65       14.9          3.3 
+#> 5 TRUE             0.419          0.581 US-KFS  FLUXMET YY               2019   12.6        11.7             2.51       13.4          3.05
+#> # ℹ 332 more variables: SW_IN_ERA <dbl>, LW_IN_ERA <dbl>, VPD_ERA <dbl>, PA_ERA <dbl>, P_ERA <dbl>, WS_ERA <dbl>, TA_F_MDS <dbl>,
+#> #   TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>, TA_F_MDS_NIGHT_SD <dbl>, TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>, TA_F_MDS_DAY_SD <dbl>,
+#> #   TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>, TA_F_QC <dbl>, TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>, TA_F_DAY <dbl>,
+#> #   TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>, LW_IN_F_MDS <dbl>,
+#> #   LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>, LW_IN_F_QC <dbl>, LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>, LW_IN_JSB_F <dbl>,
+#> #   LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>, VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>, PA_F <dbl>, PA_F_QC <dbl>, P_F <dbl>,
+#> #   P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, NETRAD <dbl>, NETRAD_QC <dbl>, PPFD_IN <dbl>, …
 ```
 
 Notice that in this case `p_gapfilled` is just 1 - `NEE_VUT_REF_QC`.
@@ -243,27 +252,32 @@ Notice that in this case `p_gapfilled` is just 1 - `NEE_VUT_REF_QC`.
 flagged_2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = 0.3
+  threshold = 0.3
 )
 flagged_2 %>%
   filter(qc_flagged) %>%
   select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
-#> # A tibble: 6 × 337
-#>   qc_flagged p_gapfilled NEE_VUT_REF_QC TA_F_QC site_id dataset  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY TA_ERA_DAY_SD SW_IN_ERA LW_IN_ERA VPD_ERA PA_ERA P_ERA WS_ERA TA_F_MDS
-#>   <lgl>            <dbl>          <dbl>   <dbl> <chr>   <chr>   <int>  <dbl>        <dbl>           <dbl>      <dbl>         <dbl>     <dbl>     <dbl>   <dbl>  <dbl> <dbl>  <dbl>    <dbl>
-#> 1 TRUE             0.386         NA       0.614 CA-MA1  FLUXMET  2009   1.43        0.429            2.42       2.20          2.46      170.      276.    2.78   98.6  421.   3.23    NA   
-#> 2 TRUE             0.817         NA       0.183 DK-Gds  FLUXMET  2020   9.30        8.09             1.47      10.1           1.91      110.      312.    2.51   99.8 1002.   3.80    NA   
-#> 3 TRUE             0.597         NA       0.403 JP-Hc3  FLUXMET  2005  15.6        15.1              1.57      16.0           1.55      171.      330.    4.28  101.  3387.   1.41    16.0 
-#> 4 TRUE             0.627         NA       0.373 JP-Hc3  FLUXMET  2006  16.0        15.6              1.37      16.3           1.47      159.      336.    4.08  101   4988.   1.30    23.7 
-#> 5 TRUE             0.486         NA       0.514 RU-Fy4  FLUXMET  2015   5.83        4.61             1.94       6.60          2.45      110.      311.    2.52   97.4  366.   2.25    NA   
-#> 6 TRUE             0.392          0.700   0.608 RU-Fy4  FLUXMET  2019   6.00        4.75             1.92       6.73          2.36      107.      314.    2.41   97.3  447.   2.27     7.34
-#> # ℹ 318 more variables: TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>, TA_F_MDS_NIGHT_SD <dbl>, TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>, TA_F_MDS_DAY_SD <dbl>, TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>,
-#> #   TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>, TA_F_DAY <dbl>, TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>,
-#> #   LW_IN_F_MDS <dbl>, LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>, LW_IN_F_QC <dbl>, LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>, LW_IN_JSB_F <dbl>, LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>,
-#> #   VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>, PA_F <dbl>, PA_F_QC <dbl>, P_F <dbl>, P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, PPFD_IN <dbl>, PPFD_IN_QC <dbl>,
-#> #   PPFD_OUT <dbl>, PPFD_OUT_QC <dbl>, CO2_F_MDS <dbl>, CO2_F_MDS_QC <dbl>, TS_F_MDS_1 <dbl>, TS_F_MDS_2 <dbl>, TS_F_MDS_1_QC <dbl>, TS_F_MDS_2_QC <dbl>, SWC_F_MDS_1 <dbl>, SWC_F_MDS_1_QC <dbl>,
-#> #   G_F_MDS <dbl>, G_F_MDS_QC <dbl>, LE_F_MDS <dbl>, LE_F_MDS_QC <dbl>, LE_CORR <dbl>, LE_RANDUNC <dbl>, H_F_MDS <dbl>, H_F_MDS_QC <dbl>, H_CORR <dbl>, H_RANDUNC <dbl>, EBC_CF_N <dbl>,
-#> #   EBC_CF_METHOD <dbl>, NIGHT_RANDUNC_N <dbl>, DAY_RANDUNC_N <dbl>, NEE_CUT_REF <dbl>, NEE_VUT_REF <dbl>, NEE_CUT_REF_QC <dbl>, NEE_CUT_REF_RANDUNC <dbl>, NEE_VUT_REF_RANDUNC <dbl>, …
+#> # A tibble: 11 × 344
+#>    qc_flagged p_gapfilled NEE_VUT_REF_QC TA_F_QC site_id dataset time_resolution  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY
+#>    <lgl>            <dbl>          <dbl>   <dbl> <chr>   <chr>   <chr>           <int>  <dbl>        <dbl>           <dbl>      <dbl>
+#>  1 TRUE             0.345          0.946   0.655 CZ-Lnz  FLUXMET YY               2019  11.8        10.8              2.02      12.5 
+#>  2 TRUE             0.378         NA       0.622 CZ-Lnz  FLUXMET YY               2022  11.5        10.4              2.01      12.3 
+#>  3 TRUE             0.471         NA       0.529 MN-Hst  FLUXMET YY               2015   2.13        0.584            3.35       3.47
+#>  4 TRUE             0.504          0.951   0.496 NL-Loo  FLUXMET YY               2004   9.93        8.81             1.70      10.7 
+#>  5 TRUE             0.434          0.588   0.566 NL-Loo  FLUXMET YY               2019  10.8         9.61             1.75      11.7 
+#>  6 TRUE             0.454         NA       0.546 US-KFS  FLUXMET YY               2007  13.3        12.3              2.59      14.2 
+#>  7 TRUE             0.352          0.648   0.728 US-KFS  FLUXMET YY               2009  12.1        11.2              2.62      13.0 
+#>  8 TRUE             0.305          0.695   0.836 US-KFS  FLUXMET YY               2014  11.9        10.7              2.80      12.9 
+#>  9 TRUE             0.337          0.663   0.909 US-KFS  FLUXMET YY               2017  13.9        12.8              2.65      14.9 
+#> 10 TRUE             0.419          0.581   0.920 US-KFS  FLUXMET YY               2019  12.6        11.7              2.51      13.4 
+#> 11 TRUE             0.457         NA       0.543 US-Me7  FLUXMET YY               2022   7.84        6.27             2.89       9.10
+#> # ℹ 332 more variables: TA_ERA_DAY_SD <dbl>, SW_IN_ERA <dbl>, LW_IN_ERA <dbl>, VPD_ERA <dbl>, PA_ERA <dbl>, P_ERA <dbl>, WS_ERA <dbl>,
+#> #   TA_F_MDS <dbl>, TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>, TA_F_MDS_NIGHT_SD <dbl>, TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>,
+#> #   TA_F_MDS_DAY_SD <dbl>, TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>, TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>, TA_F_DAY <dbl>,
+#> #   TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>, LW_IN_F_MDS <dbl>,
+#> #   LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>, LW_IN_F_QC <dbl>, LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>, LW_IN_JSB_F <dbl>,
+#> #   LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>, VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>, PA_F <dbl>, PA_F_QC <dbl>, P_F <dbl>,
+#> #   P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, NETRAD <dbl>, NETRAD_QC <dbl>, PPFD_IN <dbl>, …
 ```
 
 Now `p_gapfilled` is 1 - the smaller of `NEE_VUT_REF_QC` and `TA_F_QC`.
@@ -275,22 +289,27 @@ Now `p_gapfilled` is 1 - the smaller of `NEE_VUT_REF_QC` and `TA_F_QC`.
 flagged_3 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = c(0.3, 0.1),
+  threshold = c(0.3, 0.1),
   operator = "all"
 )
 flagged_3 %>%
   filter(qc_flagged) %>%
   select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
-#> # A tibble: 0 × 337
-#> # ℹ 337 variables: qc_flagged <lgl>, p_gapfilled <dbl>, NEE_VUT_REF_QC <dbl>, TA_F_QC <dbl>, site_id <chr>, dataset <chr>, YEAR <int>, TA_ERA <dbl>, TA_ERA_NIGHT <dbl>, TA_ERA_NIGHT_SD <dbl>,
-#> #   TA_ERA_DAY <dbl>, TA_ERA_DAY_SD <dbl>, SW_IN_ERA <dbl>, LW_IN_ERA <dbl>, VPD_ERA <dbl>, PA_ERA <dbl>, P_ERA <dbl>, WS_ERA <dbl>, TA_F_MDS <dbl>, TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>,
-#> #   TA_F_MDS_NIGHT_SD <dbl>, TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>, TA_F_MDS_DAY_SD <dbl>, TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>, TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>,
-#> #   TA_F_DAY <dbl>, TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>, LW_IN_F_MDS <dbl>, LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>,
-#> #   LW_IN_F_QC <dbl>, LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>, LW_IN_JSB_F <dbl>, LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>, VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>,
-#> #   PA_F <dbl>, PA_F_QC <dbl>, P_F <dbl>, P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, PPFD_IN <dbl>, PPFD_IN_QC <dbl>, PPFD_OUT <dbl>, PPFD_OUT_QC <dbl>, CO2_F_MDS <dbl>,
-#> #   CO2_F_MDS_QC <dbl>, TS_F_MDS_1 <dbl>, TS_F_MDS_2 <dbl>, TS_F_MDS_1_QC <dbl>, TS_F_MDS_2_QC <dbl>, SWC_F_MDS_1 <dbl>, SWC_F_MDS_1_QC <dbl>, G_F_MDS <dbl>, G_F_MDS_QC <dbl>, LE_F_MDS <dbl>, …
+#> # A tibble: 3 × 344
+#>   qc_flagged p_gapfilled NEE_VUT_REF_QC TA_F_QC site_id dataset time_resolution  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY
+#>   <lgl>            <dbl>          <dbl>   <dbl> <chr>   <chr>   <chr>           <int>  <dbl>        <dbl>           <dbl>      <dbl>
+#> 1 TRUE             0.412          0.588   0.566 NL-Loo  FLUXMET YY               2019   10.8         9.61            1.75       11.7
+#> 2 TRUE             0.272          0.648   0.728 US-KFS  FLUXMET YY               2009   12.1        11.2             2.62       13.0
+#> 3 TRUE             0.164          0.695   0.836 US-KFS  FLUXMET YY               2014   11.9        10.7             2.80       12.9
+#> # ℹ 332 more variables: TA_ERA_DAY_SD <dbl>, SW_IN_ERA <dbl>, LW_IN_ERA <dbl>, VPD_ERA <dbl>, PA_ERA <dbl>, P_ERA <dbl>, WS_ERA <dbl>,
+#> #   TA_F_MDS <dbl>, TA_F_MDS_QC <dbl>, TA_F_MDS_NIGHT <dbl>, TA_F_MDS_NIGHT_SD <dbl>, TA_F_MDS_NIGHT_QC <dbl>, TA_F_MDS_DAY <dbl>,
+#> #   TA_F_MDS_DAY_SD <dbl>, TA_F_MDS_DAY_QC <dbl>, TA_F <dbl>, TA_F_NIGHT <dbl>, TA_F_NIGHT_SD <dbl>, TA_F_NIGHT_QC <dbl>, TA_F_DAY <dbl>,
+#> #   TA_F_DAY_SD <dbl>, TA_F_DAY_QC <dbl>, SW_IN_F_MDS <dbl>, SW_IN_F_MDS_QC <dbl>, SW_IN_F <dbl>, SW_IN_F_QC <dbl>, LW_IN_F_MDS <dbl>,
+#> #   LW_IN_F_MDS_QC <dbl>, LW_IN_F <dbl>, LW_IN_F_QC <dbl>, LW_IN_JSB <dbl>, LW_IN_JSB_QC <dbl>, LW_IN_JSB_ERA <dbl>, LW_IN_JSB_F <dbl>,
+#> #   LW_IN_JSB_F_QC <dbl>, VPD_F_MDS <dbl>, VPD_F_MDS_QC <dbl>, VPD_F <dbl>, VPD_F_QC <dbl>, PA_F <dbl>, PA_F_QC <dbl>, P_F <dbl>,
+#> #   P_F_QC <dbl>, WS_F <dbl>, WS_F_QC <dbl>, USTAR <dbl>, USTAR_QC <dbl>, NETRAD <dbl>, NETRAD_QC <dbl>, PPFD_IN <dbl>, …
 ```
 
 Because we’ve set `operator = "all"`, `p_gapfilled` is now 1 - the
 *larger* of `NEE_VUT_REF_QC` and `TA_F_QC` and all of the values are
-greater than the smaller of the `max_gapfilled` values.
+greater than the smaller of the `threshold` values.

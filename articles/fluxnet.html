@@ -31,6 +31,12 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/fluxnet.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/fluxnet-duckdb.html">Working with larger-than-memory FLUXNET data</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -65,7 +71,17 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/EcosystemEcologyLab/fluxnet-package" class="external-link">fluxnet</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; ! Use of data downloaded by fluxnet requires you abide by FLUXNET data policies: &lt;</span></span>
 <span><span class="co">#&gt; ℹ Citations for individual sites' datasets are returned by `</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="discovering-what-is-available-for-download">Discovering what is available for download<a class="anchor" aria-label="anchor" href="#discovering-what-is-available-for-download"></a>
 </h2>
@@ -97,24 +113,25 @@ the available sites including, importantly, citations for site-level
 data attribution which is required by FLUXNET.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "data_hub"               "site_id"                "site_name"              "location_lat"           "location_long"          "igbp"                   "network"               </span></span>
-<span><span class="co">#&gt;  [8] "team_member_name"       "team_member_role"       "team_member_email"      "first_year"             "last_year"              "download_link"          "fluxnet_product_name"  </span></span>
-<span><span class="co">#&gt; [15] "product_citation"       "product_id"             "oneflux_code_version"   "product_source_network"</span></span>
+<span><span class="co">#&gt;  [1] "data_hub"               "site_id"                "site_name"              "location_lat"           "location_long"         </span></span>
+<span><span class="co">#&gt;  [6] "igbp"                   "network"                "team_member_name"       "team_member_role"       "team_member_email"     </span></span>
+<span><span class="co">#&gt; [11] "first_year"             "last_year"              "download_link"          "fluxnet_product_name"   "product_citation"      </span></span>
+<span><span class="co">#&gt; [16] "product_id"             "oneflux_code_version"   "product_source_network"</span></span>
 <span><span class="va">list</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">site_id</span>, <span class="va">product_citation</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 301 × 2</span></span>
-<span><span class="co">#&gt;    site_id product_citation                                                                                                                                                                           </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                                                                                                                                                      </span></span>
-<span><span class="co">#&gt;  1 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares grassland, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2469434                                  </span></span>
-<span><span class="co">#&gt;  2 AR-TF1  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF1 Rio Moat bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1818370                                               </span></span>
-<span><span class="co">#&gt;  3 AR-TF2  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF2 Rio Pipo bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2571120                                               </span></span>
-<span><span class="co">#&gt;  4 BR-CST  Antonio Antonino (2025), AmeriFlux FLUXNET-1F BR-CST Caatinga Serra Talhada, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1902820                                  </span></span>
-<span><span class="co">#&gt;  5 CA-ARB  Aaron Todd, Elyn Humphreys (2025), AmeriFlux FLUXNET-1F CA-ARB Attawapiskat River Bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1902821                        </span></span>
-<span><span class="co">#&gt;  6 CA-Ca1  T. Andrew Black (2025), AmeriFlux FLUXNET-1F CA-Ca1 British Columbia - 1949 Douglas-fir stand, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2007163                </span></span>
-<span><span class="co">#&gt;  7 CA-Ca2  T. Andrew Black (2025), AmeriFlux FLUXNET-1F CA-Ca2 British Columbia - Clearcut Douglas-fir stand (harvested winter 1999/2000), Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10…</span></span>
-<span><span class="co">#&gt;  8 CA-DB2  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DB2 Delta Burns Bog 2, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1881564                                              </span></span>
-<span><span class="co">#&gt;  9 CA-DBB  Andreas Christen, Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DBB Delta Burns Bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/1881565                              </span></span>
-<span><span class="co">#&gt; 10 CA-DSM  Sara Knox (2025), AmeriFlux FLUXNET-1F CA-DSM Delta Salt Marsh, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.17190/AMF/2571137                                               </span></span>
-<span><span class="co">#&gt; # ℹ 291 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 767 × 2</span></span>
+<span><span class="co">#&gt;    site_id product_citation                                                                                                               </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;                                                                                                                          </span></span>
+<span><span class="co">#&gt;  1 AR-Bal  Maria Isabel Gassmann, Natalia Edith Tonti (2026), AmeriFlux FLUXNET-1F AR-Bal Balcarce BA, Ver. v1.3_r1, AmeriFlux AMP, (Data…</span></span>
+<span><span class="co">#&gt;  2 AR-CCa  Gabriela Posse (2026), AmeriFlux FLUXNET-1F AR-CCa Carlos Casares agriculture, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https:/…</span></span>
+<span><span class="co">#&gt;  3 AR-CCg  Gabriela Posse (2025), AmeriFlux FLUXNET-1F AR-CCg Carlos Casares grassland, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://d…</span></span>
+<span><span class="co">#&gt;  4 AR-TF1  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF1 Rio Moat bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.171…</span></span>
+<span><span class="co">#&gt;  5 AR-TF2  Lars Kutzbach (2025), AmeriFlux FLUXNET-1F AR-TF2 Rio Pipo bog, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.org/10.171…</span></span>
+<span><span class="co">#&gt;  6 BR-CST  Antonio Antonino (2025), AmeriFlux FLUXNET-1F BR-CST Caatinga Serra Talhada, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://d…</span></span>
+<span><span class="co">#&gt;  7 BR-ITA  Joannès Guillemot (2026), AmeriFlux FLUXNET-1F BR-ITA MataFLUX: Multi-species tree restoration planting, Ver. v1.3_r1, AmeriFl…</span></span>
+<span><span class="co">#&gt;  8 BR-Ji3  Alessandro Araujo (2026), AmeriFlux FLUXNET-1F BR-Ji3 Ji-Paraná/RO - Reserva Biológica do Jaru (RBJ), Ver. v1.3_r1, AmeriFlux …</span></span>
+<span><span class="co">#&gt;  9 BR-Ma2  Alessandro Araujo, Celso von Randow, Antonio Manzi, Antonio Nobre, Gilberto Pastorello, Julie Andrews de França e Silva, Leila…</span></span>
+<span><span class="co">#&gt; 10 BR-Ma3  Alessandro Araujo (2026), AmeriFlux FLUXNET-1F BR-Ma3 ZF3, Colosso farm, Ver. v1.3_r1, AmeriFlux AMP, (Dataset). https://doi.o…</span></span>
+<span><span class="co">#&gt; # ℹ 757 more rows</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="downloading-data">Downloading data<a class="anchor" aria-label="anchor" href="#downloading-data"></a>
@@ -134,17 +151,7 @@ the <code>site_ids</code> argument, or you can filter the results of
 <span><span class="co"># Filter list and download</span></span>
 <span><span class="va">list_wet</span> <span class="op">&lt;-</span> <span class="va">list</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">igbp</span> <span class="op">==</span> <span class="st">"WET"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/flux_download.html">flux_download</a></span><span class="op">(</span>file_list_df <span class="op">=</span> <span class="va">list_wet</span><span class="op">)</span></span></code></pre></div>
-<pre><code>#&gt; Downloading data from all available sites.
-#&gt; 
-[working] (0 + 0) -&gt; 4 -&gt; 1 | ■■■■■■■                           20%
-#&gt; 
-[working] (0 + 0) -&gt; 3 -&gt; 2 | ■■■■■■■■■■■■■                     40%
-#&gt; 
-[working] (0 + 0) -&gt; 2 -&gt; 3 | ■■■■■■■■■■■■■■■■■■■               60%
-#&gt; 
-[working] (0 + 0) -&gt; 1 -&gt; 4 | ■■■■■■■■■■■■■■■■■■■■■■■■■         80%
-#&gt; 
-                                                                   </code></pre>
+<pre><code><span><span class="co">#&gt; Downloading data from all available sites.</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="extracting-data-from--zip-files">Extracting data from .zip files<a class="anchor" aria-label="anchor" href="#extracting-data-from--zip-files"></a>
@@ -173,26 +180,27 @@ the data available to read in. You <em>must</em> create this manifest
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">manifest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_discover_files.html">flux_discover_files</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">manifest</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; MM / ERA5 → 5 sites, 221 site-years across 5 files</span></span>
-<span><span class="co">#&gt; MM / FLUXMET → 5 sites, 18 site-years across 5 files</span></span>
-<span><span class="co">#&gt; YY / ERA5 → 5 sites, 221 site-years across 5 files</span></span>
-<span><span class="co">#&gt; YY / FLUXMET → 5 sites, 18 site-years across 5 files</span></span>
+<pre><code><span><span class="co">#&gt; MM / ERA5 → 5 sites, 225 site-years across 5 files</span></span>
+<span><span class="co">#&gt; MM / FLUXMET → 5 sites, 59 site-years across 5 files</span></span>
+<span><span class="co">#&gt; YY / ERA5 → 5 sites, 225 site-years across 5 files</span></span>
+<span><span class="co">#&gt; YY / FLUXMET → 5 sites, 59 site-years across 5 files</span></span>
 <span><span class="co">#&gt; # A tibble: 35 × 23</span></span>
-<span><span class="co">#&gt;    path       product_source_network site_id dataset time_resolution first_year last_year oneflux_code_version release_version download_time       data_hub site_name location_lat location_long igbp </span></span>
-<span><span class="co">#&gt;    &lt;fs::path&gt; &lt;chr&gt;                  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;                &lt;int&gt;     &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;           &lt;dttm&gt;              &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span><span class="co">#&gt;  1 ….3_r1.csv AMF                    CA-MA1  BIF     &lt;NA&gt;                  2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  2 ….3_r1.csv AMF                    CA-MA1  BIFVAR… MM                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  3 ….3_r1.csv AMF                    CA-MA1  BIFVAR… YY                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  4 ….3_r1.csv AMF                    CA-MA1  ERA5    MM                    1981      2024 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  5 ….3_r1.csv AMF                    CA-MA1  ERA5    YY                    1981      2024 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  6 ….3_r1.csv AMF                    CA-MA1  FLUXMET MM                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  7 ….3_r1.csv AMF                    CA-MA1  FLUXMET YY                    2009      2011 v1.3                 r1              2026-03-17 14:47:12 AmeriFl… Manitoba…         50.2        -97.9  CRO  </span></span>
-<span><span class="co">#&gt;  8 ….3_r1.csv ICOS                   DE-Amv  BIF     &lt;NA&gt;                  2023      2024 v1.3                 r1              2026-03-17 14:47:12 ICOS     Amtsvenn          52.2          6.96 WET  </span></span>
-<span><span class="co">#&gt;  9 ….3_r1.csv ICOS                   DE-Amv  BIFVAR… MM                    2023      2024 v1.3                 r1              2026-03-17 14:47:12 ICOS     Amtsvenn          52.2          6.96 WET  </span></span>
-<span><span class="co">#&gt; 10 ….3_r1.csv ICOS                   DE-Amv  BIFVAR… YY                    2023      2024 v1.3                 r1              2026-03-17 14:47:12 ICOS     Amtsvenn          52.2          6.96 WET  </span></span>
+<span><span class="co">#&gt;    path                   product_source_network site_id dataset time_resolution first_year last_year oneflux_code_version release_version</span></span>
+<span><span class="co">#&gt;    &lt;fs::path&gt;             &lt;chr&gt;                  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;                &lt;int&gt;     &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;          </span></span>
+<span><span class="co">#&gt;  1 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  BIF     &lt;NA&gt;                  2015      2024 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  2 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  BIFVAR… MM                    2015      2024 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  3 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  BIFVAR… YY                    2015      2024 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  4 …1981-2025_v1.3_r1.csv ICOS                   CZ-Lnz  ERA5    MM                    1981      2025 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  5 …1981-2025_v1.3_r1.csv ICOS                   CZ-Lnz  ERA5    YY                    1981      2025 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  6 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  FLUXMET MM                    2015      2024 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  7 …2015-2024_v1.3_r1.csv ICOS                   CZ-Lnz  FLUXMET YY                    2015      2024 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  8 …2015-2020_v1.3_r1.csv JPF                    MN-Hst  BIF     &lt;NA&gt;                  2015      2020 v1.3                 r1             </span></span>
+<span><span class="co">#&gt;  9 …2015-2020_v1.3_r1.csv JPF                    MN-Hst  BIFVAR… MM                    2015      2020 v1.3                 r1             </span></span>
+<span><span class="co">#&gt; 10 …2015-2020_v1.3_r1.csv JPF                    MN-Hst  BIFVAR… YY                    2015      2020 v1.3                 r1             </span></span>
 <span><span class="co">#&gt; # ℹ 25 more rows</span></span>
-<span><span class="co">#&gt; # ℹ 8 more variables: network &lt;chr&gt;, team_member_name &lt;chr&gt;, team_member_role &lt;chr&gt;, team_member_email &lt;chr&gt;, download_link &lt;chr&gt;, fluxnet_product_name &lt;chr&gt;, product_citation &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   product_id &lt;chr&gt;</span></span></code></pre>
+<span><span class="co">#&gt; # ℹ 14 more variables: download_time &lt;dttm&gt;, data_hub &lt;chr&gt;, site_name &lt;chr&gt;, location_lat &lt;dbl&gt;, location_long &lt;dbl&gt;, igbp &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   network &lt;chr&gt;, team_member_name &lt;chr&gt;, team_member_role &lt;chr&gt;, team_member_email &lt;chr&gt;, download_link &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   fluxnet_product_name &lt;chr&gt;, product_citation &lt;chr&gt;, product_id &lt;chr&gt;</span></span></code></pre>
 <p>You can visualize the sites you have data for with
 <code><a href="../reference/flux_map_sites.html">flux_map_sites()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -242,18 +250,25 @@ your choice of variables and gapfilling threshold(s).</p>
 gapfilled<a class="anchor" aria-label="anchor" href="#example-1-flag-rows-where-nee_vut_ref-is-more-than-30-gapfilled"></a>
 </h3>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">flagged_nee</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_qc.html">flux_qc</a></span><span class="op">(</span><span class="va">annual</span>, qc_vars <span class="op">=</span> <span class="st">"NEE_VUT_REF"</span>, max_gapfilled <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">flagged_nee</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_qc.html">flux_qc</a></span><span class="op">(</span><span class="va">annual</span>, qc_vars <span class="op">=</span> <span class="st">"NEE_VUT_REF"</span>, threshold <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
 <span><span class="va">flagged_nee</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">qc_flagged</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">qc_flagged</span>, <span class="va">p_gapfilled</span>, <span class="va">NEE_VUT_REF_QC</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 0 × 337</span></span>
-<span><span class="co">#&gt; # ℹ 337 variables: qc_flagged &lt;lgl&gt;, p_gapfilled &lt;dbl&gt;, NEE_VUT_REF_QC &lt;dbl&gt;, site_id &lt;chr&gt;, dataset &lt;chr&gt;, YEAR &lt;int&gt;, TA_ERA &lt;dbl&gt;, TA_ERA_NIGHT &lt;dbl&gt;, TA_ERA_NIGHT_SD &lt;dbl&gt;, TA_ERA_DAY &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_ERA_DAY_SD &lt;dbl&gt;, SW_IN_ERA &lt;dbl&gt;, LW_IN_ERA &lt;dbl&gt;, VPD_ERA &lt;dbl&gt;, PA_ERA &lt;dbl&gt;, P_ERA &lt;dbl&gt;, WS_ERA &lt;dbl&gt;, TA_F_MDS &lt;dbl&gt;, TA_F_MDS_QC &lt;dbl&gt;, TA_F_MDS_NIGHT &lt;dbl&gt;, TA_F_MDS_NIGHT_SD &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_F_MDS_NIGHT_QC &lt;dbl&gt;, TA_F_MDS_DAY &lt;dbl&gt;, TA_F_MDS_DAY_SD &lt;dbl&gt;, TA_F_MDS_DAY_QC &lt;dbl&gt;, TA_F &lt;dbl&gt;, TA_F_QC &lt;dbl&gt;, TA_F_NIGHT &lt;dbl&gt;, TA_F_NIGHT_SD &lt;dbl&gt;, TA_F_NIGHT_QC &lt;dbl&gt;, TA_F_DAY &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_F_DAY_SD &lt;dbl&gt;, TA_F_DAY_QC &lt;dbl&gt;, SW_IN_F_MDS &lt;dbl&gt;, SW_IN_F_MDS_QC &lt;dbl&gt;, SW_IN_F &lt;dbl&gt;, SW_IN_F_QC &lt;dbl&gt;, LW_IN_F_MDS &lt;dbl&gt;, LW_IN_F_MDS_QC &lt;dbl&gt;, LW_IN_F &lt;dbl&gt;, LW_IN_F_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   LW_IN_JSB &lt;dbl&gt;, LW_IN_JSB_QC &lt;dbl&gt;, LW_IN_JSB_ERA &lt;dbl&gt;, LW_IN_JSB_F &lt;dbl&gt;, LW_IN_JSB_F_QC &lt;dbl&gt;, VPD_F_MDS &lt;dbl&gt;, VPD_F_MDS_QC &lt;dbl&gt;, VPD_F &lt;dbl&gt;, VPD_F_QC &lt;dbl&gt;, PA_F &lt;dbl&gt;, PA_F_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   P_F &lt;dbl&gt;, P_F_QC &lt;dbl&gt;, WS_F &lt;dbl&gt;, WS_F_QC &lt;dbl&gt;, USTAR &lt;dbl&gt;, USTAR_QC &lt;dbl&gt;, PPFD_IN &lt;dbl&gt;, PPFD_IN_QC &lt;dbl&gt;, PPFD_OUT &lt;dbl&gt;, PPFD_OUT_QC &lt;dbl&gt;, CO2_F_MDS &lt;dbl&gt;, CO2_F_MDS_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TS_F_MDS_1 &lt;dbl&gt;, TS_F_MDS_2 &lt;dbl&gt;, TS_F_MDS_1_QC &lt;dbl&gt;, TS_F_MDS_2_QC &lt;dbl&gt;, SWC_F_MDS_1 &lt;dbl&gt;, SWC_F_MDS_1_QC &lt;dbl&gt;, G_F_MDS &lt;dbl&gt;, G_F_MDS_QC &lt;dbl&gt;, LE_F_MDS &lt;dbl&gt;, LE_F_MDS_QC &lt;dbl&gt;, …</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 5 × 344</span></span>
+<span><span class="co">#&gt;   qc_flagged p_gapfilled NEE_VUT_REF_QC site_id dataset time_resolution  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY TA_ERA_DAY_SD</span></span>
+<span><span class="co">#&gt;   &lt;lgl&gt;            &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;           &lt;int&gt;  &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 TRUE             0.412          0.588 NL-Loo  FLUXMET YY               2019   10.8         9.61            1.75       11.7          2.40</span></span>
+<span><span class="co">#&gt; 2 TRUE             0.352          0.648 US-KFS  FLUXMET YY               2009   12.1        11.2             2.62       13.0          3.13</span></span>
+<span><span class="co">#&gt; 3 TRUE             0.305          0.695 US-KFS  FLUXMET YY               2014   11.9        10.7             2.80       12.9          3.29</span></span>
+<span><span class="co">#&gt; 4 TRUE             0.337          0.663 US-KFS  FLUXMET YY               2017   13.9        12.8             2.65       14.9          3.3 </span></span>
+<span><span class="co">#&gt; 5 TRUE             0.419          0.581 US-KFS  FLUXMET YY               2019   12.6        11.7             2.51       13.4          3.05</span></span>
+<span><span class="co">#&gt; # ℹ 332 more variables: SW_IN_ERA &lt;dbl&gt;, LW_IN_ERA &lt;dbl&gt;, VPD_ERA &lt;dbl&gt;, PA_ERA &lt;dbl&gt;, P_ERA &lt;dbl&gt;, WS_ERA &lt;dbl&gt;, TA_F_MDS &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_MDS_QC &lt;dbl&gt;, TA_F_MDS_NIGHT &lt;dbl&gt;, TA_F_MDS_NIGHT_SD &lt;dbl&gt;, TA_F_MDS_NIGHT_QC &lt;dbl&gt;, TA_F_MDS_DAY &lt;dbl&gt;, TA_F_MDS_DAY_SD &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_MDS_DAY_QC &lt;dbl&gt;, TA_F &lt;dbl&gt;, TA_F_QC &lt;dbl&gt;, TA_F_NIGHT &lt;dbl&gt;, TA_F_NIGHT_SD &lt;dbl&gt;, TA_F_NIGHT_QC &lt;dbl&gt;, TA_F_DAY &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_DAY_SD &lt;dbl&gt;, TA_F_DAY_QC &lt;dbl&gt;, SW_IN_F_MDS &lt;dbl&gt;, SW_IN_F_MDS_QC &lt;dbl&gt;, SW_IN_F &lt;dbl&gt;, SW_IN_F_QC &lt;dbl&gt;, LW_IN_F_MDS &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   LW_IN_F_MDS_QC &lt;dbl&gt;, LW_IN_F &lt;dbl&gt;, LW_IN_F_QC &lt;dbl&gt;, LW_IN_JSB &lt;dbl&gt;, LW_IN_JSB_QC &lt;dbl&gt;, LW_IN_JSB_ERA &lt;dbl&gt;, LW_IN_JSB_F &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   LW_IN_JSB_F_QC &lt;dbl&gt;, VPD_F_MDS &lt;dbl&gt;, VPD_F_MDS_QC &lt;dbl&gt;, VPD_F &lt;dbl&gt;, VPD_F_QC &lt;dbl&gt;, PA_F &lt;dbl&gt;, PA_F_QC &lt;dbl&gt;, P_F &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   P_F_QC &lt;dbl&gt;, WS_F &lt;dbl&gt;, WS_F_QC &lt;dbl&gt;, USTAR &lt;dbl&gt;, USTAR_QC &lt;dbl&gt;, NETRAD &lt;dbl&gt;, NETRAD_QC &lt;dbl&gt;, PPFD_IN &lt;dbl&gt;, …</span></span></code></pre></div>
 <p>Notice that in this case <code>p_gapfilled</code> is just 1 -
 <code>NEE_VUT_REF_QC</code>.</p>
 </div>
@@ -265,27 +280,32 @@ than 30% gapfilled<a class="anchor" aria-label="anchor" href="#example-2-flag-ro
 <code class="sourceCode R"><span><span class="va">flagged_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_qc.html">flux_qc</a></span><span class="op">(</span></span>
 <span>  <span class="va">annual</span>,</span>
 <span>  qc_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NEE_VUT_REF"</span>, <span class="st">"TA_F"</span><span class="op">)</span>,</span>
-<span>  max_gapfilled <span class="op">=</span> <span class="fl">0.3</span></span>
+<span>  threshold <span class="op">=</span> <span class="fl">0.3</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">flagged_2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">qc_flagged</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">qc_flagged</span>, <span class="va">p_gapfilled</span>, <span class="va">NEE_VUT_REF_QC</span>, <span class="va">TA_F_QC</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 337</span></span>
-<span><span class="co">#&gt;   qc_flagged p_gapfilled NEE_VUT_REF_QC TA_F_QC site_id dataset  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY TA_ERA_DAY_SD SW_IN_ERA LW_IN_ERA VPD_ERA PA_ERA P_ERA WS_ERA TA_F_MDS</span></span>
-<span><span class="co">#&gt;   &lt;lgl&gt;            &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 TRUE             0.386         NA       0.614 CA-MA1  FLUXMET  2009   1.43        0.429            2.42       2.20          2.46      170.      276.    2.78   98.6  421.   3.23    NA   </span></span>
-<span><span class="co">#&gt; 2 TRUE             0.817         NA       0.183 DK-Gds  FLUXMET  2020   9.30        8.09             1.47      10.1           1.91      110.      312.    2.51   99.8 1002.   3.80    NA   </span></span>
-<span><span class="co">#&gt; 3 TRUE             0.597         NA       0.403 JP-Hc3  FLUXMET  2005  15.6        15.1              1.57      16.0           1.55      171.      330.    4.28  101.  3387.   1.41    16.0 </span></span>
-<span><span class="co">#&gt; 4 TRUE             0.627         NA       0.373 JP-Hc3  FLUXMET  2006  16.0        15.6              1.37      16.3           1.47      159.      336.    4.08  101   4988.   1.30    23.7 </span></span>
-<span><span class="co">#&gt; 5 TRUE             0.486         NA       0.514 RU-Fy4  FLUXMET  2015   5.83        4.61             1.94       6.60          2.45      110.      311.    2.52   97.4  366.   2.25    NA   </span></span>
-<span><span class="co">#&gt; 6 TRUE             0.392          0.700   0.608 RU-Fy4  FLUXMET  2019   6.00        4.75             1.92       6.73          2.36      107.      314.    2.41   97.3  447.   2.27     7.34</span></span>
-<span><span class="co">#&gt; # ℹ 318 more variables: TA_F_MDS_QC &lt;dbl&gt;, TA_F_MDS_NIGHT &lt;dbl&gt;, TA_F_MDS_NIGHT_SD &lt;dbl&gt;, TA_F_MDS_NIGHT_QC &lt;dbl&gt;, TA_F_MDS_DAY &lt;dbl&gt;, TA_F_MDS_DAY_SD &lt;dbl&gt;, TA_F_MDS_DAY_QC &lt;dbl&gt;, TA_F &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_F_NIGHT &lt;dbl&gt;, TA_F_NIGHT_SD &lt;dbl&gt;, TA_F_NIGHT_QC &lt;dbl&gt;, TA_F_DAY &lt;dbl&gt;, TA_F_DAY_SD &lt;dbl&gt;, TA_F_DAY_QC &lt;dbl&gt;, SW_IN_F_MDS &lt;dbl&gt;, SW_IN_F_MDS_QC &lt;dbl&gt;, SW_IN_F &lt;dbl&gt;, SW_IN_F_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   LW_IN_F_MDS &lt;dbl&gt;, LW_IN_F_MDS_QC &lt;dbl&gt;, LW_IN_F &lt;dbl&gt;, LW_IN_F_QC &lt;dbl&gt;, LW_IN_JSB &lt;dbl&gt;, LW_IN_JSB_QC &lt;dbl&gt;, LW_IN_JSB_ERA &lt;dbl&gt;, LW_IN_JSB_F &lt;dbl&gt;, LW_IN_JSB_F_QC &lt;dbl&gt;, VPD_F_MDS &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   VPD_F_MDS_QC &lt;dbl&gt;, VPD_F &lt;dbl&gt;, VPD_F_QC &lt;dbl&gt;, PA_F &lt;dbl&gt;, PA_F_QC &lt;dbl&gt;, P_F &lt;dbl&gt;, P_F_QC &lt;dbl&gt;, WS_F &lt;dbl&gt;, WS_F_QC &lt;dbl&gt;, USTAR &lt;dbl&gt;, USTAR_QC &lt;dbl&gt;, PPFD_IN &lt;dbl&gt;, PPFD_IN_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   PPFD_OUT &lt;dbl&gt;, PPFD_OUT_QC &lt;dbl&gt;, CO2_F_MDS &lt;dbl&gt;, CO2_F_MDS_QC &lt;dbl&gt;, TS_F_MDS_1 &lt;dbl&gt;, TS_F_MDS_2 &lt;dbl&gt;, TS_F_MDS_1_QC &lt;dbl&gt;, TS_F_MDS_2_QC &lt;dbl&gt;, SWC_F_MDS_1 &lt;dbl&gt;, SWC_F_MDS_1_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   G_F_MDS &lt;dbl&gt;, G_F_MDS_QC &lt;dbl&gt;, LE_F_MDS &lt;dbl&gt;, LE_F_MDS_QC &lt;dbl&gt;, LE_CORR &lt;dbl&gt;, LE_RANDUNC &lt;dbl&gt;, H_F_MDS &lt;dbl&gt;, H_F_MDS_QC &lt;dbl&gt;, H_CORR &lt;dbl&gt;, H_RANDUNC &lt;dbl&gt;, EBC_CF_N &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   EBC_CF_METHOD &lt;dbl&gt;, NIGHT_RANDUNC_N &lt;dbl&gt;, DAY_RANDUNC_N &lt;dbl&gt;, NEE_CUT_REF &lt;dbl&gt;, NEE_VUT_REF &lt;dbl&gt;, NEE_CUT_REF_QC &lt;dbl&gt;, NEE_CUT_REF_RANDUNC &lt;dbl&gt;, NEE_VUT_REF_RANDUNC &lt;dbl&gt;, …</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 11 × 344</span></span>
+<span><span class="co">#&gt;    qc_flagged p_gapfilled NEE_VUT_REF_QC TA_F_QC site_id dataset time_resolution  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY</span></span>
+<span><span class="co">#&gt;    &lt;lgl&gt;            &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;           &lt;int&gt;  &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 TRUE             0.345          0.946   0.655 CZ-Lnz  FLUXMET YY               2019  11.8        10.8              2.02      12.5 </span></span>
+<span><span class="co">#&gt;  2 TRUE             0.378         NA       0.622 CZ-Lnz  FLUXMET YY               2022  11.5        10.4              2.01      12.3 </span></span>
+<span><span class="co">#&gt;  3 TRUE             0.471         NA       0.529 MN-Hst  FLUXMET YY               2015   2.13        0.584            3.35       3.47</span></span>
+<span><span class="co">#&gt;  4 TRUE             0.504          0.951   0.496 NL-Loo  FLUXMET YY               2004   9.93        8.81             1.70      10.7 </span></span>
+<span><span class="co">#&gt;  5 TRUE             0.434          0.588   0.566 NL-Loo  FLUXMET YY               2019  10.8         9.61             1.75      11.7 </span></span>
+<span><span class="co">#&gt;  6 TRUE             0.454         NA       0.546 US-KFS  FLUXMET YY               2007  13.3        12.3              2.59      14.2 </span></span>
+<span><span class="co">#&gt;  7 TRUE             0.352          0.648   0.728 US-KFS  FLUXMET YY               2009  12.1        11.2              2.62      13.0 </span></span>
+<span><span class="co">#&gt;  8 TRUE             0.305          0.695   0.836 US-KFS  FLUXMET YY               2014  11.9        10.7              2.80      12.9 </span></span>
+<span><span class="co">#&gt;  9 TRUE             0.337          0.663   0.909 US-KFS  FLUXMET YY               2017  13.9        12.8              2.65      14.9 </span></span>
+<span><span class="co">#&gt; 10 TRUE             0.419          0.581   0.920 US-KFS  FLUXMET YY               2019  12.6        11.7              2.51      13.4 </span></span>
+<span><span class="co">#&gt; 11 TRUE             0.457         NA       0.543 US-Me7  FLUXMET YY               2022   7.84        6.27             2.89       9.10</span></span>
+<span><span class="co">#&gt; # ℹ 332 more variables: TA_ERA_DAY_SD &lt;dbl&gt;, SW_IN_ERA &lt;dbl&gt;, LW_IN_ERA &lt;dbl&gt;, VPD_ERA &lt;dbl&gt;, PA_ERA &lt;dbl&gt;, P_ERA &lt;dbl&gt;, WS_ERA &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_MDS &lt;dbl&gt;, TA_F_MDS_QC &lt;dbl&gt;, TA_F_MDS_NIGHT &lt;dbl&gt;, TA_F_MDS_NIGHT_SD &lt;dbl&gt;, TA_F_MDS_NIGHT_QC &lt;dbl&gt;, TA_F_MDS_DAY &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_MDS_DAY_SD &lt;dbl&gt;, TA_F_MDS_DAY_QC &lt;dbl&gt;, TA_F &lt;dbl&gt;, TA_F_NIGHT &lt;dbl&gt;, TA_F_NIGHT_SD &lt;dbl&gt;, TA_F_NIGHT_QC &lt;dbl&gt;, TA_F_DAY &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_DAY_SD &lt;dbl&gt;, TA_F_DAY_QC &lt;dbl&gt;, SW_IN_F_MDS &lt;dbl&gt;, SW_IN_F_MDS_QC &lt;dbl&gt;, SW_IN_F &lt;dbl&gt;, SW_IN_F_QC &lt;dbl&gt;, LW_IN_F_MDS &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   LW_IN_F_MDS_QC &lt;dbl&gt;, LW_IN_F &lt;dbl&gt;, LW_IN_F_QC &lt;dbl&gt;, LW_IN_JSB &lt;dbl&gt;, LW_IN_JSB_QC &lt;dbl&gt;, LW_IN_JSB_ERA &lt;dbl&gt;, LW_IN_JSB_F &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   LW_IN_JSB_F_QC &lt;dbl&gt;, VPD_F_MDS &lt;dbl&gt;, VPD_F_MDS_QC &lt;dbl&gt;, VPD_F &lt;dbl&gt;, VPD_F_QC &lt;dbl&gt;, PA_F &lt;dbl&gt;, PA_F_QC &lt;dbl&gt;, P_F &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   P_F_QC &lt;dbl&gt;, WS_F &lt;dbl&gt;, WS_F_QC &lt;dbl&gt;, USTAR &lt;dbl&gt;, USTAR_QC &lt;dbl&gt;, NETRAD &lt;dbl&gt;, NETRAD_QC &lt;dbl&gt;, PPFD_IN &lt;dbl&gt;, …</span></span></code></pre></div>
 <p>Now <code>p_gapfilled</code> is 1 - the smaller of
 <code>NEE_VUT_REF_QC</code> and <code>TA_F_QC</code>.</p>
 </div>
@@ -297,24 +317,29 @@ than 30% gapfilled<a class="anchor" aria-label="anchor" href="#example-2-flag-ro
 <code class="sourceCode R"><span><span class="va">flagged_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/flux_qc.html">flux_qc</a></span><span class="op">(</span></span>
 <span>  <span class="va">annual</span>,</span>
 <span>  qc_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NEE_VUT_REF"</span>, <span class="st">"TA_F"</span><span class="op">)</span>,</span>
-<span>  max_gapfilled <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
 <span>  operator <span class="op">=</span> <span class="st">"all"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">flagged_3</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">qc_flagged</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">qc_flagged</span>, <span class="va">p_gapfilled</span>, <span class="va">NEE_VUT_REF_QC</span>, <span class="va">TA_F_QC</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 0 × 337</span></span>
-<span><span class="co">#&gt; # ℹ 337 variables: qc_flagged &lt;lgl&gt;, p_gapfilled &lt;dbl&gt;, NEE_VUT_REF_QC &lt;dbl&gt;, TA_F_QC &lt;dbl&gt;, site_id &lt;chr&gt;, dataset &lt;chr&gt;, YEAR &lt;int&gt;, TA_ERA &lt;dbl&gt;, TA_ERA_NIGHT &lt;dbl&gt;, TA_ERA_NIGHT_SD &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_ERA_DAY &lt;dbl&gt;, TA_ERA_DAY_SD &lt;dbl&gt;, SW_IN_ERA &lt;dbl&gt;, LW_IN_ERA &lt;dbl&gt;, VPD_ERA &lt;dbl&gt;, PA_ERA &lt;dbl&gt;, P_ERA &lt;dbl&gt;, WS_ERA &lt;dbl&gt;, TA_F_MDS &lt;dbl&gt;, TA_F_MDS_QC &lt;dbl&gt;, TA_F_MDS_NIGHT &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_F_MDS_NIGHT_SD &lt;dbl&gt;, TA_F_MDS_NIGHT_QC &lt;dbl&gt;, TA_F_MDS_DAY &lt;dbl&gt;, TA_F_MDS_DAY_SD &lt;dbl&gt;, TA_F_MDS_DAY_QC &lt;dbl&gt;, TA_F &lt;dbl&gt;, TA_F_NIGHT &lt;dbl&gt;, TA_F_NIGHT_SD &lt;dbl&gt;, TA_F_NIGHT_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TA_F_DAY &lt;dbl&gt;, TA_F_DAY_SD &lt;dbl&gt;, TA_F_DAY_QC &lt;dbl&gt;, SW_IN_F_MDS &lt;dbl&gt;, SW_IN_F_MDS_QC &lt;dbl&gt;, SW_IN_F &lt;dbl&gt;, SW_IN_F_QC &lt;dbl&gt;, LW_IN_F_MDS &lt;dbl&gt;, LW_IN_F_MDS_QC &lt;dbl&gt;, LW_IN_F &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   LW_IN_F_QC &lt;dbl&gt;, LW_IN_JSB &lt;dbl&gt;, LW_IN_JSB_QC &lt;dbl&gt;, LW_IN_JSB_ERA &lt;dbl&gt;, LW_IN_JSB_F &lt;dbl&gt;, LW_IN_JSB_F_QC &lt;dbl&gt;, VPD_F_MDS &lt;dbl&gt;, VPD_F_MDS_QC &lt;dbl&gt;, VPD_F &lt;dbl&gt;, VPD_F_QC &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   PA_F &lt;dbl&gt;, PA_F_QC &lt;dbl&gt;, P_F &lt;dbl&gt;, P_F_QC &lt;dbl&gt;, WS_F &lt;dbl&gt;, WS_F_QC &lt;dbl&gt;, USTAR &lt;dbl&gt;, USTAR_QC &lt;dbl&gt;, PPFD_IN &lt;dbl&gt;, PPFD_IN_QC &lt;dbl&gt;, PPFD_OUT &lt;dbl&gt;, PPFD_OUT_QC &lt;dbl&gt;, CO2_F_MDS &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   CO2_F_MDS_QC &lt;dbl&gt;, TS_F_MDS_1 &lt;dbl&gt;, TS_F_MDS_2 &lt;dbl&gt;, TS_F_MDS_1_QC &lt;dbl&gt;, TS_F_MDS_2_QC &lt;dbl&gt;, SWC_F_MDS_1 &lt;dbl&gt;, SWC_F_MDS_1_QC &lt;dbl&gt;, G_F_MDS &lt;dbl&gt;, G_F_MDS_QC &lt;dbl&gt;, LE_F_MDS &lt;dbl&gt;, …</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 3 × 344</span></span>
+<span><span class="co">#&gt;   qc_flagged p_gapfilled NEE_VUT_REF_QC TA_F_QC site_id dataset time_resolution  YEAR TA_ERA TA_ERA_NIGHT TA_ERA_NIGHT_SD TA_ERA_DAY</span></span>
+<span><span class="co">#&gt;   &lt;lgl&gt;            &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;           &lt;int&gt;  &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 TRUE             0.412          0.588   0.566 NL-Loo  FLUXMET YY               2019   10.8         9.61            1.75       11.7</span></span>
+<span><span class="co">#&gt; 2 TRUE             0.272          0.648   0.728 US-KFS  FLUXMET YY               2009   12.1        11.2             2.62       13.0</span></span>
+<span><span class="co">#&gt; 3 TRUE             0.164          0.695   0.836 US-KFS  FLUXMET YY               2014   11.9        10.7             2.80       12.9</span></span>
+<span><span class="co">#&gt; # ℹ 332 more variables: TA_ERA_DAY_SD &lt;dbl&gt;, SW_IN_ERA &lt;dbl&gt;, LW_IN_ERA &lt;dbl&gt;, VPD_ERA &lt;dbl&gt;, PA_ERA &lt;dbl&gt;, P_ERA &lt;dbl&gt;, WS_ERA &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_MDS &lt;dbl&gt;, TA_F_MDS_QC &lt;dbl&gt;, TA_F_MDS_NIGHT &lt;dbl&gt;, TA_F_MDS_NIGHT_SD &lt;dbl&gt;, TA_F_MDS_NIGHT_QC &lt;dbl&gt;, TA_F_MDS_DAY &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_MDS_DAY_SD &lt;dbl&gt;, TA_F_MDS_DAY_QC &lt;dbl&gt;, TA_F &lt;dbl&gt;, TA_F_NIGHT &lt;dbl&gt;, TA_F_NIGHT_SD &lt;dbl&gt;, TA_F_NIGHT_QC &lt;dbl&gt;, TA_F_DAY &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TA_F_DAY_SD &lt;dbl&gt;, TA_F_DAY_QC &lt;dbl&gt;, SW_IN_F_MDS &lt;dbl&gt;, SW_IN_F_MDS_QC &lt;dbl&gt;, SW_IN_F &lt;dbl&gt;, SW_IN_F_QC &lt;dbl&gt;, LW_IN_F_MDS &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   LW_IN_F_MDS_QC &lt;dbl&gt;, LW_IN_F &lt;dbl&gt;, LW_IN_F_QC &lt;dbl&gt;, LW_IN_JSB &lt;dbl&gt;, LW_IN_JSB_QC &lt;dbl&gt;, LW_IN_JSB_ERA &lt;dbl&gt;, LW_IN_JSB_F &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   LW_IN_JSB_F_QC &lt;dbl&gt;, VPD_F_MDS &lt;dbl&gt;, VPD_F_MDS_QC &lt;dbl&gt;, VPD_F &lt;dbl&gt;, VPD_F_QC &lt;dbl&gt;, PA_F &lt;dbl&gt;, PA_F_QC &lt;dbl&gt;, P_F &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   P_F_QC &lt;dbl&gt;, WS_F &lt;dbl&gt;, WS_F_QC &lt;dbl&gt;, USTAR &lt;dbl&gt;, USTAR_QC &lt;dbl&gt;, NETRAD &lt;dbl&gt;, NETRAD_QC &lt;dbl&gt;, PPFD_IN &lt;dbl&gt;, …</span></span></code></pre></div>
 <p>Because we’ve set <code>operator = "all"</code>,
 <code>p_gapfilled</code> is now 1 - the <em>larger</em> of
 <code>NEE_VUT_REF_QC</code> and <code>TA_F_QC</code> and all of the
-values are greater than the smaller of the <code>max_gapfilled</code>
+values are greater than the smaller of the <code>threshold</code>
 values.</p>
 </div>
 </div>
