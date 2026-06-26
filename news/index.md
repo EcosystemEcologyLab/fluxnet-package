@@ -1,5 +1,7 @@
 # Changelog
 
+## fluxnet (development version)
+
 ## fluxnet 0.6.0
 
 - Added experimental functions
