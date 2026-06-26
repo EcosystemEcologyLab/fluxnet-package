@@ -180,7 +180,7 @@ Fluxnet data can be gapfilled to varying degrees.
 ### Example 1: Flag rows where `NEE_VUT_REF` is more than 30% gapfilled
 
 ```{r}
-flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", max_gapfilled = 0.3)
+flagged_nee <- flux_qc(annual, qc_vars = "NEE_VUT_REF", threshold = 0.3)
 flagged_nee %>%
   filter(qc_flagged) %>%
   select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, everything())
@@ -194,7 +194,7 @@ Notice that in this case `p_gapfilled` is just 1 - `NEE_VUT_REF_QC`.
 flagged_2 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = 0.3
+  threshold = 0.3
 )
 flagged_2 %>%
   filter(qc_flagged) %>%
@@ -209,7 +209,7 @@ Now `p_gapfilled` is 1 - the smaller of `NEE_VUT_REF_QC` and `TA_F_QC`.
 flagged_3 <- flux_qc(
   annual,
   qc_vars = c("NEE_VUT_REF", "TA_F"),
-  max_gapfilled = c(0.3, 0.1),
+  threshold = c(0.3, 0.1),
   operator = "all"
 )
 flagged_3 %>%
@@ -217,4 +217,4 @@ flagged_3 %>%
   select(qc_flagged, p_gapfilled, NEE_VUT_REF_QC, TA_F_QC, everything())
 ```
 
-Because we've set `operator = "all"`, `p_gapfilled` is now 1 - the *larger* of `NEE_VUT_REF_QC` and `TA_F_QC` and all of the values are greater than the smaller of the `max_gapfilled` values.
+Because we've set `operator = "all"`, `p_gapfilled` is now 1 - the *larger* of `NEE_VUT_REF_QC` and `TA_F_QC` and all of the values are greater than the smaller of the `threshold` values.
